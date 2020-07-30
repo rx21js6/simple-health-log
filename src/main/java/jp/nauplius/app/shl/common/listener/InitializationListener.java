@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.listener;
+package jp.nauplius.app.shl.common.listener;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;

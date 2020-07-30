@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.util.CipherUtil;
@@ -27,11 +28,9 @@ public class DbLoader {
     /**
      * テーブル作成
      */
+    @Transactional
     public void createTables() {
-        EntityTransaction tx = this.em.getTransaction();
         try {
-            tx.begin();
-
             // key_iv
             System.out.println("create table key_iv.");
             String createKeyIvSql = this.loadSqlString("key_iv");
@@ -47,21 +46,19 @@ public class DbLoader {
             String createUserRoleSql = this.loadSqlString("user_role");
             this.em.createNativeQuery(createUserRoleSql).executeUpdate();
 
-            tx.commit();
             System.out.println("Table created.");
         } catch (Throwable e) {
             e.printStackTrace();
             System.err.println("craete table failed.");
-            tx.rollback();
+            throw new RuntimeException(e);
         }
     }
 
     /**
      * KeyIvデータ登録。
      */
+    @Transactional
     public void loadKeyIvData() {
-        EntityTransaction tx = this.em.getTransaction();
-        tx.begin();
         System.out.println("Transaction begin.");
         KeyIv keyIv = new KeyIv();
         try {
@@ -77,11 +74,10 @@ public class DbLoader {
             this.em.persist(keyIv);
             this.em.merge(keyIv);
             this.em.flush();
-            System.out.println("Flush!");
-            tx.commit();
+            System.out.println("key iv registered.");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            tx.rollback();
+            System.err.println("key iv insert failed.");
             throw new RuntimeException(e);
         }
     }

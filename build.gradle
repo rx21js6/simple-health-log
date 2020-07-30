@@ -33,18 +33,18 @@ repositories {
 }
 
 dependencies {
-    // This dependency is used by the application.
-    // implementation 'com.google.guava:guava:29.0-jre'
+    // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
-
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13'
+
+    // Servlet + JSF
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 
     // https://mvnrepository.com/artifact/com.sun.faces/jsf-api
     compile group: 'com.sun.faces', name: 'jsf-api', version: '2.2.20'
@@ -52,20 +52,36 @@ dependencies {
     // https://mvnrepository.com/artifact/com.sun.faces/jsf-impl
     compile group: 'com.sun.faces', name: 'jsf-impl', version: '2.2.20'
 
+    // https://mvnrepository.com/artifact/net.bootsfaces/bootsfaces
+    compile group: 'net.bootsfaces', name: 'bootsfaces', version: '1.4.2'
+
+    // CDI
     // https://mvnrepository.com/artifact/org.jboss.weld.servlet/weld-servlet-shaded
     compile group: 'org.jboss.weld.servlet', name: 'weld-servlet-shaded', version: '3.1.4.Final'
+
+    // https://mvnrepository.com/artifact/org.jboss.weld/weld-spi
+    // compile group: 'org.jboss.weld', name: 'weld-spi', version: '3.1.SP2'
+
+    // https://mvnrepository.com/artifact/org.apache.deltaspike/deltaspike
+    compile group: 'org.apache.deltaspike', name: 'deltaspike', version: '1.8.2', ext: 'pom'
+
+    // DB + JPA
+    // https://mvnrepository.com/artifact/org.apache.derby/derby
+    compile group: 'org.apache.derby', name: 'derby', version: '10.14.2.0'
 
     // https://mvnrepository.com/artifact/org.eclipse.persistence/eclipselink
     compile group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.7.7'
 
-    // https://mvnrepository.com/artifact/org.apache.derby/derby
-    compile group: 'org.apache.derby', name: 'derby', version: '10.14.2.0'
-
-    // https://mvnrepository.com/artifact/org.glassfish.transaction/jta
-    compile group: 'org.glassfish.transaction', name: 'jta', version: '3.0.1-b08'
-
+    // JTA + Deltaspike
     // https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api
     compile group: 'javax.transaction', name: 'javax.transaction-api', version: '1.3'
+
+    // https://mvnrepository.com/artifact/org.apache.deltaspike.modules/deltaspike-jpa-module-api
+    compile group: 'org.apache.deltaspike.modules', name: 'deltaspike-jpa-module-api', version: '1.9.4'
+
+    // https://mvnrepository.com/artifact/org.apache.deltaspike.modules/deltaspike-jpa-module-impl
+    compile group: 'org.apache.deltaspike.modules', name: 'deltaspike-jpa-module-impl', version: '1.9.4'
+
 }
 
 application {
