@@ -46,14 +46,24 @@ dependencies {
     // Servlet + JSF
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 
-    // https://mvnrepository.com/artifact/com.sun.faces/jsf-api
-    compile group: 'com.sun.faces', name: 'jsf-api', version: '2.2.20'
+    // https://mvnrepository.com/artifact/javax.faces/javax.faces-api
+    compile group: 'javax.faces', name: 'javax.faces-api', version: '2.3'
+
+    // https://mvnrepository.com/artifact/org.glassfish/javax.faces
+    compile group: 'org.glassfish', name: 'javax.faces', version: '2.3.9'
 
     // https://mvnrepository.com/artifact/com.sun.faces/jsf-impl
     compile group: 'com.sun.faces', name: 'jsf-impl', version: '2.2.20'
 
     // https://mvnrepository.com/artifact/net.bootsfaces/bootsfaces
     compile group: 'net.bootsfaces', name: 'bootsfaces', version: '1.4.2'
+
+    // https://mvnrepository.com/artifact/org.omnifaces/omnifaces
+    compile group: 'org.omnifaces', name: 'omnifaces', version: '3.7.1'
+
+    // Bean Validation
+    // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
+    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.1.5.Final'
 
     // CDI
     // https://mvnrepository.com/artifact/org.jboss.weld.servlet/weld-servlet-shaded
@@ -82,6 +92,19 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.deltaspike.modules/deltaspike-jpa-module-impl
     compile group: 'org.apache.deltaspike.modules', name: 'deltaspike-jpa-module-impl', version: '1.9.4'
 
+    // SLF4J + Logback
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    // mail
+    // https://mvnrepository.com/artifact/com.sun.mail/javax.mail
+    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+
+    // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 }
 
 application {

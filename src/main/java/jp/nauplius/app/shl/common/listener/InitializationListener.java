@@ -41,7 +41,7 @@ public class InitializationListener implements ServletContextListener {
         }
 
         System.out.println("KeyIv not found.");
-        this.dbLoader.loadKeyIvData();
+        // this.dbLoader.loadKeyIvData();
     }
 
     @Override
