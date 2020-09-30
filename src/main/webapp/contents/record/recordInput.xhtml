@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>体温を登録</title>
+</h:head>
+<h:body>
+    <b:container>
+        <ui:include src="/common/logout.xhtml" />
+        <b:row>
+            <b:column>
+                <h1>体温を登録</h1>
+            </b:column>
+            <b:column id="dailyRecordValues">
+                <b:form inline="true">
+                    <b:panelGrid columns="1" cellpadding="5">
+                        <b:inputText
+                            value="#{dailyRecordController.dailyRecordForm.tempMorning}"
+                            label="体温（朝）:" labelStyle="width:100px;" mask="9{2}.9{1}"
+                            maxlength="4">
+                            <f:converter converterId="javax.faces.BigDecimal" />
+                        </b:inputText>
+
+                        <b:message for="@previous" />
+
+                        <b:inputText
+                            value="#{dailyRecordController.dailyRecordForm.tempEvening}"
+                            label="体温（夜）:" labelStyle="width:100px;" mask="9{2}.9{1}"
+                            maxlength="4">
+                            <f:converter converterId="javax.faces.BigDecimal" />
+                        </b:inputText>
+                        <b:message for="@previous" />
+
+                        <b:commandButton value="#{msg['common.button.register']}"
+                            action="#{dailyRecordController.register()}" />
+                    </b:panelGrid>
+                </b:form>
+            </b:column>
+        </b:row>
+    </b:container>
+</h:body>
+</html>

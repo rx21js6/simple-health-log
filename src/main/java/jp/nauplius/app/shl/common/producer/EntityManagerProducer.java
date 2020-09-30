@@ -18,7 +18,7 @@ public class EntityManagerProducer implements Serializable {
 
     @Produces
     public EntityManager getEntityManager() {
-        if (this.factory == null) {
+        if (this.factory == null || !this.factory.isOpen()) {
             synchronized (this) {
                 this.factory = Persistence.createEntityManagerFactory("simple-health-log");
             }
@@ -42,6 +42,7 @@ public class EntityManagerProducer implements Serializable {
     }
 
     protected void closeEntityManager(@Disposes EntityManager entityManager) {
+        System.out.println("EntityManager closeing: " + entityManager);
         if (entityManager.isOpen()) {
             entityManager.close();
         }
