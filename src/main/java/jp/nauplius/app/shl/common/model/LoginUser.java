@@ -1,93 +1,147 @@
 package jp.nauplius.app.shl.common.model;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
- * The persistent class for the login_user database table.
- *
+ * The persistent class for the LOGIN_USER database table.
+ * 
  */
 @Entity
-@Table(name="login_user")
+@Table(name="LOGIN_USER")
 @NamedQuery(name="LoginUser.findAll", query="SELECT l FROM LoginUser l")
-@NoArgsConstructor
 public class LoginUser implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Getter
-    @Setter
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(unique=true, nullable=false)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
 
-    @Getter
-    @Setter
-    @Column(name="created_date", nullable=false)
-    private Timestamp createdDate;
+	@Column(name="CREATED_DATE")
+	private Timestamp createdDate;
 
-    @Getter
-    @Setter
-    @Column(nullable=false)
-    private Boolean disabled;
+	private boolean disabled;
 
-    @Getter
-    @Setter
-    @Column(name="encrypted_password", length=2147483647)
-    private String encryptedPassword;
+	@Column(name="ENCRYPTED_PASSWORD")
+	private String encryptedPassword;
 
-    @Getter
-    @Setter
-    @Column(name="login_id", nullable=false, length=12)
-    private String loginId;
+	@Column(name="LOGIN_ID")
+	private String loginId;
 
-    @Getter
-    @Setter
-    @Column(name="mail_address", length=2147483647)
-    private String mailAddress;
+	@Column(name="MAIL_ADDRESS")
+	private String mailAddress;
 
-    @Getter
-    @Setter
-    @Column(name="modified_date", nullable=false)
-    private Timestamp modifiedDate;
+	@Column(name="MODIFIED_DATE")
+	private Timestamp modifiedDate;
 
-    @Getter
-    @Setter
-    @Column(nullable=false, length=2147483647)
-    private String name;
+	private String name;
 
-    //bi-directional many-to-one association to UserRole
-    @Getter
-    @Setter
-    @OneToMany(mappedBy="loginUser")
-    private List<UserRole> userRoles;
+	//bi-directional many-to-one association to DailyHealthRecord
+	@OneToMany(mappedBy="loginUser")
+	private List<DailyHealthRecord> dailyHealthRecords;
 
-    public UserRole addUserRole(UserRole userRole) {
-        getUserRoles().add(userRole);
-        userRole.setLoginUser(this);
+	//bi-directional one-to-one association to UserRole
+	@OneToOne(mappedBy="loginUser")
+	private UserRole userRole;
 
-        return userRole;
-    }
+	public LoginUser() {
+	}
 
-    public UserRole removeUserRole(UserRole userRole) {
-        getUserRoles().remove(userRole);
-        userRole.setLoginUser(null);
+	public int getId() {
+		return this.id;
+	}
 
-        return userRole;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Timestamp getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public boolean getDisabled() {
+		return this.disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	public String getEncryptedPassword() {
+		return this.encryptedPassword;
+	}
+
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.encryptedPassword = encryptedPassword;
+	}
+
+	public String getLoginId() {
+		return this.loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+
+	public String getMailAddress() {
+		return this.mailAddress;
+	}
+
+	public void setMailAddress(String mailAddress) {
+		this.mailAddress = mailAddress;
+	}
+
+	public Timestamp getModifiedDate() {
+		return this.modifiedDate;
+	}
+
+	public void setModifiedDate(Timestamp modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<DailyHealthRecord> getDailyHealthRecords() {
+		return this.dailyHealthRecords;
+	}
+
+	public void setDailyHealthRecords(List<DailyHealthRecord> dailyHealthRecords) {
+		this.dailyHealthRecords = dailyHealthRecords;
+	}
+
+	public DailyHealthRecord addDailyHealthRecord(DailyHealthRecord dailyHealthRecord) {
+		getDailyHealthRecords().add(dailyHealthRecord);
+		dailyHealthRecord.setLoginUser(this);
+
+		return dailyHealthRecord;
+	}
+
+	public DailyHealthRecord removeDailyHealthRecord(DailyHealthRecord dailyHealthRecord) {
+		getDailyHealthRecords().remove(dailyHealthRecord);
+		dailyHealthRecord.setLoginUser(null);
+
+		return dailyHealthRecord;
+	}
+
+	public UserRole getUserRole() {
+		return this.userRole;
+	}
+
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
+	}
 
 }

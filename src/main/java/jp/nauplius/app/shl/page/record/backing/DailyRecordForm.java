@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Named
+@Deprecated
 public class DailyRecordForm {
     @Getter
     @Setter

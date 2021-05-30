@@ -1,8 +1,10 @@
 package jp.nauplius.app.shl.page.login.service;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -19,6 +21,7 @@ import jp.nauplius.app.shl.page.login.backing.LoginForm;
 import jp.nauplius.app.shl.ws.bean.GetUsersResponse;
 
 @Named
+@ViewScoped
 public class LoginService implements Serializable {
     @Inject
     private EntityManager em;
@@ -36,13 +39,13 @@ public class LoginService implements Serializable {
 
         TypedQuery<LoginUser> query = this.em.createQuery("SELECT lu FROM LoginUser lu WHERE lu.loginId = :loginId AND lu.disabled = cast('false' as boolean)", LoginUser.class);
         query.setParameter("loginId", loginForm.getLoginId());
-        LoginUser loginUser = query.getSingleResult();
-
-        if (loginUser == null) {
-            return false;
+        List<LoginUser> results = query.getResultList();
+        if (results.size() == 0) {
             // TODO: 例外
+            return false;
         }
 
+        LoginUser loginUser = results.get(0);
         String encryptedPassword = loginUser.getEncryptedPassword();
         String password = this.cipherUtil.decrypt(encryptedPassword, keyBytes, ivBytes);
         if (!password.equals(loginForm.getPassword())) {

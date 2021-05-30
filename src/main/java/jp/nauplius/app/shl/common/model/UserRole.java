@@ -1,57 +1,79 @@
 package jp.nauplius.app.shl.common.model;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 
 /**
- * The persistent class for the user_role database table.
+ * The persistent class for the USER_ROLE database table.
  *
  */
 @Entity
-@Table(name="user_role")
+@Table(name="USER_ROLE")
 @NamedQuery(name="UserRole.findAll", query="SELECT u FROM UserRole u")
-@NoArgsConstructor
 public class UserRole implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Getter
-    @Setter
     @Id
-    @Column(unique=true, nullable=false)
-    private Integer id;
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private int id;
 
-    @Getter
-    @Setter
-    @Column(name="created_date")
+    @Column(name="CREATED_DATE")
     private Timestamp createdDate;
 
-    @Getter
-    @Setter
-    @Column(name="modified_date")
+    @Column(name="MODIFIED_DATE")
     private Timestamp modifiedDate;
 
-    @Getter
-    @Setter
-    @Column(name="role_name", length=20)
+    @Column(name="ROLE_NAME")
     private String roleName;
 
-    //bi-directional many-to-one association to LoginUser
-    @Getter
-    @Setter
-    @ManyToOne
-    @JoinColumn(name="id", nullable=false, insertable=false, updatable=false)
+    //bi-directional one-to-one association to LoginUser
+    @OneToOne
+    @PrimaryKeyJoinColumn(name="ID")
     private LoginUser loginUser;
+
+    public UserRole() {
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Timestamp getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Timestamp getModifiedDate() {
+        return this.modifiedDate;
+    }
+
+    public void setModifiedDate(Timestamp modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public String getRoleName() {
+        return this.roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public LoginUser getLoginUser() {
+        return this.loginUser;
+    }
+
+    public void setLoginUser(LoginUser loginUser) {
+        this.loginUser = loginUser;
+    }
+
 }

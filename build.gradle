@@ -16,7 +16,7 @@ plugins {
     id 'war'
     id 'eclipse'
     // id 'eclipse-wtp'
-    id "org.gretty" version "3.0.3"
+    id "org.gretty" version "3.0.4"
 }
 
 sourceCompatibility = 1.8

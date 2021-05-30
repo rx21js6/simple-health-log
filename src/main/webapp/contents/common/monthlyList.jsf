@@ -44,26 +44,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <ui:repeat var="dailyRecord"
-                        value="#{monthlyListHolder.dailyRecords}" varStatus="status">
+                    <ui:repeat var="holder"
+                        value="#{monthlyListHolder.getMonthlyRecordHolders()}"
+                        varStatus="status">
+
                         <tr>
-                            <td><h:outputText value="#{dailyRecord.dateText}"></h:outputText>
+                            <td><h:outputText value="#{holder.dateText}"></h:outputText>
                             </td>
-                            <td><h:outputText value="#{dailyRecord.tempMorning}" /></td>
-                            <td><h:outputText value="#{dailyRecord.tempEvening}" /></td>
-                            <td>
-                                <ul>
-                                    <ui:repeat var="healthDetail"
-                                        value="#{dailyRecord.healthDetails}"
-                                        varStatus="healthDetailStatus">
-                                        <li><h:outputText
-                                                value="#{healthDetail.name} - #{healthDetail.value}" /></li>
-                                    </ui:repeat>
-                                </ul>
-                            </td>
-                            <td><p>
-                                    <h:outputText value="#{dailyRecord.conditionNote}" />
-                                </p></td>
+                            <ui:fragment rendered="#{holder.recordExists()}">
+                                <td><h:outputText
+                                        value="#{holder.dailyHealthRecord.tempMorning}" /></td>
+                                <td><h:outputText
+                                        value="#{holder.dailyHealthRecord.tempEvening}" /></td>
+                                <td>
+                                    <ul>
+                                        <ui:repeat var="healthDetail"
+                                            value="#{holder.dailyHealthRecord.healthDetails}"
+                                            varStatus="healthDetailStatus">
+                                            <li><h:outputText
+                                                    value="#{healthDetail.name} - #{healthDetail.value}" /></li>
+                                        </ui:repeat>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <p>
+                                        <h:outputText
+                                            value="#{holder.dailyHealthRecord.tconditionNote}" />
+                                    </p>
+                                </td>
+                            </ui:fragment>
+
+
                         </tr>
                     </ui:repeat>
                 </tbody>

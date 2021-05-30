@@ -19,7 +19,7 @@
                 <b:form inline="true">
                     <b:panelGrid columns="1" cellpadding="10">
                         <b:inputText
-                            value="#{dailyRecordController.dailyRecord.tempMorning}"
+                            value="#{dailyRecordController.dailyHealthRecord.tempMorning}"
                             label="体温（朝）:" labelStyle="width:100px;" mask="9{2}.9{1}"
                             maxlength="4">
                             <f:converter converterId="javax.faces.BigDecimal" />
@@ -27,7 +27,7 @@
                         <b:message for="@previous" />
 
                         <b:inputText
-                            value="#{dailyRecordController.dailyRecord.tempEvening}"
+                            value="#{dailyRecordController.dailyHealthRecord.tempEvening}"
                             label="体温（夜）:" labelStyle="width:100px;" mask="9{2}.9{1}"
                             maxlength="4">
                             <f:converter converterId="javax.faces.BigDecimal" />
@@ -36,7 +36,7 @@
 
                         <b:panel title="体調詳細">
                             <ui:repeat var="healthDetail"
-                                value="#{dailyRecordController.dailyRecord.healthDetails}"
+                                value="#{dailyRecordController.dailyHealthRecord.healthDetails}"
                                 varStatus="healthDetailStatus">
                                 <b:selectOneMenu value="#{healthDetail.value}" required="false"
                                     label="#{healthDetail.name}" labelStyle="width:100px;">
@@ -53,7 +53,7 @@
                         </b:panel>
 
                         <b:inputTextarea placeholder="Type something here..."
-                            value="#{dailyRecordController.dailyRecord.conditionNote}"
+                            value="#{dailyRecordController.dailyHealthRecord.conditionNote}"
                             label="ノート" labelStyle="width:100px;">
                         </b:inputTextarea>
                         <b:message for="@previous" />

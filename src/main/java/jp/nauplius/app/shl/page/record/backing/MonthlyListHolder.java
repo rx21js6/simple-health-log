@@ -8,18 +8,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import javax.faces.view.ViewScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
+import jp.nauplius.app.shl.common.constants.ShlConstants;
+import jp.nauplius.app.shl.common.model.LoginUser;
 import jp.nauplius.app.shl.page.record.bean.DailyRecord;
 import jp.nauplius.app.shl.page.record.bean.HealthDetail;
+import jp.nauplius.app.shl.page.record.bean.RecordHolder;
 import jp.nauplius.app.shl.page.record.service.DailyRecordService;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named
-@ViewScoped
+@SessionScoped
 public class MonthlyListHolder implements Serializable {
     private static List<String> HEALTH_DETAIL_NAMES;
     static {
@@ -47,6 +52,16 @@ public class MonthlyListHolder implements Serializable {
 
     public String getYearMonthText() {
         return String.format("%04d-%02d", this.year, this.month);
+    }
+
+    public List<RecordHolder> getMonthlyRecordHolders() {
+        // セッション登録
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpSession httpSession = (HttpSession) context.getExternalContext().getSession(true);
+        LoginUser loginUser = (LoginUser) httpSession.getAttribute(ShlConstants.LOGIN_SESSION_KEY);
+
+        return this.dailyRecordService.getMontylyRecords(loginUser.getId(), this.year, this.month);
+
     }
 
     public List<DailyRecord> getDailyRecords() {

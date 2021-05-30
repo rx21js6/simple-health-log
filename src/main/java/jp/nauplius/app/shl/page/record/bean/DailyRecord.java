@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
+@Deprecated
 public class DailyRecord {
     @Getter
     @Setter

@@ -34,8 +34,9 @@ public class LoginFilter implements Filter {
     private static final List<String> ALLOWED_PATHS_INITIAL = Collections
             .unmodifiableList(Arrays.asList("/javax.faces.resource", "/rest", "/contents/initial"));
 
-    private static final List<String> ALLOWED_PATHS = Collections.unmodifiableList(Arrays.asList(
-            "/javax.faces.resource", "/rest", "/contents/login", "/contents/initial/initialSettingComplete.xhtml"));
+    private static final List<String> ALLOWED_PATHS = Collections
+            .unmodifiableList(Arrays.asList("/javax.faces.resource", "/rest", "/contents/record/recordInput.xhtml",
+                    "/contents/initial/initialSettingComplete.xhtml"));
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -78,6 +79,7 @@ public class LoginFilter implements Filter {
                         .sendRedirect(httpServletRequest.getContextPath() + "/contents/initial/initialSetting.xhtml");
             }
         } else { // ログイン済み確認（restは許可）
+
             boolean loggedIn = (httpSession != null
                     && httpSession.getAttribute(ShlConstants.LOGIN_SESSION_KEY) != null);
             boolean pathAllowed = ALLOWED_PATHS.stream().anyMatch(allowedPath -> path.startsWith(allowedPath));
@@ -85,7 +87,9 @@ public class LoginFilter implements Filter {
             if (loggedIn || pathAllowed) {
                 chain.doFilter(request, response);
             } else {
-                httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/contents/login/login.xhtml");
+                // httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/contents/login/login.xhtml");
+                httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/contents/record/recordInput.xhtml");
+
             }
         }
 

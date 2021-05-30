@@ -2,49 +2,76 @@ package jp.nauplius.app.shl.common.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.sql.Timestamp;
 
 
 /**
- * The persistent class for the encryptionKey_encryptionIv database table.
- *
+ * The persistent class for the KEY_IV database table.
+ * 
  */
 @Entity
-@Table(name="key_iv")
+@Table(name="KEY_IV")
 @NamedQuery(name="KeyIv.findAll", query="SELECT k FROM KeyIv k")
-@NoArgsConstructor
 public class KeyIv implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Getter
-    @Setter
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(unique=true, nullable=false)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
 
-    @Getter
-    @Setter
-    @Column(name="encryption_key", length=2147483647)
-    private String encryptionKey;
+	@Column(name="CREATED_DATE")
+	private Timestamp createdDate;
 
-    @Getter
-    @Setter
-    @Column(name="encryption_iv", length=2147483647)
-    private String encryptionIv;
+	@Column(name="ENCRYPTION_IV")
+	private String encryptionIv;
 
-    @Getter
-    @Setter
-    @Column(name="created_date")
-    private Timestamp createdDate;
+	@Column(name="ENCRYPTION_KEY")
+	private String encryptionKey;
 
-    @Getter
-    @Setter
-    @Column(name="modified_date")
-    private Timestamp modifiedDate;
+	@Column(name="MODIFIED_DATE")
+	private Timestamp modifiedDate;
+
+	public KeyIv() {
+	}
+
+	public int getId() {
+		return this.id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Timestamp getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getEncryptionIv() {
+		return this.encryptionIv;
+	}
+
+	public void setEncryptionIv(String encryptionIv) {
+		this.encryptionIv = encryptionIv;
+	}
+
+	public String getEncryptionKey() {
+		return this.encryptionKey;
+	}
+
+	public void setEncryptionKey(String encryptionKey) {
+		this.encryptionKey = encryptionKey;
+	}
+
+	public Timestamp getModifiedDate() {
+		return this.modifiedDate;
+	}
+
+	public void setModifiedDate(Timestamp modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
 }
