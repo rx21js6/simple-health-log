@@ -1,9 +1,14 @@
 package jp.nauplius.app.shl.page.record.service;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -12,97 +17,63 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import jp.nauplius.app.shl.common.model.DailyHealthDetail;
-import jp.nauplius.app.shl.common.model.DailyHealthDetailTemplate;
-import jp.nauplius.app.shl.common.model.DailyHealthRecord;
-import jp.nauplius.app.shl.common.model.DailyHealthRecordPK;
-import jp.nauplius.app.shl.common.model.LoginUser;
-import jp.nauplius.app.shl.common.model.converters.LocalDateAttributeConverter;
-import jp.nauplius.app.shl.page.record.bean.DailyRecord;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
+
+import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.model.PhysicalCondition;
+import jp.nauplius.app.shl.common.model.PhysicalConditionPK;
+import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.record.bean.RecordHolder;
 
 @Named
 @SessionScoped
 public class DailyRecordService implements Serializable {
+    private static final DateTimeFormatter RECORDING_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
+
     @Inject
     private transient EntityManager em;
 
     @Inject
-    private LocalDateAttributeConverter converter;
+    private LoginInfo loginInfo;
 
     @PostConstruct
     public void init() {
         System.out.println("DailyRecordService#init() em: " + this.em);
     }
 
-    public DailyHealthRecord getRecord(LoginUser loginUser, LocalDate postedDate) {
+    /**
+     * レコード取得
+     * @param recordingDate
+     * @return
+     */
+    public PhysicalCondition getRecord(LocalDate recordingDate) {
+        String dateText = recordingDate.format(RECORDING_DATE_FORMATTER);
 
-        String sql = "SELECT dhr FROM DailyHealthRecord dhr WHERE dhr.loginUser.id = :loginUserId AND dhr.id.postedDate = :postedDate";
+        PhysicalConditionPK pk = new PhysicalConditionPK();
+        pk.setId(this.loginInfo.getUserInfo().getId());
+        pk.setRecordingDate(dateText);
+        PhysicalCondition record = this.em.find(PhysicalCondition.class, pk);
 
-        TypedQuery<DailyHealthRecord> query = this.em.createQuery(sql, DailyHealthRecord.class);
-        query.setParameter("loginUserId", loginUser.getId());
-        query.setParameter("postedDate", postedDate);
-        try {
-            query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        List<DailyHealthRecord> records = query.getResultList();
-
-        DailyHealthRecord record = null;
-        if (records.size() == 0) {
-            record = new DailyHealthRecord();
-            DailyHealthRecordPK pk = new DailyHealthRecordPK();
-            pk.setLoginUserId(loginUser.getId());
-            pk.setPostedDate(postedDate);
+        if (Objects.isNull(record)) {
+            record = new PhysicalCondition();
             record.setId(pk);
-            record.setLoginUser(loginUser);
-            record.setDailyHealthDetails(createDetails());
-        } else {
-            record = records.get(0);
         }
 
         return record;
     }
 
-    /**
-     * テンプレートから詳細を作成。
-     *
-     * @return
-     */
-    private List<DailyHealthDetail> createDetails() {
-        List<DailyHealthDetail> details = new ArrayList<>();
-        String sql = "SELECT t FROM DailyHealthDetailTemplate t WHERE t.deleted = FALSE ORDER BY t.id";
-
-        TypedQuery<DailyHealthDetailTemplate> query = this.em.createQuery(sql, DailyHealthDetailTemplate.class);
-        try {
-            query.getResultList();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        List<DailyHealthDetailTemplate> templates = query.getResultList();
-
-        for (DailyHealthDetailTemplate template : templates) {
-            DailyHealthDetail detail = new DailyHealthDetail();
-            detail.setDailyHealthDetailTemplate(template);
-            detail.setHealthDetailId(template.getId());
-            detail.setValue(1);
-            details.add(detail);
-        }
-
-        return details;
-    }
-
-    public List<RecordHolder> getMontylyRecords(int loginUserId, int year, int month) {
+    public List<RecordHolder> getMontylyRecords(LocalDate localDate) {
 
         // 当月の1日～月末までのリストを作成
         List<RecordHolder> monthlyRecordHolders = new ArrayList<>();
 
-        LocalDate date = LocalDate.of(year, month, 1);
+        LocalDate date = LocalDate.of(localDate.getYear(), localDate.getMonth(), 1);
         LocalDate firstDate = date;
-        while (month == date.getMonthValue()) {
+
+        while (localDate.getMonth().equals(date.getMonth())) {
             RecordHolder tmpRec = new RecordHolder();
-            tmpRec.setDateText(date.toString());
+            tmpRec.setDateText(date.format(RECORDING_DATE_FORMATTER));
             monthlyRecordHolders.add(tmpRec);
             System.out.println(tmpRec);
             date = date.plusDays(1);
@@ -110,28 +81,55 @@ public class DailyRecordService implements Serializable {
         LocalDate lastDate = date.plusDays(-1);
 
         // レコード取得
-        // String sql = "SELECT dhr FROM DailyHealthRecord dhr WHERE dhr.id.loginUser.id
-        // = :loginUserId AND dhr.id.postedDate BETWEEN :firstDate AND :lastDate ORDER
-        // BY dhr.id.postedDate";
-        String sql = "SELECT dhr FROM DailyHealthRecord dhr WHERE dhr.loginUser.id = :loginUserId AND dhr.id.postedDate BETWEEN :firstDate AND :lastDate ORDER BY dhr.id.postedDate";
+        String sql = "SELECT pc FROM PhysicalCondition pc WHERE pc.id.id = :loginUserId AND pc.id.recordingDate BETWEEN :firstDate AND :lastDate ORDER BY pc.id.recordingDate";
 
-        TypedQuery<DailyHealthRecord> query = this.em.createQuery(sql, DailyHealthRecord.class);
-        query.setParameter("loginUserId", loginUserId);
-        query.setParameter("firstDate", firstDate);
-        query.setParameter("lastDate", lastDate);
-        List<DailyHealthRecord> results = query.getResultList();
+        TypedQuery<PhysicalCondition> query = this.em.createQuery(sql, PhysicalCondition.class);
+        query.setParameter("loginUserId", this.loginInfo.getUserInfo().getId());
+        query.setParameter("firstDate", firstDate.format(RECORDING_DATE_FORMATTER));
+        query.setParameter("lastDate", lastDate.format(RECORDING_DATE_FORMATTER));
+        List<PhysicalCondition> results = query.getResultList();
 
         // マッチしたら設定
-        results.forEach(d -> {
-            LocalDate postedDate = d.getId().getPostedDate();
-            int dom = postedDate.getDayOfMonth();
-            monthlyRecordHolders.get(dom - 1).setDailyHealthRecord(d);
-        });
+        for (RecordHolder holder : monthlyRecordHolders) {
+            for (PhysicalCondition tmpCondition : results) {
+                if (tmpCondition.getId().getRecordingDate().equals(holder.getDateText())) {
+                    holder.setPhysicalCondition(tmpCondition);
+                    break;
+                }
+            }
+        }
 
         return monthlyRecordHolders;
     }
 
-    public void register(DailyRecord dailyRecord) {
-        // TODO: 処理をかく。
+    /**
+     * 登録
+     *
+     * @param physicalCondition
+     */
+    @Transactional
+    public void register(PhysicalCondition physicalCondition) {
+        PhysicalCondition tmpCondition = this.em.find(PhysicalCondition.class, physicalCondition.getId());
+        LocalDateTime now = LocalDateTime.now();
+        if (Objects.isNull(tmpCondition)) {
+            // 新規
+            this.em.persist(physicalCondition);
+            physicalCondition.setModifiedBy(physicalCondition.getId().getId());
+            physicalCondition.setModifiedDate(Timestamp.valueOf(now));
+            physicalCondition.setModifiedBy(physicalCondition.getId().getId());
+            physicalCondition.setModifiedDate(Timestamp.valueOf(now));
+            this.em.merge(physicalCondition);
+        } else {
+            // 更新
+            try {
+                BeanUtils.copyProperties(tmpCondition, physicalCondition);
+                tmpCondition.setModifiedBy(physicalCondition.getId().getId());
+                tmpCondition.setModifiedDate(Timestamp.valueOf(now));
+                this.em.merge(tmpCondition);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new SimpleHealthLogException(e);
+            }
+        }
+        this.em.flush();
     }
 }

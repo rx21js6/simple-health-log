@@ -1,0 +1,190 @@
+package jp.nauplius.app.shl.common.model;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
+
+
+/**
+ * The persistent class for the user_info database table.
+ *
+ */
+@Entity
+@Table(name="user_info")
+@NamedQuery(name="UserInfo.findAll", query="SELECT u FROM UserInfo u")
+public class UserInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @SequenceGenerator(name="USER_INFO_ID_GENERATOR", sequenceName="USER_INFO_ID_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USER_INFO_ID_GENERATOR")
+    private Integer id;
+
+    @Column(name="created_by")
+    private Integer createdBy;
+
+    @Column(name="created_date")
+    private Timestamp createdDate;
+
+    private Boolean deleted;
+
+    @Column(name="deleted_date")
+    private Timestamp deletedDate;
+
+    @Column(name="encrypted_password")
+    private String encryptedPassword;
+
+    @Column(name="login_id")
+    private String loginId;
+
+    @Column(name="mail_address")
+    private String mailAddress;
+
+    @Column(name="modified_by")
+    private Integer modifiedBy;
+
+    @Column(name="modified_date")
+    private Timestamp modifiedDate;
+
+    private String name;
+
+    @Column(name="role_id")
+    private Integer roleId;
+
+    private Integer status;
+
+    //bi-directional many-to-one association to PhysicalCondition
+    @OneToMany(mappedBy="userInfo")
+    private List<PhysicalCondition> physicalConditions;
+
+    public UserInfo() {
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(Integer createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Timestamp getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Boolean getDeleted() {
+        return this.deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Timestamp getDeletedDate() {
+        return this.deletedDate;
+    }
+
+    public void setDeletedDate(Timestamp deletedDate) {
+        this.deletedDate = deletedDate;
+    }
+
+    public String getEncryptedPassword() {
+        return this.encryptedPassword;
+    }
+
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
+    }
+
+    public String getLoginId() {
+        return this.loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
+    public String getMailAddress() {
+        return this.mailAddress;
+    }
+
+    public void setMailAddress(String mailAddress) {
+        this.mailAddress = mailAddress;
+    }
+
+    public Integer getModifiedBy() {
+        return this.modifiedBy;
+    }
+
+    public void setModifiedBy(Integer modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public Timestamp getModifiedDate() {
+        return this.modifiedDate;
+    }
+
+    public void setModifiedDate(Timestamp modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getRoleId() {
+        return this.roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public Integer getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public List<PhysicalCondition> getPhysicalConditions() {
+        return this.physicalConditions;
+    }
+
+    public void setPhysicalConditions(List<PhysicalCondition> physicalConditions) {
+        this.physicalConditions = physicalConditions;
+    }
+
+    public PhysicalCondition addPhysicalCondition(PhysicalCondition physicalCondition) {
+        getPhysicalConditions().add(physicalCondition);
+        physicalCondition.setUserInfo(this);
+
+        return physicalCondition;
+    }
+
+    public PhysicalCondition removePhysicalCondition(PhysicalCondition physicalCondition) {
+        getPhysicalConditions().remove(physicalCondition);
+        physicalCondition.setUserInfo(null);
+
+        return physicalCondition;
+    }
+
+}

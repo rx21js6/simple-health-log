@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.faces.application.ResourceHandler;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -16,20 +18,27 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
+import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.login.service.LoginService;
 
+@Named
 @WebFilter(urlPatterns = { "/*" })
 public class LoginFilter implements Filter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginFilter.class);
+    @Inject
+    private Logger logger;
 
     @Inject
     private KeyIvHolderService keyIvHolderService;
+
+    @Inject
+    private LoginService loginService;
+
+    @Inject
+    private LoginInfo loginInfo;
 
     private static final List<String> ALLOWED_PATHS_INITIAL = Collections
             .unmodifiableList(Arrays.asList("/javax.faces.resource", "/rest", "/contents/initial"));
@@ -40,14 +49,13 @@ public class LoginFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        System.out.println("LoginFilter#init");
-        LOGGER.info("init");
+        this.logger.info("LoginFilter#init");
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        LOGGER.info("doFilter");
+        this.logger.info("doFilter");
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
@@ -66,10 +74,10 @@ public class LoginFilter implements Filter {
         }
 
         // セッション確認
-        HttpSession httpSession = httpServletRequest.getSession(false);
         String path = requestUri.substring(httpServletRequest.getContextPath().length()).replaceAll("[/]+$", "");
 
         if (!this.keyIvHolderService.isRegistered()) {
+            this.logger.info("Not registered.");
             // 初期設定
             boolean pathAllowed = ALLOWED_PATHS_INITIAL.stream().anyMatch(allowedPath -> path.startsWith(allowedPath));
             if (pathAllowed) {
@@ -78,18 +86,19 @@ public class LoginFilter implements Filter {
                 httpServletResponse
                         .sendRedirect(httpServletRequest.getContextPath() + "/contents/initial/initialSetting.xhtml");
             }
-        } else { // ログイン済み確認（restは許可）
-
-            boolean loggedIn = (httpSession != null
-                    && httpSession.getAttribute(ShlConstants.LOGIN_SESSION_KEY) != null);
+        } else {
+            // ログイン済み確認（restは許可）
+            boolean loggedIn = !Objects.isNull(this.loginInfo.getUserInfo());
             boolean pathAllowed = ALLOWED_PATHS.stream().anyMatch(allowedPath -> path.startsWith(allowedPath));
+            this.logger.debug(String.format("loggedIn: %s, pathAllowed: %s", loggedIn, pathAllowed));
 
             if (loggedIn || pathAllowed) {
                 chain.doFilter(request, response);
             } else {
+                this.logger.debug("redirect to recordInput.xhtml");
                 // httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/contents/login/login.xhtml");
                 httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/contents/record/recordInput.xhtml");
-
+                // chain.doFilter(request, response);
             }
         }
 

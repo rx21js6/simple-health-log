@@ -76,8 +76,8 @@ dependencies {
     compile group: 'org.apache.deltaspike', name: 'deltaspike', version: '1.8.2', ext: 'pom'
 
     // DB + JPA
-    // https://mvnrepository.com/artifact/org.apache.derby/derby
-    compile group: 'org.apache.derby', name: 'derby', version: '10.14.2.0'
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.20'
 
     // https://mvnrepository.com/artifact/org.eclipse.persistence/eclipselink
     compile group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.7.7'
@@ -105,6 +105,13 @@ dependencies {
 
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+
+    // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
+    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
 }
 
 application {

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.nauplius.app.shl.page.initial.service.InitialsettingService;
+import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +28,9 @@ public class InitialSettingController implements Serializable {
 
     @Inject
     private InitialsettingService initialsettingService;
+
+    @Inject
+    private LoginInfo loginInfo;
 
     public void init() {
         LOGGER.info("init()");
@@ -60,5 +64,9 @@ public class InitialSettingController implements Serializable {
 
     public String toLogin() {
         return "/contents/login/login.xhtml?faces-redirect=true";
+    }
+
+    public String toInput() {
+        return "/contents/record/recordInput.xhtml?faces-redirect=true";
     }
 }

@@ -1,30 +1,42 @@
 package jp.nauplius.app.shl.page.login.service;
 
 import java.io.Serializable;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
-import jp.nauplius.app.shl.common.model.LoginUser;
+import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.model.UserInfo;
+import jp.nauplius.app.shl.common.model.UserToken;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
-import jp.nauplius.app.shl.page.login.backing.LoginForm;
+import jp.nauplius.app.shl.page.login.bean.LoginForm;
+import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.login.bean.LoginResponse;
 import jp.nauplius.app.shl.ws.bean.GetUsersResponse;
 
 @Named
-@ViewScoped
+@SessionScoped
 public class LoginService implements Serializable {
     @Inject
-    private EntityManager em;
+    private Logger logger;
+
+    @Inject
+    private transient EntityManager em;
 
     @Inject
     private CipherUtil cipherUtil;
@@ -32,40 +44,50 @@ public class LoginService implements Serializable {
     @Inject
     private KeyIvHolderService keyIvHolderService;
 
-    public boolean login(LoginForm loginForm) {
+    @Inject
+    private LoginInfo loginInfo;
+
+    /**
+     * ログイン
+     */
+    @Transactional
+    public LoginResponse login(LoginForm loginForm) {
+        LoginResponse loginResponse = new LoginResponse();
 
         byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
         byte[] ivBytes = this.keyIvHolderService.getIvBytes();
 
-        TypedQuery<LoginUser> query = this.em.createQuery("SELECT lu FROM LoginUser lu WHERE lu.loginId = :loginId AND lu.disabled = cast('false' as boolean)", LoginUser.class);
+        TypedQuery<UserInfo> query = this.em.createQuery(
+                "SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId AND ui.deleted = cast('false' as boolean)",
+                UserInfo.class);
         query.setParameter("loginId", loginForm.getLoginId());
-        List<LoginUser> results = query.getResultList();
+        List<UserInfo> results = query.getResultList();
         if (results.size() == 0) {
-            // TODO: 例外
-            return false;
+            throw new SimpleHealthLogException("ログインIDかパスワードが不正です。");
         }
 
-        LoginUser loginUser = results.get(0);
-        String encryptedPassword = loginUser.getEncryptedPassword();
+        UserInfo userInfo = results.get(0);
+        String encryptedPassword = userInfo.getEncryptedPassword();
         String password = this.cipherUtil.decrypt(encryptedPassword, keyBytes, ivBytes);
         if (!password.equals(loginForm.getPassword())) {
-            return false;
-            // TODO: 例外
+            throw new SimpleHealthLogException("ログインIDかパスワードが不正です。");
         }
 
-        // セッション登録
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpSession httpSession = (HttpSession) context.getExternalContext().getSession(true);
-        httpSession.setAttribute(ShlConstants.LOGIN_SESSION_KEY, loginUser);
+        // トークン登録
+        UserToken userToken = this.createToken(userInfo);
 
-        return true;
+        this.loginInfo.setUserInfo(userInfo);
+
+        loginResponse.setUserInfo(userInfo);
+        loginResponse.setUserToken(userToken);
+
+        return loginResponse;
     }
 
     public void logout() {
+        this.logger.info("LoginService#logout");
         // セッション削除
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpSession httpSession = (HttpSession) context.getExternalContext().getSession(true);
-        httpSession.removeAttribute(ShlConstants.LOGIN_SESSION_KEY);
+        this.loginInfo.setUserInfo(null);
     }
 
     @Transactional
@@ -73,11 +95,68 @@ public class LoginService implements Serializable {
         GetUsersResponse response = new GetUsersResponse();
 
         // クエリの生成
-        TypedQuery<LoginUser> q = em.createQuery("SELECT lu FROM LoginUser lu", LoginUser.class);
+        TypedQuery<UserInfo> q = em.createQuery("SELECT ui FROM UserInfo ui", UserInfo.class);
 
         // 抽出
-        response.setLoginUsers(q.getResultList());
-        response.setCount(response.getLoginUsers().size());
+        response.setUserInfos(q.getResultList());
+        response.setCount(response.getUserInfos().size());
         return response;
+    }
+
+    public UserInfo loginFromToken(String token) {
+        this.logger.info("loginFromToken");
+
+        this.logger.debug(String.format("token: %s", token));
+
+        TypedQuery<UserInfo> query = this.em.createQuery(
+                "SELECT ui FROM UserInfo ui INNER JOIN UserToken ut ON ui.id = ut.id WHERE ut.token = :token AND ui.deleted = cast('false' as boolean)",
+                UserInfo.class);
+        query.setParameter("token", token);
+        List<UserInfo> results = query.getResultList();
+        if (results.size() == 0) {
+            this.loginInfo.setUserInfo(null);
+            return null;
+        }
+
+        UserInfo userInfo = results.get(0);
+        this.logger.debug(String.format("userInfo: %s", userInfo));
+        this.loginInfo.setUserInfo(userInfo);
+        return userInfo;
+    }
+
+    private synchronized UserToken createToken(UserInfo userInfo) {
+        List<UserToken> results = null;
+        UserToken userToken = null;
+
+        try {
+            userToken = this.em.find(UserToken.class, userInfo.getId());
+            if (Objects.isNull(userToken)) {
+                userToken = new UserToken();
+                userToken.setId(userInfo.getId());
+                this.em.persist(userToken);
+            }
+
+            SecureRandom random = new SecureRandom();
+            TypedQuery<UserToken> query = this.em.createQuery("SELECT t FROM UserToken t WHERE t.token = :token",
+                    UserToken.class);
+
+            String token = null;
+
+            do {
+                byte[] randomBytes = random.generateSeed(64);
+                token = Base64.getEncoder().encodeToString(randomBytes);
+                query.setParameter("token", token);
+                results = query.getResultList();
+            } while (0 < results.size());
+
+
+            userToken.setToken(token);
+            this.em.merge(userToken);
+            this.em.flush();
+            return userToken;
+        } catch (Throwable e) {
+            e.printStackTrace();
+            throw new SimpleHealthLogException(e);
+        }
     }
 }

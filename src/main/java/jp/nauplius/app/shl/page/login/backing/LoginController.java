@@ -1,22 +1,32 @@
 package jp.nauplius.app.shl.page.login.backing;
 
-import javax.enterprise.context.RequestScoped;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Objects;
+
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.page.login.bean.LoginForm;
+import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.login.bean.LoginResponse;
+import jp.nauplius.app.shl.page.login.service.CookieService;
 import jp.nauplius.app.shl.page.login.service.LoginService;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named
-@RequestScoped
-public class LoginController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+@SessionScoped
+public class LoginController implements Serializable {
+    @Inject
+    private Logger logger;
 
     @Inject
     @Getter
@@ -26,12 +36,23 @@ public class LoginController {
     @Inject
     private LoginService loginService;
 
+    @Inject
+    private CookieService cookieService;
+
+    @Inject
+    private FacesContext facesContext;
+
+    @Inject
+    @Getter
+    @Setter
+    private LoginInfo loginInfo;
+
     public void init() {
-        LOGGER.info("init()");
+        this.logger.info("init()");
     }
 
     public String dummy() {
-        LOGGER.info("dummy()");
+        this.logger.info("dummy()");
         return null;
     }
 
@@ -44,19 +65,39 @@ public class LoginController {
     }
 
     public String login() {
+        if (Objects.isNull(this.loginInfo.getUserInfo())) {
+            try {
+                LoginResponse loginResponse = this.loginService.login(loginForm);
+                this.cookieService.registerToken(this.facesContext, loginResponse.getUserToken().getToken());
 
-        if (!this.loginService.login(loginForm)) {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.getExternalContext().getFlash().setKeepMessages(true);
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "ログインIDまたはパスワードが不正です。");
-            facesContext.addMessage("initialSettingValues", message);
-            return null;
+            } catch (SimpleHealthLogException e) {
+                facesContext.getExternalContext().getFlash().setKeepMessages(true);
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "認証に失敗しました。: " + e.getMessage(), null));
+            }
         }
-
-        return "/contents/main.xhtml?faces-redirect=true";
+        return null;
     }
 
     public String logout() {
-        return "/contents/login/login.xhtml?faces-redirect=true";
+        this.logger.info("DailyRecordController#logout");
+        try {
+            if (!Objects.isNull(this.loginInfo.getUserInfo())) {
+                this.loginService.logout();
+                this.cookieService.removeToken(this.facesContext);
+            }
+        } catch (SimpleHealthLogException e) {
+            facesContext.getExternalContext().getFlash().setKeepMessages(true);
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ログアウトしました。", null));
+        }
+
+        return null;
+    }
+
+    public void timeout() throws IOException {
+        ExternalContext externalContext = this.facesContext.getExternalContext();
+        this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
+        this.facesContext.addMessage(null, new FacesMessage("セッションが切れました。ログインしてください。"));
+
+        externalContext.redirect(externalContext.getRequestContextPath() + "/login.xhtml");
     }
 }

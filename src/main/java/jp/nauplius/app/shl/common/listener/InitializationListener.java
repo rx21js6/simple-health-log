@@ -7,6 +7,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
+import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.db.DbLoader;
 import jp.nauplius.app.shl.common.model.KeyIv;
@@ -14,7 +15,11 @@ import jp.nauplius.app.shl.common.model.KeyIv;
 @WebListener
 public class InitializationListener implements ServletContextListener {
     @Inject
+    private Logger logger;
+
+    @Inject
     private EntityManager em;
+
     @Inject
     private DbLoader dbLoader;
 

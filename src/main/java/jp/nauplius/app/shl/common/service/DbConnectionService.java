@@ -7,7 +7,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import jp.nauplius.app.shl.common.model.LoginUser;
+import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.ws.bean.GetUsersResponse;
 
 @Named
@@ -19,11 +19,11 @@ public class DbConnectionService implements Serializable {
         GetUsersResponse response = new GetUsersResponse();
 
         // クエリの生成
-        TypedQuery<LoginUser> q = em.createQuery("SELECT lu FROM LoginUser lu",LoginUser.class);
+        TypedQuery<UserInfo> q = em.createQuery("SELECT ui FROM UserInfo ui",UserInfo.class);
 
         // 抽出
-        response.setLoginUsers(q.getResultList());
-        response.setCount(response.getLoginUsers().size());
+        response.setUserInfos(q.getResultList());
+        response.setCount(response.getUserInfos().size());
         return response;
     }
 }

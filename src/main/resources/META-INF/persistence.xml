@@ -5,23 +5,19 @@
     <persistence-unit name="simple-health-log">
         <!-- Converters -->
         <class>jp.nauplius.app.shl.common.model.converters.LocalDateAttributeConverter</class>
+        <class>jp.nauplius.app.shl.common.model.KeyIv</class>
+        <class>jp.nauplius.app.shl.common.model.PhysicalCondition</class>
+        <class>jp.nauplius.app.shl.common.model.PhysicalConditionPK</class>
+        <class>jp.nauplius.app.shl.common.model.UserInfo</class>
+        <class>jp.nauplius.app.shl.common.model.UserToken</class>
 
         <!-- Entities / Model -->
-        <class>jp.nauplius.app.shl.common.model.DailyHealthDetail</class>
-        <class>jp.nauplius.app.shl.common.model.DailyHealthDetailPK</class>
-        <class>jp.nauplius.app.shl.common.model.DailyHealthDetailTemplate</class>
-        <class>jp.nauplius.app.shl.common.model.DailyHealthRecord</class>
-        <class>jp.nauplius.app.shl.common.model.DailyHealthRecordPK</class>
-        <class>jp.nauplius.app.shl.common.model.KeyIv</class>
-        <class>jp.nauplius.app.shl.common.model.LoginUser</class>
-        <class>jp.nauplius.app.shl.common.model.UserRole</class>
         <properties>
-            <property name="javax.persistence.jdbc.driver"
-                value="org.apache.derby.jdbc.EmbeddedDriver" />
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
             <property name="javax.persistence.jdbc.url"
-                value="jdbc:derby:/home/www/healthlog_db;create=true" />
-            <property name="javax.persistence.jdbc.user" value="" />
-            <property name="javax.persistence.jdbc.password" value="" />
+                value="jdbc:postgresql://localhost:5432/simple_health_log_development" />
+            <property name="javax.persistence.jdbc.user" value="healthlog" />
+            <property name="javax.persistence.jdbc.password" value="dummy" />
         </properties>
     </persistence-unit>
 </persistence>

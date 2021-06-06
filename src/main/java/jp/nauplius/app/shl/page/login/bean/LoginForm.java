@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.page.login.backing;
+package jp.nauplius.app.shl.page.login.bean;
 
 import java.io.Serializable;
 

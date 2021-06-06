@@ -6,40 +6,54 @@ import java.sql.Timestamp;
 
 
 /**
- * The persistent class for the KEY_IV database table.
+ * The persistent class for the key_iv database table.
  * 
  */
 @Entity
-@Table(name="KEY_IV")
+@Table(name="key_iv")
 @NamedQuery(name="KeyIv.findAll", query="SELECT k FROM KeyIv k")
 public class KeyIv implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int id;
+	private Integer id;
 
-	@Column(name="CREATED_DATE")
+	@Column(name="created_by")
+	private Integer createdBy;
+
+	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@Column(name="ENCRYPTION_IV")
+	@Column(name="encryption_iv")
 	private String encryptionIv;
 
-	@Column(name="ENCRYPTION_KEY")
+	@Column(name="encryption_key")
 	private String encryptionKey;
 
-	@Column(name="MODIFIED_DATE")
+	@Column(name="modified_by")
+	private Integer modifiedBy;
+
+	@Column(name="modified_date")
 	private Timestamp modifiedDate;
 
 	public KeyIv() {
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getCreatedBy() {
+		return this.createdBy;
+	}
+
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public Timestamp getCreatedDate() {
@@ -64,6 +78,14 @@ public class KeyIv implements Serializable {
 
 	public void setEncryptionKey(String encryptionKey) {
 		this.encryptionKey = encryptionKey;
+	}
+
+	public Integer getModifiedBy() {
+		return this.modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 	public Timestamp getModifiedDate() {

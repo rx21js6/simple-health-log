@@ -6,41 +6,187 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
-    <title>体温を登録</title>
+    <title><h:outputText value="#{msg['common.title']}" /></title>
+
+    <ui:fragment rendered="#{loginInfo.userInfo == null}">
+        <f:metadata>
+            <f:viewAction action="#{dailyRecordController.init()}" />
+        </f:metadata>
+    </ui:fragment>
+    <ui:fragment rendered="#{loginInfo.userInfo != null}">
+        <f:metadata>
+            <f:viewAction action="#{dailyRecordController.loadRecord()}" />
+        </f:metadata>
+    </ui:fragment>
 </h:head>
 <h:body>
     <b:container>
-        <ui:include src="/common/logout.xhtml" />
-        <b:row>
-            <b:column>
-                <h1>体温を登録</h1>
-            </b:column>
-            <b:column id="dailyRecordValues">
-                <b:form inline="true">
-                    <b:panelGrid columns="1" cellpadding="5">
+        <b:form inline="true">
+            <b:row>
+                <b:column>
+                    <h1>
+                        <h:outputText value="#{msg['common.title']}" />
+                    </h1>
+                </b:column>
+            </b:row>
+            <b:row>
+                <b:column>
+                    <b:messages></b:messages>
+                </b:column>
+            </b:row>
+            <b:row>
+                <b:column>
+                    <h:outputText value="ログインしていません。"
+                        rendered="#{loginInfo.userInfo == null}" />
+                    <h:outputText value="#{loginInfo.userInfo.name}さんようこそ"
+                        rendered="#{loginInfo.userInfo != null}" />
+                </b:column>
+            </b:row>
+
+            <b:row rendered="#{loginInfo.userInfo != null}">
+                <b:column>
+                    <b:commandButton action="#{loginController.logout()}">ログアウト</b:commandButton>
+                </b:column>
+            </b:row>
+
+            <!-- ログイン -->
+            <ui:fragment rendered="#{loginInfo.userInfo == null}">
+                <b:row>
+                    <b:column id="loginValues">
+                        <b:panelGrid columns="1" cellpadding="5">
+                            <b:inputText value="#{loginController.loginForm.loginId}"
+                                label="Login ID:" labelStyle="width:100px;" maxlength="10" />
+                            <b:inputSecret value="#{loginController.loginForm.password}"
+                                label="Password:" labelStyle="width:100px;" maxlength="32" />
+                        </b:panelGrid>
+                    </b:column>
+                    <b:column>
+                        <b:commandButton value="ログイン" action="#{loginController.login()}" />
+                    </b:column>
+                </b:row>
+            </ui:fragment>
+
+            <!-- 入力 -->
+            <ui:fragment rendered="#{loginInfo.userInfo != null}">
+                <b:row>
+                    <b:column>
+                        <h4>
+                            <h:outputText value="#{dailyRecordController.today}" />
+                        </h4>
+                    </b:column>
+                </b:row>
+                <b:row>
+                    <b:column>
+                        <b:panelGrid columns="12">
+                            <b:commandButton value="月次" icon="list"
+                                action="#{dailyRecordController.showMonthlyList()}" />
+                        </b:panelGrid>
+                    </b:column>
+                    <b:column>
+                        <b:panelGrid columns="12">
+                            <b:commandButton value="前日" icon="chevron-left"
+                                action="#{dailyRecordController.loadYesterday()}" />
+                            <b:commandButton value="当日" icon="chevron-up"
+                                action="#{dailyRecordController.loadToday()}" />
+                            <b:commandButton value="翌日" icon="chevron-right"
+                                action="#{dailyRecordController.loadTomorrow()}" />
+                        </b:panelGrid>
+                    </b:column>
+                </b:row>
+                <b:row>
+                    <b:column>
+                        <h3>体調</h3>
+                    </b:column>
+                </b:row>
+
+                <b:row>
+                    <b:column>
+                        <h4>朝</h4>
+                    </b:column>
+                </b:row>
+                <b:row>
+                    <b:column id="dailyRecordValuesMorning">
+                        <b:panelGrid columns="3">
+                            <b:inputText type="time"
+                                value="#{dailyRecordController.physicalCondition.awakeTime}"
+                                converter="timeConverter" label="起床時刻:"
+                                labelStyle="width:100px;">
+                            </b:inputText>
+                            <b:inputText
+                                value="#{dailyRecordController.physicalCondition.bodyTemperatureMorning}"
+                                label="体温:" labelStyle="width:100px;" mask="9{2}.9{1}"
+                                maxlength="4">
+                                <f:converter converterId="javax.faces.BigDecimal" />
+                            </b:inputText>
+                            <b:message for="@previous" />
+
+                            <b:inputText
+                                value="#{dailyRecordController.physicalCondition.oxygenSaturationMorning}"
+                                label="酸素飽和濃度:" labelStyle="width:100px;" maxlength="3">
+                                <f:converter converterId="javax.faces.Integer" />
+                            </b:inputText>
+                            <b:message for="@previous" />
+                        </b:panelGrid>
+                    </b:column>
+                </b:row>
+                <b:row>
+                    <b:column>
+                        <h4>夜</h4>
+                    </b:column>
+                </b:row>
+                <b:row>
+                    <b:column id="dailyRecordValuesEvening">
+                        <b:panelGrid columns="3">
+                            <b:inputText type="time"
+                                value="#{dailyRecordController.physicalCondition.bedTime}"
+                                converter="timeConverter" label="就寝時刻:"
+                                labelStyle="width:100px;">
+                            </b:inputText>
+                            <b:inputText
+                                value="#{dailyRecordController.physicalCondition.bodyTemperatureEvening}"
+                                label="体温:" labelStyle="width:100px;" mask="9{2}.9{1}"
+                                maxlength="4">
+                                <f:converter converterId="javax.faces.BigDecimal" />
+                            </b:inputText>
+                            <b:message for="@previous" />
+
+                            <b:inputText
+                                value="#{dailyRecordController.physicalCondition.oxygenSaturationEvening}"
+                                label="酸素飽和濃度:" labelStyle="width:100px;" maxlength="3">
+                                <f:converter converterId="javax.faces.Integer" />
+                                <b:message for="@previous" />
+
+                            </b:inputText>
+                        </b:panelGrid>
+                    </b:column>
+                </b:row>
+                <b:row>
+                    <b:column>
+                        <h4>メモ</h4>
+                    </b:column>
+                </b:row>
+                <b:row>
+                    <b:column>
                         <b:inputText
-                            value="#{dailyRecordController.dailyRecordForm.tempMorning}"
-                            label="体温（朝）:" labelStyle="width:100px;" mask="9{2}.9{1}"
-                            maxlength="4">
-                            <f:converter converterId="javax.faces.BigDecimal" />
+                            value="#{dailyRecordController.physicalCondition.conditionNote}"
+                            label="特記事項等" labelStyle="width:100px;" maxlength="100">
+                            <b:message for="@previous" />
                         </b:inputText>
+                    </b:column>
+                </b:row>
+                <b:row>
+                    <b:column>
+                        <b:panelGrid columns="6">
+                            <b:commandButton value="#{msg['common.button.register']}"
+                                look="primary" size="lg"
+                                action="#{dailyRecordController.register()}" />
+                        </b:panelGrid>
 
-                        <b:message for="@previous" />
+                    </b:column>
+                </b:row>
+            </ui:fragment>
 
-                        <b:inputText
-                            value="#{dailyRecordController.dailyRecordForm.tempEvening}"
-                            label="体温（夜）:" labelStyle="width:100px;" mask="9{2}.9{1}"
-                            maxlength="4">
-                            <f:converter converterId="javax.faces.BigDecimal" />
-                        </b:inputText>
-                        <b:message for="@previous" />
-
-                        <b:commandButton value="#{msg['common.button.register']}"
-                            action="#{dailyRecordController.register()}" />
-                    </b:panelGrid>
-                </b:form>
-            </b:column>
-        </b:row>
+        </b:form>
     </b:container>
 </h:body>
 </html>

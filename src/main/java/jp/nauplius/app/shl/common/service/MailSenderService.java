@@ -3,9 +3,11 @@ package jp.nauplius.app.shl.common.service;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import javax.faces.context.ExternalContext;
@@ -25,7 +27,7 @@ import jp.nauplius.app.shl.page.initial.backing.InitialSettingForm;
 
 @Named
 public class MailSenderService implements Serializable {
-    private static final String CHARSET = "UTF-8";
+    private static final String CHARSET = StandardCharsets.UTF_8.toString();
 
     @Inject
     private FacesContext facesContext;
@@ -52,7 +54,7 @@ public class MailSenderService implements Serializable {
 
     public void sendInitialSettingMail(InitialSettingForm initialSettingForm) {
         String varName = "msg";
-        ResourceBundle bundle = this.facesContext.getApplication().getResourceBundle(this.facesContext, varName);
+        ResourceBundle bundle = PropertyResourceBundle.getBundle(varName);
 
         String mailMessage = this.buildInitialMailMessageText(initialSettingForm, bundle);
         Properties props = new Properties();
