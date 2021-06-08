@@ -15,9 +15,11 @@
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
             <property name="javax.persistence.jdbc.url"
-                value="jdbc:postgresql://localhost:5432/simple_health_log_development" />
-            <property name="javax.persistence.jdbc.user" value="healthlog" />
-            <property name="javax.persistence.jdbc.password" value="dummy" />
+                value="@jp.nauplius.app.shl.setting.development.dbUrl@" />
+            <property name="javax.persistence.jdbc.user"
+                value="@jp.nauplius.app.shl.setting.development.dbUser@" />
+            <property name="javax.persistence.jdbc.password"
+                value="@jp.nauplius.app.shl.setting.development.dbPassword@" />
         </properties>
     </persistence-unit>
 </persistence>

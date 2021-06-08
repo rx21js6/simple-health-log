@@ -79,7 +79,11 @@
                     <b:column>
                         <b:panelGrid columns="12">
                             <b:commandButton value="月次" icon="list"
-                                action="#{dailyRecordController.showMonthlyList()}" />
+                                action="#{monthlyRecordController.loadCurrentMonth()}">
+                                <f:setPropertyActionListener
+                                    value="#{dailyRecordController.today}"
+                                    target="#{monthlyRecordController.today}" />
+                            </b:commandButton>
                         </b:panelGrid>
                     </b:column>
                     <b:column>
