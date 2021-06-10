@@ -7,17 +7,6 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <title><h:outputText value="#{msg['common.title']}" /></title>
-
-    <ui:fragment rendered="#{loginInfo.userInfo == null}">
-        <f:metadata>
-            <f:viewAction action="#{dailyRecordController.init()}" />
-        </f:metadata>
-    </ui:fragment>
-    <ui:fragment rendered="#{loginInfo.userInfo != null}">
-        <f:metadata>
-            <f:viewAction action="#{dailyRecordController.loadRecord()}" />
-        </f:metadata>
-    </ui:fragment>
 </h:head>
 <h:body>
     <b:container>
@@ -35,20 +24,29 @@
                 <h2>月次リスト</h2>
             </b:column>
             <b:row>
+
+                <b:column>
+                    <h3>
+                        <h:outputText
+                            value="#{monthlyRecordController.monthlyRecords.get(0).dateText}"
+                            converter="stringDateConverter" />
+                        <h:outputText value="～" />
+                    </h3>
+                </b:column>
+            </b:row>
+            <b:row>
                 <b:column>
                     <b:messages></b:messages>
                 </b:column>
             </b:row>
             <b:row>
                 <b:column>
-                    <b:panelGrid columns="12">
-                        <b:commandButton value="前月" icon="chevron-left"
-                            action="#{monthlyRecordController.loadPreviousMonth()}" />
-                        <b:commandButton value="当月" icon="chevron-up"
-                            action="#{monthlyRecordController.loadCurrentMonth()}" />
-                        <b:commandButton value="翌月" icon="chevron-right"
-                            action="#{monthlyRecordController.loadNextMonth()}" />
-                    </b:panelGrid>
+                    <b:commandButton value="前月" icon="chevron-left"
+                        action="#{monthlyRecordController.loadPreviousMonth()}" />
+                    <b:commandButton value="当月" icon="chevron-up"
+                        action="#{monthlyRecordController.loadCurrentMonth()}" />
+                    <b:commandButton value="翌月" icon="chevron-right"
+                        action="#{monthlyRecordController.loadNextMonth()}" />
                 </b:column>
             </b:row>
             <b:row>
@@ -63,26 +61,41 @@
                             <th>酸素飽和度（朝）</th>
                             <th>酸素飽和度（夜）</th>
                             <th>記事</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                        </tr>
+                        <ui:repeat var="record"
+                            value="#{monthlyRecordController.monthlyRecords}">
+                            <tr>
+                                <td><h:outputText value="#{record.dateText}"
+                                        converter="stringDateConverter" /></td>
+                                <td><h:outputText
+                                        value="#{record.physicalCondition.awakeTime}"
+                                        converter="timeConverter" /></td>
+                                <td><h:outputText
+                                        value="#{record.physicalCondition.bedTime}"
+                                        converter="timeConverter" /></td>
+                                <td><h:outputText
+                                        value="#{record.physicalCondition.bodyTemperatureMorning}" /></td>
+                                <td><h:outputText
+                                        value="#{record.physicalCondition.bodyTemperatureEvening}" /></td>
+                                <td><h:outputText
+                                        value="#{record.physicalCondition.oxygenSaturationMorning}" /></td>
+                                <td><h:outputText
+                                        value="#{record.physicalCondition.oxygenSaturationEvening}" /></td>
+                                <td><h:outputText
+                                        value="#{record.physicalCondition.conditionNote}" /></td>
+                                <td><b:commandButton value="入力" icon="pencil"
+                                        action="#{dailyRecordController.showInput()}">
+                                        <f:setPropertyActionListener
+                                            value="#{record.physicalCondition.id.recordingDate}"
+                                            target="#{dailyRecordController.selectedDate}" />
+                                    </b:commandButton></td>
+                            </tr>
+                        </ui:repeat>
                     </tbody>
                 </table>
-            </b:row>
-            <b:row>
-                <b:column>
-                    <b:panelGrid columns="12">
-                        <b:commandButton value="前月" icon="chevron-left"
-                            action="#{monthlyRecordController.loadPreviousMonth()}" />
-                        <b:commandButton value="当月" icon="chevron-up"
-                            action="#{monthlyRecordController.loadCurrentMonth()}" />
-                        <b:commandButton value="翌月" icon="chevron-right"
-                            action="#{monthlyRecordController.loadNextMonth()}" />
-                    </b:panelGrid>
-                </b:column>
             </b:row>
         </b:form>
     </b:container>

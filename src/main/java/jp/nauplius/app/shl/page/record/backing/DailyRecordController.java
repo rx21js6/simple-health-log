@@ -15,6 +15,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.model.PhysicalConditionPK;
@@ -67,6 +68,10 @@ public class DailyRecordController implements Serializable {
     @Setter
     private LocalDate today;
 
+    @Getter
+    @Setter
+    private String selectedDate;
+
     @PostConstruct
     public void postConstruct() {
         this.today = LocalDate.now();
@@ -87,7 +92,9 @@ public class DailyRecordController implements Serializable {
         if (tmpUserInfo != null) {
             // ログインできた場合は当日のレコードを取得
             this.loginInfo.setUserInfo(tmpUserInfo);
-            this.today = LocalDate.now();
+            this.today = !StringUtils.isEmpty(this.selectedDate)
+                    ? LocalDate.parse(this.selectedDate, ShlConstants.RECORDING_DATE_FORMATTER)
+                    : LocalDate.now();
             this.physicalCondition = this.dailyRecordService.getRecord(this.today);
 
             if (this.physicalCondition == null) {
@@ -116,7 +123,8 @@ public class DailyRecordController implements Serializable {
 
             } catch (SimpleHealthLogException e) {
                 facesContext.getExternalContext().getFlash().setKeepMessages(true);
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "認証に失敗しました。: " + e.getMessage(), null));
+                facesContext.addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "認証に失敗しました。: " + e.getMessage(), null));
             }
         }
         return null;
@@ -154,12 +162,12 @@ public class DailyRecordController implements Serializable {
     }
 
     /**
-     * 月次リスト表示
+     * 入力画面表示 月次リストから遷移時に実行
      *
      * @return
      */
-    public String showMonthlyList() {
-        return null;
+    public String showInput() {
+        return "/contents/record/recordInput.xhtml?faces-redirect=true";
     }
 
     /**
@@ -169,7 +177,7 @@ public class DailyRecordController implements Serializable {
      */
     public String loadYesterday() {
         this.today = this.today.minusDays(1);
-        this.physicalCondition = this.dailyRecordService.getRecord(today);
+        this.physicalCondition = this.dailyRecordService.getRecord(this.today);
         return null;
     }
 
@@ -180,7 +188,7 @@ public class DailyRecordController implements Serializable {
      */
     public String loadToday() {
         this.today = LocalDate.now();
-        this.physicalCondition = this.dailyRecordService.getRecord(today);
+        this.physicalCondition = this.dailyRecordService.getRecord(this.today);
         return null;
     }
 

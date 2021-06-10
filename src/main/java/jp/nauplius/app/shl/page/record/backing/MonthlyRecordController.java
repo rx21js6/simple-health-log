@@ -27,17 +27,32 @@ public class MonthlyRecordController implements Serializable {
     @Setter
     private List<RecordHolder> monthlyRecords;
 
-    public String loadPreviousMonth() {
-        return null;
-    }
-
-    public String loadCurrentMonth() {
+    public String showMonthlyList() {
+        this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
         this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);
 
         return "/contents/record/monthlyRecord.xhtml?faces-redirect=true";
     }
 
+    public String loadPreviousMonth() {
+        this.today = this.today.plusMonths(-1);
+        this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);
+
+        return null;
+    }
+
+    public String loadCurrentMonth() {
+        this.today = LocalDate.now();
+        this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
+        this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);
+
+        return null;
+    }
+
     public String loadNextMonth() {
+        this.today = this.today.plusMonths(1);
+        this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);
+
         return null;
     }
 }

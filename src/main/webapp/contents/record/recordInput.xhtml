@@ -77,24 +77,20 @@
                 </b:row>
                 <b:row>
                     <b:column>
-                        <b:panelGrid columns="12">
-                            <b:commandButton value="月次" icon="list"
-                                action="#{monthlyRecordController.loadCurrentMonth()}">
-                                <f:setPropertyActionListener
-                                    value="#{dailyRecordController.today}"
-                                    target="#{monthlyRecordController.today}" />
-                            </b:commandButton>
-                        </b:panelGrid>
+                        <b:commandButton value="月次" icon="list"
+                            action="#{monthlyRecordController.showMonthlyList()}">
+                            <f:setPropertyActionListener
+                                value="#{dailyRecordController.today}"
+                                target="#{monthlyRecordController.today}" />
+                        </b:commandButton>
                     </b:column>
                     <b:column>
-                        <b:panelGrid columns="12">
-                            <b:commandButton value="前日" icon="chevron-left"
-                                action="#{dailyRecordController.loadYesterday()}" />
-                            <b:commandButton value="当日" icon="chevron-up"
-                                action="#{dailyRecordController.loadToday()}" />
-                            <b:commandButton value="翌日" icon="chevron-right"
-                                action="#{dailyRecordController.loadTomorrow()}" />
-                        </b:panelGrid>
+                        <b:commandButton value="前日" icon="chevron-left"
+                            action="#{dailyRecordController.loadYesterday()}" />
+                        <b:commandButton value="当日" icon="chevron-up"
+                            action="#{dailyRecordController.loadToday()}" />
+                        <b:commandButton value="翌日" icon="chevron-right"
+                            action="#{dailyRecordController.loadTomorrow()}" />
                     </b:column>
                 </b:row>
                 <b:row>

@@ -31,22 +31,13 @@ public class DbLoader {
     @Transactional
     public void createTables() {
         try {
-            // key_iv
-            System.out.println("create table key_iv.");
-            String createKeyIvSql = this.loadSqlString("key_iv");
-            this.em.createNativeQuery(createKeyIvSql).executeUpdate();
+            String sqlString = this.loadSqlString();
+            String[] sqlLines = sqlString.split(";");
+            for (String sqlLine : sqlLines) {
+                // System.out.println(line);
+                this.em.createNativeQuery(sqlLine).executeUpdate();
+            }
 
-            // login_user
-            System.out.println("create table login_user.");
-            String createLoginUserSql = this.loadSqlString("login_user");
-            this.em.createNativeQuery(createLoginUserSql).executeUpdate();
-
-            // user_role
-            System.out.println("create table user_role.");
-            String createUserRoleSql = this.loadSqlString("user_role");
-            this.em.createNativeQuery(createUserRoleSql).executeUpdate();
-
-            System.out.println("Table created.");
         } catch (Throwable e) {
             e.printStackTrace();
             System.err.println("craete table failed.");
@@ -82,9 +73,9 @@ public class DbLoader {
         }
     }
 
-    private String loadSqlString(String tableName) {
+    public String loadSqlString() {
         StringBuilder sqlBuilder = new StringBuilder();
-        String sqlPath = String.format("/sql/derby_create_%s.sql", tableName);
+        String sqlPath = "/sql/create_tables.sql";
 
         try {
             InputStream in = getClass().getResourceAsStream(sqlPath);
@@ -93,12 +84,15 @@ public class DbLoader {
             String line = null;
 
             while ((line = reader.readLine()) != null) {
-                // System.out.println(line);
-                sqlBuilder.append(line);
+                if (!line.startsWith("--")) {
+                    // System.out.println(line);
+                    sqlBuilder.append(line);
+                }
+
             }
 
             String sqlString = sqlBuilder.toString();
-            sqlString = sqlString.replace(" +$", "").replace(";$", "");
+            sqlString = sqlString.replace(" +$", "").replace(";$", ";");
             return sqlString;
         } catch (IOException e) {
             e.printStackTrace();

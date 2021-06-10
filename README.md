@@ -35,7 +35,7 @@ jp.nauplius.app.shl.setting.development.dbPassword=**********
 create user "healthlog". And set "CREATEDB".
 
 ```sql
-CREATE USER healthlog PASSWORDD '**********' CREATEDB;
+CREATE USER healthlog PASSWORD '**********' CREATEDB;
 ```
 
 ### Build and Deploy war.
