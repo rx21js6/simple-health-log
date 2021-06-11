@@ -78,10 +78,17 @@
                 <b:row>
                     <b:column>
                         <b:commandButton value="月次" icon="list"
-                            action="#{monthlyRecordController.showMonthlyList()}">
+                            action="#{monthlyRecordListController.showMonthlyList()}">
                             <f:setPropertyActionListener
                                 value="#{dailyRecordController.today}"
-                                target="#{monthlyRecordController.today}" />
+                                target="#{monthlyRecordListController.today}" />
+                        </b:commandButton>
+                        <b:commandButton value="全員" icon="user"
+                            action="#{dailyRecordListController.showDailyList()}"
+                            rendered="#{loginInfo.userInfo.roleId == 0}">
+                            <f:setPropertyActionListener
+                                value="#{dailyRecordController.today}"
+                                target="#{dailyRecordListController.today}" />
                         </b:commandButton>
                     </b:column>
                     <b:column>

@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Named
 @SessionScoped
-public class MonthlyRecordController implements Serializable {
+public class MonthlyRecordListController implements Serializable {
     @Inject
     private MonthlyRecordService monthlyRecordService;;
 
@@ -34,6 +34,10 @@ public class MonthlyRecordController implements Serializable {
         return "/contents/record/monthlyRecord.xhtml?faces-redirect=true";
     }
 
+    /**
+     * 前月表示
+     * @return null
+     */
     public String loadPreviousMonth() {
         this.today = this.today.plusMonths(-1);
         this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);
@@ -41,6 +45,10 @@ public class MonthlyRecordController implements Serializable {
         return null;
     }
 
+    /**
+     * 当月表示
+     * @return null
+     */
     public String loadCurrentMonth() {
         this.today = LocalDate.now();
         this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
@@ -49,6 +57,10 @@ public class MonthlyRecordController implements Serializable {
         return null;
     }
 
+    /**
+     * 翌月表示
+     * @return null
+     */
     public String loadNextMonth() {
         this.today = this.today.plusMonths(1);
         this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);

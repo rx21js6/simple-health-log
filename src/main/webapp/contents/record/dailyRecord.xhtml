@@ -21,16 +21,13 @@
             <b:row>
             </b:row>
             <b:column>
-                <h2>月次リスト</h2>
+                <h2>全利用者体調リスト</h2>
             </b:column>
             <b:row>
 
                 <b:column>
                     <h3>
-                        <h:outputText
-                            value="#{monthlyRecordListController.monthlyRecords.get(0).dateText}"
-                            converter="stringDateConverter" />
-                        <h:outputText value="～" />
+                        <h:outputText value="#{dailyRecordListController.today}" />
                     </h3>
                 </b:column>
             </b:row>
@@ -41,19 +38,27 @@
             </b:row>
             <b:row>
                 <b:column>
-                    <b:commandButton value="前月" icon="chevron-left"
-                        action="#{monthlyRecordListController.loadPreviousMonth()}" />
-                    <b:commandButton value="当月" icon="chevron-up"
-                        action="#{monthlyRecordListController.loadCurrentMonth()}" />
-                    <b:commandButton value="翌月" icon="chevron-right"
-                        action="#{monthlyRecordListController.loadNextMonth()}" />
+                    <b:commandButton value="入力" icon="list"
+                        action="#{dailyRecordController.showInput()}">
+                        <f:setPropertyActionListener
+                            value="#{dailyRecordListController.getTodayText()}"
+                            target="#{dailyRecordController.selectedDate}" />
+                    </b:commandButton>
+                </b:column>
+                <b:column>
+                    <b:commandButton value="前日" icon="chevron-left"
+                        action="#{dailyRecordListController.loadYesterday()}" />
+                    <b:commandButton value="当日" icon="chevron-up"
+                        action="#{dailyRecordListController.loadToday()}" />
+                    <b:commandButton value="翌日" icon="chevron-right"
+                        action="#{dailyRecordListController.loadTomorrow()}" />
                 </b:column>
             </b:row>
             <b:row>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>日付</th>
+                            <th>氏名</th>
                             <th>起床</th>
                             <th>就寝</th>
                             <th>体温（朝）</th>
@@ -61,15 +66,13 @@
                             <th>酸素飽和度（朝）</th>
                             <th>酸素飽和度（夜）</th>
                             <th>記事</th>
-                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
                         <ui:repeat var="record"
-                            value="#{monthlyRecordListController.monthlyRecords}">
+                            value="#{dailyRecordListController.dailyRecords}">
                             <tr>
-                                <td><h:outputText value="#{record.dateText}"
-                                        converter="stringDateConverter" /></td>
+                                <td><h:outputText value="#{record.userInfo.name}" /></td>
                                 <td><h:outputText
                                         value="#{record.physicalCondition.awakeTime}"
                                         converter="timeConverter" /></td>
@@ -86,12 +89,6 @@
                                         value="#{record.physicalCondition.oxygenSaturationEvening}" /></td>
                                 <td><h:outputText
                                         value="#{record.physicalCondition.conditionNote}" /></td>
-                                <td><b:commandButton value="入力" icon="pencil"
-                                        action="#{dailyRecordController.showInput()}">
-                                        <f:setPropertyActionListener
-                                            value="#{record.physicalCondition.id.recordingDate}"
-                                            target="#{dailyRecordController.selectedDate}" />
-                                    </b:commandButton></td>
                             </tr>
                         </ui:repeat>
                     </tbody>

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
@@ -21,6 +23,7 @@ import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.model.PhysicalConditionPK;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.record.bean.DailyRecord;
 
 @Named
 @SessionScoped
@@ -86,5 +89,19 @@ public class DailyRecordService implements Serializable {
             }
         }
         this.em.flush();
+    }
+
+    public List<DailyRecord> getDailyRecords(LocalDate date) {
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT NEW jp.nauplius.app.shl.page.record.bean.DailyRecord(u, p) ");
+        queryBuilder.append("FROM UserInfo u ");
+        queryBuilder.append("LEFT JOIN PhysicalCondition p ON ");
+        queryBuilder.append("u.id = p.id.id ");
+        queryBuilder.append("AND p.id.recordingDate = :date ");
+        queryBuilder.append("ORDER BY u.id");
+        TypedQuery<DailyRecord> query = this.em.createQuery(queryBuilder.toString(), DailyRecord.class);
+        query.setParameter("date", date.format(ShlConstants.RECORDING_DATE_FORMATTER));
+        List<DailyRecord> results = query.getResultList();
+        return results;
     }
 }

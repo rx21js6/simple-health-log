@@ -1,40 +1,17 @@
 package jp.nauplius.app.shl.page.record.bean;
 
-import java.util.List;
+import java.io.Serializable;
 
-import lombok.Getter;
+import jp.nauplius.app.shl.common.model.PhysicalCondition;
+import jp.nauplius.app.shl.common.model.UserInfo;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@Data
 @NoArgsConstructor
-@Deprecated
-public class DailyRecord {
-    @Getter
-    @Setter
-    private int year;
-    @Getter
-    @Setter
-    private int month;
-    @Getter
-    @Setter
-    private int day;
-    @Getter
-    @Setter
-    private String dateText;
-
-    @Getter
-    @Setter
-    private double tempMorning;
-
-    @Getter
-    @Setter
-    private double tempEvening;
-
-    @Getter
-    @Setter
-    private String conditionNote;
-
-    @Getter
-    @Setter
-    private List<HealthDetail> healthDetails;
+@AllArgsConstructor
+public class DailyRecord implements Serializable {
+    private UserInfo userInfo;
+    private PhysicalCondition physicalCondition;
 }
