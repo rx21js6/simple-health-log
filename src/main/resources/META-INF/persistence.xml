@@ -15,11 +15,11 @@
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
             <property name="javax.persistence.jdbc.url"
-                value="@jp.nauplius.app.shl.setting.development.dbUrl@" />
+                value="@jp.nauplius.app.shl.setting.dbUrl@" />
             <property name="javax.persistence.jdbc.user"
-                value="@jp.nauplius.app.shl.setting.development.dbUser@" />
+                value="@jp.nauplius.app.shl.setting.dbUser@" />
             <property name="javax.persistence.jdbc.password"
-                value="@jp.nauplius.app.shl.setting.development.dbPassword@" />
+                value="@jp.nauplius.app.shl.setting.dbPassword@" />
         </properties>
     </persistence-unit>
 </persistence>

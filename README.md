@@ -12,8 +12,8 @@
 ## 必要なもの
 
 * Gradle
-* Jetty（推奨）
-* PostgreSQL(12+)
+* Jetty9.4+（推奨）
+* PostgreSQL 12+
 
 ## 準備
 
@@ -22,6 +22,10 @@
 ~/.gradle/gralde.properties に以下を記載。必要に応じて適宜修正
 
 ```java
+# 必要に応じて変更
+# jp.nauplius.app.shl.setting.db = development
+jp.nauplius.app.shl.setting.db = production
+
 jp.nauplius.app.shl.setting.production.dbUrl=jdbc:postgresql://localhost:5432/simple_health_log_production
 jp.nauplius.app.shl.setting.production.dbUser=healthlog
 jp.nauplius.app.shl.setting.production.dbPassword=**********

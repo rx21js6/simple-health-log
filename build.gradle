@@ -118,22 +118,24 @@ dependencies {
 task replaceToken {
     doLast {
         def persistenceXmlFile = 'build/resources/main/META-INF/persistence.xml'
-        def developmentDbUrl = project.property('jp.nauplius.app.shl.setting.development.dbUrl')
-        def developmentDbuser = project.property('jp.nauplius.app.shl.setting.development.dbUser')
-        def developmentDbPassword = project.property('jp.nauplius.app.shl.setting.development.dbPassword')
+        def settingPrefix = 'jp.nauplius.app.shl.setting'
+        def dbType = project.property(settingPrefix + '.' + 'dbType')
+        def developmentDbUrl = project.property(settingPrefix + '.' + dbType + '.' + 'dbUrl')
+        def developmentDbuser = project.property(settingPrefix + '.' + dbType + '.' + 'dbUser')
+        def developmentDbPassword = project.property(settingPrefix + '.' + dbType + '.' + 'dbPassword')
         ant.replace(
             file: persistenceXmlFile,
-            token: '@jp.nauplius.app.shl.setting.development.dbUrl@',
+            token: '@jp.nauplius.app.shl.setting.dbUrl@',
             value: developmentDbUrl
         )
         ant.replace(
             file: persistenceXmlFile,
-            token: '@jp.nauplius.app.shl.setting.development.dbUser@',
+            token: '@jp.nauplius.app.shl.setting.dbUser@',
             value: developmentDbuser
         )
         ant.replace(
             file: persistenceXmlFile,
-            token: '@jp.nauplius.app.shl.setting.development.dbPassword@',
+            token: '@jp.nauplius.app.shl.setting.dbPassword@',
             value: developmentDbPassword
         )
     }
