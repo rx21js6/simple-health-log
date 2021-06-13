@@ -21,9 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 
+import jp.nauplius.app.shl.common.service.AuthService;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
-import jp.nauplius.app.shl.page.login.service.LoginService;
 
 @Named
 @WebFilter(urlPatterns = { "/*" })
@@ -35,7 +35,7 @@ public class LoginFilter implements Filter {
     private KeyIvHolderService keyIvHolderService;
 
     @Inject
-    private LoginService loginService;
+    private AuthService authService;
 
     @Inject
     private LoginInfo loginInfo;
@@ -93,11 +93,18 @@ public class LoginFilter implements Filter {
             this.logger.debug(String.format("loggedIn: %s, pathAllowed: %s", loggedIn, pathAllowed));
 
             if (loggedIn || pathAllowed) {
+                if (!this.authService.isVisible(path, httpServletRequest.getContextPath())) {
+                    // 表示権限がない場合
+                    httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/error/authError.xhtml");
+                }
+
                 chain.doFilter(request, response);
             } else {
                 this.logger.debug("redirect to recordInput.xhtml");
-                // httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/contents/login/login.xhtml");
-                httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/contents/record/recordInput.xhtml");
+                // httpServletResponse.sendRedirect(httpServletRequest.getContextPath() +
+                // "/contents/login/login.xhtml");
+                httpServletResponse
+                        .sendRedirect(httpServletRequest.getContextPath() + "/contents/record/recordInput.xhtml");
                 // chain.doFilter(request, response);
             }
         }
