@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<f:view locale="#{localeService.getLocale()}">
+    <h:head>
+        <title>Error Page</title>
+    </h:head>
+    <h:body>
+        <h2>Error page</h2>
+
+        <h4>Error message</h4>
+        <h:outputText value="#{requestScope['error-message']}"></h:outputText>
+
+
+        <h4>Stack trace</h4>
+        <ul>
+            <ui:repeat value="#{requestScope['error-stack']}" var="stack">
+                <li><h:outputText
+                        value="#{stack.className} - #{stack.methodName} - #{stack.fileName} (#{stack.lineNumber})" />
+                </li>
+            </ui:repeat>
+        </ul>
+
+    </h:body>
+</f:view>
+</html>
+

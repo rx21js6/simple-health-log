@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html">
+<b:form inline="true">
+    <b:row>
+        <b:form>
+            <b:column span="4">
+                <b:commandButton value="#{msg['common.button.logout']}"
+                    action="#{loginController.logout()}"></b:commandButton>
+            </b:column>
+        </b:form>
+    </b:row>
+</b:form>
+</html>

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<f:view locale="#{localeService.getLocale()}">
+    <h:head>
+        <f:metadata>
+            <f:viewAction action="#{initialSettingController.init()}" />
+        </f:metadata>
+        <title><h:outputText
+                value="#{msg['initial.initialSetting.title']}" /></title>
+    </h:head>
+    <h:body>
+        <b:container>
+            <ui:include src="/common/locale.xhtml" />
+            <b:row>
+                <b:column>
+                    <h1>
+                        <h:outputText value="#{msg['initial.initialSetting.title']}" />
+                    </h1>
+                </b:column>
+            </b:row>
+            <b:row>
+                <b:column id="initialSettingValues">
+                    <b:form inline="true">
+                        <b:panelGrid columns="1" cellpadding="5">
+                            <b:inputText
+                                value="#{initialSettingController.initialSettingForm.loginId}"
+                                label="Login ID:" labelStyle="width:100px;" disabled="true"
+                                maxlength="10" />
+                            <b:inputText
+                                value="#{initialSettingController.initialSettingForm.name}"
+                                label="氏名:" labelStyle="width:100px;" disabled="true"
+                                maxlength="10" />
+
+                            <b:inputText
+                                value="#{initialSettingController.initialSettingForm.mailAddress}"
+                                mask="email" label="E-mail:" labelStyle="width:100px;"
+                                maxlength="255" />
+                            <b:message for="@previous" />
+                            <b:inputSecret
+                                value="#{initialSettingController.initialSettingForm.password}"
+                                label="Password:" labelStyle="width:100px;" maxlength="32" />
+                            <b:message for="@previous" />
+                            <b:inputSecret
+                                value="#{initialSettingController.initialSettingForm.passwordReEnter}"
+                                label="Password(再入力):" labelStyle="width:140px;" maxlength="32" />
+                            <b:message for="@previous" />
+                            <b:commandButton value="#{msg['common.button.register']}"
+                                action="#{initialSettingController.register()}" />
+                        </b:panelGrid>
+                    </b:form>
+                    <b:messages />
+                </b:column>
+            </b:row>
+        </b:container>
+    </h:body>
+</f:view>
+</html>
+

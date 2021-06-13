@@ -1,0 +1,48 @@
+package jp.nauplius.app.shl.common.filter;
+
+import java.io.IOException;
+import java.util.Locale;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jp.nauplius.app.shl.common.service.LocaleService;
+
+@WebFilter(urlPatterns = { "/*" })
+public class LocaleFilter implements Filter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginFilter.class);
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        System.out.println("LocaleFilter#init");
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        HttpSession httpSession = httpServletRequest.getSession(true);
+        if (httpSession.getAttribute(LocaleService.SESSION_KEY) == null) {
+            Locale locale = new Locale(LocaleService.DEFAULT_LANG);
+            httpSession.setAttribute(LocaleService.SESSION_KEY, locale);
+        }
+
+        chain.doFilter(request, response);
+    }
+
+    @Override
+    public void destroy() {
+    }
+}
