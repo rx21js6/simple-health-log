@@ -41,10 +41,14 @@ public class DailyRecordService implements Serializable {
 
     /**
      * レコード取得
+     *
      * @param recordingDate
      * @return
      */
+    @Transactional
     public PhysicalCondition getRecord(LocalDate recordingDate) {
+        this.em.flush();
+
         String dateText = recordingDate.format(ShlConstants.RECORDING_DATE_FORMATTER);
 
         PhysicalConditionPK pk = new PhysicalConditionPK();

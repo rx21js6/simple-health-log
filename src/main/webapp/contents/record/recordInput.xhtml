@@ -55,9 +55,12 @@
                     <b:column id="loginValues">
                         <b:panelGrid columns="1" cellpadding="5">
                             <b:inputText value="#{loginController.loginForm.loginId}"
-                                label="Login ID:" labelStyle="width:100px;" maxlength="10" />
+                                label="Login ID:" labelStyle="width:150px;" maxlength="10" />
                             <b:inputSecret value="#{loginController.loginForm.password}"
-                                label="Password:" labelStyle="width:100px;" maxlength="32" />
+                                label="Password:" labelStyle="width:150px;" maxlength="32" />
+                            <b:selectBooleanCheckbox
+                                value="#{loginController.loginForm.keepLogin}" label="ログイン状態を保持"
+                                labelStyle="width:150px;" />
                         </b:panelGrid>
                     </b:column>
                     <b:column>

@@ -11,14 +11,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.slf4j.Logger;
 
-import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.model.UserToken;
@@ -74,13 +71,12 @@ public class LoginService implements Serializable {
         }
 
         // トークン登録
-        UserToken userToken = this.createToken(userInfo);
+        UserToken userToken = this.createToken(userInfo, loginForm.isKeepLogin());
 
         this.loginInfo.setUserInfo(userInfo);
 
         loginResponse.setUserInfo(userInfo);
         loginResponse.setUserToken(userToken);
-
         return loginResponse;
     }
 
@@ -124,7 +120,14 @@ public class LoginService implements Serializable {
         return userInfo;
     }
 
-    private synchronized UserToken createToken(UserInfo userInfo) {
+    /**
+     * トークン生成、更新
+     * @param userInfo ユーザ情報
+     * @param tokenUpdate トークンを更新する場合はtrue
+     * @return
+     */
+    @Transactional
+    private synchronized UserToken createToken(UserInfo userInfo, boolean tokenUpdate) {
         List<UserToken> results = null;
         UserToken userToken = null;
 
@@ -136,13 +139,18 @@ public class LoginService implements Serializable {
                 this.em.persist(userToken);
             }
 
-            SecureRandom random = new SecureRandom();
+            // 一次的に他の端末から参照する場合の対応（トークンを更新しない）
+            if (!tokenUpdate && !StringUtils.isEmpty(userToken.getToken()) ) {
+                return userToken;
+            }
+
             TypedQuery<UserToken> query = this.em.createQuery("SELECT t FROM UserToken t WHERE t.token = :token",
                     UserToken.class);
 
             String token = null;
 
             do {
+                SecureRandom random = new SecureRandom();
                 byte[] randomBytes = random.generateSeed(64);
                 token = Base64.getEncoder().encodeToString(randomBytes);
                 query.setParameter("token", token);

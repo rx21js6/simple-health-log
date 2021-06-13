@@ -67,12 +67,15 @@ public class LoginController implements Serializable {
     public String login() {
         if (Objects.isNull(this.loginInfo.getUserInfo())) {
             try {
-                LoginResponse loginResponse = this.loginService.login(loginForm);
-                this.cookieService.registerToken(this.facesContext, loginResponse.getUserToken().getToken());
+                LoginResponse loginResponse = this.loginService.login(this.loginForm);
+                if (this.loginForm.isKeepLogin()) {
+                    this.cookieService.registerToken(this.facesContext, loginResponse.getUserToken().getToken());
+                }
 
             } catch (SimpleHealthLogException e) {
                 facesContext.getExternalContext().getFlash().setKeepMessages(true);
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "認証に失敗しました。: " + e.getMessage(), null));
+                facesContext.addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "認証に失敗しました。: " + e.getMessage(), null));
             }
         }
         return null;
