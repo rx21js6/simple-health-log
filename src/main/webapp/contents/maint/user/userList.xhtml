@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:head>
+        <title>利用者一覧</title>
+        <f:metadata>
+            <f:event type="preRenderView"
+                listener="#{maintUserController.loadUserInfos}" />
+            <f:viewAction action="#{maintUserController.initModal()}" />
+        </f:metadata>
+    </h:head>
+    <h:body>
+        <b:container>
+            <b:row>
+                <h2>利用者一覧</h2>
+            </b:row>
+            <b:messages></b:messages>
+            <b:row>
+                <h:form>
+                    <b:column>
+                        <b:commandButton value="新規登録" icon="pencil"
+                            action="#{maintUserController.newData}"></b:commandButton>
+                        <b:commandButton value="体調入力" icon="heart-empty"
+                            action="#{dailyRecordController.showInput()}">
+                        </b:commandButton>
+                    </b:column>
+                </h:form>
+            </b:row>
+            <b:row>
+                <b:dataTable value="#{maintUserController.userInfos}" var="userInfo"
+                    searching="false">
+                    <b:dataTableColumn label="ログインID" orderable="false"
+                        value="#{userInfo.loginId}" />
+                    <b:dataTableColumn label="氏名" orderable="false"
+                        value="#{userInfo.name}" />
+                    <b:dataTableColumn label="区分" orderable="false">
+                        <h:outputText value="#{userInfo.roleId}"
+                            converter="userRoleIdConverter"></h:outputText>
+                    </b:dataTableColumn>
+                    <b:dataTableColumn orderable="false" label="処理">
+                        <h:form>
+                            <b:commandButton icon="pencil" value="編集"
+                                action="#{maintUserController.editData}">
+                                <f:setPropertyActionListener value="#{userInfo.id}"
+                                    target="#{maintUserController.selectedId}" />
+                            </b:commandButton>
+                            <b:commandButton icon="trash" value="削除"
+                                rendered="#{userInfo.id != loginInfoHolder.userInfo.id}"
+                                action="#{maintUserController.showDeletionModal}">
+                                <f:setPropertyActionListener value="#{userInfo.id}"
+                                    target="#{maintUserController.selectedId}" />
+                            </b:commandButton>
+                        </h:form>
+                    </b:dataTableColumn>
+                </b:dataTable>
+            </b:row>
+            <b:row>
+                <h:form id="modalForm">
+                    <ui:fragment rendered="#{commonConfirmModalBean.visible}">
+                        <ui:insert>
+                            <ui:include src="/contents/common/commonConfirmModal.jsf" />
+                        </ui:insert>
+                    </ui:fragment>
+                </h:form>
+            </b:row>
+        </b:container>
+    </h:body>
+</f:view>
+</html>

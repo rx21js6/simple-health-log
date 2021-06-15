@@ -16,6 +16,7 @@
     <ui:fragment rendered="#{loginInfo.userInfo != null}">
         <f:metadata>
             <f:viewAction action="#{dailyRecordController.loadRecord()}" />
+            <f:viewAction action="#{maintUserController.init()}" />
         </f:metadata>
     </ui:fragment>
 </h:head>
@@ -86,13 +87,16 @@
                                 value="#{dailyRecordController.today}"
                                 target="#{monthlyRecordListController.today}" />
                         </b:commandButton>
-                        <b:commandButton value="全員" icon="user"
+                        <b:commandButton value="全員" icon="list"
                             action="#{dailyRecordListController.showDailyList()}"
                             rendered="#{loginInfo.userInfo.roleId == 0}">
                             <f:setPropertyActionListener
                                 value="#{dailyRecordController.today}"
                                 target="#{dailyRecordListController.today}" />
                         </b:commandButton>
+                        <b:commandButton action="#{maintUserController.showList()}"
+                            value="利用者" icon="user"
+                            rendered="#{loginInfo.userInfo.roleId == 0}" />
                     </b:column>
                     <b:column>
                         <b:commandButton value="前日" icon="chevron-left"
