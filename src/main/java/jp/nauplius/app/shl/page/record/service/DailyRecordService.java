@@ -102,6 +102,7 @@ public class DailyRecordService implements Serializable {
         queryBuilder.append("LEFT JOIN PhysicalCondition p ON ");
         queryBuilder.append("u.id = p.id.id ");
         queryBuilder.append("AND p.id.recordingDate = :date ");
+        queryBuilder.append("WHERE u.deleted = false ");
         queryBuilder.append("ORDER BY u.id");
         TypedQuery<DailyRecord> query = this.em.createQuery(queryBuilder.toString(), DailyRecord.class);
         query.setParameter("date", date.format(ShlConstants.RECORDING_DATE_FORMATTER));

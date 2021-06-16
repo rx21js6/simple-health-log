@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:head>
+        <title>利用者管理</title>
+        <meta charset="UTF-8" />
+    </h:head>
+    <h:body>
+        <h:form id="modalForm">
+            <ui:fragment rendered="#{commonConfirmModalBean.visible}">
+                <ui:insert>
+                    <ui:include src="/contents/common/commonConfirmModal.jsf" />
+                </ui:insert>
+            </ui:fragment>
+        </h:form>
+        <b:container>
+            <h:form id="detailForm">
+                <b:row>
+                    <h2>利用者管理</h2>
+                </b:row>
+                <b:row>
+                    <b:row>
+                        <b:commandButton action="#{maintUserController.cancel()}">戻る</b:commandButton>
+                    </b:row>
+                </b:row>
+                <b:row>
+                    <b:inputText
+                        value="#{maintUserController.selectedMaintUserInfo.loginId}"
+                        disabled="#{!maintUserController.selectedMaintUserInfo.newData}"
+                        label="ログインID" span="6" maxlength="100" />
+                </b:row>
+                <b:row>
+                    <b:inputText
+                        value="#{maintUserController.selectedMaintUserInfo.name}"
+                        label="氏名" span="6" maxlength="100" />
+                </b:row>
+                <b:row>
+                    <b:inputText
+                        value="#{maintUserController.selectedMaintUserInfo.mailAddress}"
+                        label="メールアドレス" span="6" maxlength="100" />
+                </b:row>
+                <b:row>
+                    <b:inputSecret
+                        disabled="#{!maintUserController.selectedMaintUserInfo.passwordChanged}"
+                        value="#{maintUserController.selectedMaintUserInfo.password}"
+                        label="パスワード" span="6" maxlength="100" />
+                </b:row>
+                <b:row>
+                    <b:inputSecret
+                        disabled="#{!maintUserController.selectedMaintUserInfo.passwordChanged}"
+                        value="#{maintUserController.selectedMaintUserInfo.passwordRetype}"
+                        label="パスワード（再入力）" span="6" maxlength="100" />
+                </b:row>
+                <b:row>
+                    <b:selectBooleanCheckbox
+                        rendered="#{!maintUserController.selectedMaintUserInfo.newData}"
+                        value="#{maintUserController.selectedMaintUserInfo.passwordChanged}"
+                        caption="変更" label="パスワード変更有無" update="@form" span="6"
+                        onchange="ajax:maintUserController.onPasswordCheckboxChanged()" />
+                </b:row>
+                <b:row>
+                    <b:selectOneMenu
+                        value="#{maintUserController.selectedMaintUserInfo.roleId}"
+                        label="ロール" span="6" maxlength="100"
+                        converter="javax.faces.Integer">
+                        <f:selectItem itemLabel="管理者" itemValue="0" />
+                        <f:selectItem itemLabel="一般" itemValue="1" />
+                    </b:selectOneMenu>
+                </b:row>
+                <b:row>
+                    <b:commandButton action="#{maintUserController.register()}">登録／更新</b:commandButton>
+                </b:row>
+            </h:form>
+        </b:container>
+        <b:container>
+            <b:row></b:row>
+        </b:container>
+    </h:body>
+</f:view>
+</html>
