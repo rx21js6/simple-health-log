@@ -23,8 +23,8 @@
 
 ```java
 # 必要に応じて変更
-# jp.nauplius.app.shl.setting.db = development
-jp.nauplius.app.shl.setting.db = production
+# jp.nauplius.app.shl.setting.dbType=development
+jp.nauplius.app.shl.setting.dbType=production
 
 jp.nauplius.app.shl.setting.production.dbUrl=jdbc:postgresql://localhost:5432/simple_health_log_production
 jp.nauplius.app.shl.setting.production.dbUser=healthlog
