@@ -36,10 +36,14 @@ jp.nauplius.app.shl.setting.development.dbPassword=**********
 
 ### PostgreSQL
 
-create user "healthlog". And set "CREATEDB".
+create user "healthlog". And create database.
 
 ```sql
-CREATE USER healthlog PASSWORD '**********' CREATEDB;
+CREATE USER healthlog PASSWORD '**********' NOINHERIT VALID UNTIL 'infinity';
+
+-- productoin
+CREATE DATABASE simple_health_log_production WITH OWNER='healthlog';
+
 ```
 
 ### Build and Deploy war.
