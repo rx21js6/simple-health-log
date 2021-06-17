@@ -41,7 +41,7 @@ create user "healthlog". And create database.
 ```sql
 CREATE USER healthlog PASSWORD '**********' NOINHERIT VALID UNTIL 'infinity';
 
--- productoin
+-- production
 CREATE DATABASE simple_health_log_production WITH OWNER='healthlog';
 
 ```
