@@ -12,7 +12,7 @@
 ## 必要なもの
 
 * Gradle
-* Jetty9.4+（推奨）
+* ~~Jetty9.4+（推奨）~~
 * PostgreSQL 12+
 
 ## 準備
