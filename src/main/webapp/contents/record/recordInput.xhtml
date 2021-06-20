@@ -4,7 +4,8 @@
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
     <title><h:outputText value="#{msg['common.title']}" /></title>
 
@@ -22,36 +23,38 @@
 </h:head>
 <h:body>
     <b:container>
-        <b:form inline="true">
-            <b:row>
-                <b:column>
-                    <h1>
-                        <h:outputText value="#{msg['common.title']}" />
-                    </h1>
-                </b:column>
-            </b:row>
-            <b:row>
-                <b:column>
-                    <b:messages></b:messages>
-                </b:column>
-            </b:row>
-            <b:row>
-                <b:column>
-                    <h:outputText value="ログインしていません。"
-                        rendered="#{loginInfo.userInfo == null}" />
-                    <h:outputText value="#{loginInfo.userInfo.name}さんようこそ"
-                        rendered="#{loginInfo.userInfo != null}" />
-                </b:column>
-            </b:row>
+        <b:row>
+            <b:column>
+                <h1>
+                    <h:outputText value="#{msg['common.title']}" />
+                </h1>
+            </b:column>
+        </b:row>
+        <b:row>
+            <b:column>
+                <b:messages></b:messages>
+            </b:column>
+        </b:row>
+        <b:row>
+            <b:column>
+                <h:outputText value="ログインしていません。"
+                    rendered="#{loginInfo.userInfo == null}" />
+                <h:outputText value="#{loginInfo.userInfo.name}さんようこそ"
+                    rendered="#{loginInfo.userInfo != null}" />
+            </b:column>
+        </b:row>
 
+        <b:form inline="true">
             <b:row rendered="#{loginInfo.userInfo != null}">
                 <b:column>
                     <b:commandButton action="#{loginController.logout()}">ログアウト</b:commandButton>
                 </b:column>
             </b:row>
+        </b:form>
 
-            <!-- ログイン -->
-            <ui:fragment rendered="#{loginInfo.userInfo == null}">
+        <!-- ログイン -->
+        <ui:fragment rendered="#{loginInfo.userInfo == null}">
+            <b:form inline="true">
                 <b:row>
                     <b:column id="loginValues">
                         <b:panelGrid columns="1" cellpadding="5">
@@ -68,17 +71,20 @@
                         <b:commandButton value="ログイン" action="#{loginController.login()}" />
                     </b:column>
                 </b:row>
-            </ui:fragment>
+            </b:form>
+        </ui:fragment>
 
-            <!-- 入力 -->
-            <ui:fragment rendered="#{loginInfo.userInfo != null}">
-                <b:row>
-                    <b:column>
-                        <h4>
-                            <h:outputText value="#{dailyRecordController.today}" />
-                        </h4>
-                    </b:column>
-                </b:row>
+        <!-- 入力 -->
+        <ui:fragment rendered="#{loginInfo.userInfo != null}">
+
+            <b:row>
+                <b:column>
+                    <h4>
+                        <h:outputText value="#{dailyRecordController.today}" />
+                    </h4>
+                </b:column>
+            </b:row>
+            <b:form>
                 <b:row>
                     <b:column>
                         <b:commandButton value="月次" icon="list"
@@ -107,12 +113,15 @@
                             action="#{dailyRecordController.loadTomorrow()}" />
                     </b:column>
                 </b:row>
-                <b:row>
-                    <b:column>
-                        <h3>体調</h3>
-                    </b:column>
-                </b:row>
+            </b:form>
 
+            <b:row>
+                <b:column>
+                    <h3>体調</h3>
+                </b:column>
+            </b:row>
+
+            <b:form inline="true">
                 <b:row>
                     <b:column>
                         <h4>朝</h4>
@@ -126,15 +135,14 @@
                                 converter="timeConverter" label="起床時刻:"
                                 labelStyle="width:100px;">
                             </b:inputText>
-                            <b:inputText
+                            <b:inputText type="number" mask="99.9" p:step="0.1"
                                 value="#{dailyRecordController.physicalCondition.bodyTemperatureMorning}"
-                                label="体温:" labelStyle="width:100px;" mask="9{2}.9{1}"
-                                maxlength="4">
+                                label="体温:" labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
                             </b:inputText>
                             <b:message for="@previous" />
 
-                            <b:inputText
+                            <b:inputText type="number" mask="9{1,2}"
                                 value="#{dailyRecordController.physicalCondition.oxygenSaturationMorning}"
                                 label="酸素飽和濃度:" labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
@@ -156,15 +164,14 @@
                                 converter="timeConverter" label="就寝時刻:"
                                 labelStyle="width:100px;">
                             </b:inputText>
-                            <b:inputText
+                            <b:inputText type="number" mask="99.9" p:step="0.1"
                                 value="#{dailyRecordController.physicalCondition.bodyTemperatureEvening}"
-                                label="体温:" labelStyle="width:100px;" mask="9{2}.9{1}"
-                                maxlength="4">
+                                label="体温:" labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
                             </b:inputText>
                             <b:message for="@previous" />
 
-                            <b:inputText
+                            <b:inputText type="number" mask="9{1,2}"
                                 value="#{dailyRecordController.physicalCondition.oxygenSaturationEvening}"
                                 label="酸素飽和濃度:" labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
@@ -181,26 +188,27 @@
                 </b:row>
                 <b:row>
                     <b:column>
-                        <b:inputText
+                        <b:inputTextarea
                             value="#{dailyRecordController.physicalCondition.conditionNote}"
                             label="特記事項等" labelStyle="width:100px;" maxlength="100">
                             <b:message for="@previous" />
-                        </b:inputText>
+                        </b:inputTextarea>
                     </b:column>
                 </b:row>
                 <b:row>
                     <b:column>
                         <b:panelGrid columns="6">
-                            <b:commandButton value="#{msg['common.button.register']}"
-                                look="primary" size="lg"
-                                action="#{dailyRecordController.register()}" />
+                            <b:commandButton
+                                value="#{msg['common.button.register']}" look="primary"
+                                size="lg" action="#{dailyRecordController.register()}" />
                         </b:panelGrid>
 
                     </b:column>
                 </b:row>
-            </ui:fragment>
+            </b:form>
 
-        </b:form>
+        </ui:fragment>
+
     </b:container>
 </h:body>
 </html>
