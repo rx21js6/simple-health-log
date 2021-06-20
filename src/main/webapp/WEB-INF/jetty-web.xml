@@ -8,9 +8,6 @@
         <Arg>-org.eclipse.jetty.util.DecoratedObjectFactory</Arg>
     </Call>
     <Call name="prependServerClass">
-        <Arg>-org.eclipse.jetty.server.handler.ContextHandler.</Arg>
-    </Call>
-    <Call name="prependServerClass">
         <Arg>-org.eclipse.jetty.server.handler.ContextHandler</Arg>
     </Call>
     <Call name="prependServerClass">

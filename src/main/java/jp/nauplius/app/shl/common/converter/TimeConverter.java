@@ -12,9 +12,9 @@ import javax.faces.convert.FacesConverter;
 import org.apache.commons.lang3.StringUtils;
 
 @FacesConverter("timeConverter")
-public class TimeConverter implements Converter<Time> {
+public class TimeConverter implements Converter {
     @Override
-    public Time getAsObject(FacesContext context, UIComponent component, String value) {
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (StringUtils.isEmpty(value)) {
             return null;
         }
@@ -31,11 +31,16 @@ public class TimeConverter implements Converter<Time> {
     }
 
     @Override
-    public String getAsString(FacesContext conext, UIComponent component, Time value) {
+    public String getAsString(FacesContext conext, UIComponent component, Object value) {
+        if (!(value instanceof Time)) {
+            return StringUtils.EMPTY;
+        }
+
         if (Objects.isNull(value)) {
             return StringUtils.EMPTY;
         }
-        LocalTime localTime = value.toLocalTime();
+        Time timeValue = (Time) value;
+        LocalTime localTime = timeValue.toLocalTime();
         String timeText = String.format("%02d:%02d", localTime.getHour(), localTime.getMinute());
         return timeText;
     }

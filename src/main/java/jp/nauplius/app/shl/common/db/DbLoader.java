@@ -5,20 +5,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.transaction.Transactional;
 
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.eclipse.persistence.sessions.DatabaseLogin;
+import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 
 @Named
 public class DbLoader {
+    @Inject
+    private Logger logger;
+
     @Inject
     private EntityManager em;
 
@@ -28,17 +37,22 @@ public class DbLoader {
     /**
      * テーブル作成
      */
-    @Transactional
     public void createTables() {
+        EntityTransaction transaction = this.em.getTransaction();
         try {
+            transaction.begin();
             String sqlString = this.loadSqlString();
             String[] sqlLines = sqlString.split(";");
             for (String sqlLine : sqlLines) {
-                // System.out.println(line);
+                this.logger.info(String.format("execute query: %s", sqlLine));
                 this.em.createNativeQuery(sqlLine).executeUpdate();
             }
+            transaction.commit();
 
         } catch (Throwable e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             e.printStackTrace();
             System.err.println("craete table failed.");
             throw new RuntimeException(e);
