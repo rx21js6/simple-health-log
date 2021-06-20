@@ -115,36 +115,6 @@ public class DailyRecordController implements Serializable {
         this.physicalCondition = this.dailyRecordService.getRecord(today);
     }
 
-    public String login() {
-        if (Objects.isNull(this.loginInfo.getUserInfo())) {
-            try {
-                LoginResponse loginResponse = this.loginService.login(loginForm);
-                this.cookieService.registerToken(this.facesContext, loginResponse.getUserToken().getToken());
-
-            } catch (SimpleHealthLogException e) {
-                facesContext.getExternalContext().getFlash().setKeepMessages(true);
-                facesContext.addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_WARN, "認証に失敗しました。: " + e.getMessage(), null));
-            }
-        }
-        return null;
-    }
-
-    public String logout() {
-        this.logger.info("DailyRecordController#logout");
-        try {
-            if (!Objects.isNull(this.loginInfo.getUserInfo())) {
-                this.loginService.logout();
-                this.cookieService.removeToken(this.facesContext);
-            }
-        } catch (SimpleHealthLogException e) {
-            facesContext.getExternalContext().getFlash().setKeepMessages(true);
-            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ログアウトしました。", null));
-        }
-
-        return null;
-    }
-
     public String register() {
         try {
             this.physicalCondition.getId().setId(this.loginInfo.getUserInfo().getId());

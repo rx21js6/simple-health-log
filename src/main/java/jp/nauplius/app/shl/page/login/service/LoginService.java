@@ -5,6 +5,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -49,6 +50,9 @@ public class LoginService implements Serializable {
      */
     @Transactional
     public LoginResponse login(LoginForm loginForm) {
+        this.logger.info(String.format("login: loginId: %s / keepLogin: %n", loginForm.getLoginId()),
+                loginForm.isKeepLogin());
+
         LoginResponse loginResponse = new LoginResponse();
 
         byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
@@ -71,7 +75,10 @@ public class LoginService implements Serializable {
         }
 
         // トークン登録
-        UserToken userToken = this.createToken(userInfo, loginForm.isKeepLogin());
+        UserToken userToken = null;
+        if (loginForm.isKeepLogin()) {
+            userToken = this.createToken(userInfo, loginForm.isKeepLogin());
+        }
 
         this.loginInfo.setUserInfo(userInfo);
 
@@ -122,7 +129,8 @@ public class LoginService implements Serializable {
 
     /**
      * トークン生成、更新
-     * @param userInfo ユーザ情報
+     *
+     * @param userInfo    ユーザ情報
      * @param tokenUpdate トークンを更新する場合はtrue
      * @return
      */
@@ -136,11 +144,12 @@ public class LoginService implements Serializable {
             if (Objects.isNull(userToken)) {
                 userToken = new UserToken();
                 userToken.setId(userInfo.getId());
+                userToken.setToken(StringUtils.EMPTY);
                 this.em.persist(userToken);
             }
 
             // 一次的に他の端末から参照する場合の対応（トークンを更新しない）
-            if (!tokenUpdate && !StringUtils.isEmpty(userToken.getToken()) ) {
+            if (!tokenUpdate && !StringUtils.isEmpty(userToken.getToken())) {
                 return userToken;
             }
 
@@ -156,7 +165,6 @@ public class LoginService implements Serializable {
                 query.setParameter("token", token);
                 results = query.getResultList();
             } while (0 < results.size());
-
 
             userToken.setToken(token);
             this.em.merge(userToken);
