@@ -65,6 +65,7 @@ public class LoginController implements Serializable {
     }
 
     public String login() {
+        this.logger.info("login");
         if (Objects.isNull(this.loginInfo.getUserInfo())) {
             try {
                 LoginResponse loginResponse = this.loginService.login(this.loginForm);
@@ -82,7 +83,7 @@ public class LoginController implements Serializable {
     }
 
     public String logout() {
-        this.logger.info("DailyRecordController#logout");
+        this.logger.info("logout");
         try {
             if (!Objects.isNull(this.loginInfo.getUserInfo())) {
                 this.loginService.logout();
