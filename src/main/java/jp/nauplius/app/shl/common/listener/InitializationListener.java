@@ -25,7 +25,7 @@ public class InitializationListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("InitializationListener#contextInitialized() em: " + this.em);
+        this.logger.info("InitializationListener#contextInitialized() em: " + this.em);
 
         this.checkDbInitialized();
 

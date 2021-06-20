@@ -12,7 +12,7 @@
 ## 必要なもの
 
 * Gradle
-* ~~Jetty9.4+（推奨）~~
+* Jetty9.4+（推奨）
 * PostgreSQL 12+
 
 ## 準備
@@ -22,7 +22,7 @@
 ~/.gradle/gralde.properties に以下を記載。必要に応じて適宜修正
 
 ```java
-# 必要に応じて変更
+# development/productionおよびパスワード（**********）は必要に応じて変更
 # jp.nauplius.app.shl.setting.dbType=development
 jp.nauplius.app.shl.setting.dbType=production
 
@@ -41,8 +41,12 @@ create user "healthlog". And create database.
 ```sql
 CREATE USER healthlog PASSWORD '**********' NOINHERIT VALID UNTIL 'infinity';
 
+-- development
+-- CREATE DATABASE simple_health_log_development WITH OWNER='healthlog';
+
 -- production
 CREATE DATABASE simple_health_log_production WITH OWNER='healthlog';
+
 
 ```
 
