@@ -1,8 +1,8 @@
+
 package jp.nauplius.app.shl.page.record.backing;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
@@ -17,12 +17,9 @@ import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.PhysicalCondition;
-import jp.nauplius.app.shl.common.model.PhysicalConditionPK;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.page.login.bean.LoginForm;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
-import jp.nauplius.app.shl.page.login.bean.LoginResponse;
 import jp.nauplius.app.shl.page.login.service.CookieService;
 import jp.nauplius.app.shl.page.login.service.LoginService;
 import jp.nauplius.app.shl.page.record.service.DailyRecordService;
@@ -41,11 +38,6 @@ public class DailyRecordController implements Serializable {
 
     @Inject
     private FacesContext facesContext;
-
-    @Inject
-    @Getter
-    @Setter
-    private PhysicalCondition physicalCondition;
 
     @Inject
     private LoginService loginService;
@@ -95,16 +87,7 @@ public class DailyRecordController implements Serializable {
             this.today = !StringUtils.isEmpty(this.selectedDate)
                     ? LocalDate.parse(this.selectedDate, ShlConstants.RECORDING_DATE_FORMATTER)
                     : LocalDate.now();
-            this.physicalCondition = this.dailyRecordService.getRecord(this.today);
-
-            if (this.physicalCondition == null) {
-                this.physicalCondition = new PhysicalCondition();
-                PhysicalConditionPK pk = new PhysicalConditionPK();
-                pk.setId(null);
-                String dateText = this.today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-                pk.setRecordingDate(dateText);
-                this.physicalCondition.setId(pk);
-            }
+            this.dailyRecordService.loadRecord(this.today);
         }
 
         this.logger.info("DailyRecordController#init complete");
@@ -112,14 +95,12 @@ public class DailyRecordController implements Serializable {
 
     public void loadRecord() {
         this.logger.info("DailyRecordController#loadRecord");
-        this.physicalCondition = this.dailyRecordService.getRecord(today);
+        this.dailyRecordService.loadRecord(today);
     }
 
     public String register() {
         try {
-            this.physicalCondition.getId().setId(this.loginInfo.getUserInfo().getId());
-            this.physicalCondition.setUserInfo(this.loginInfo.getUserInfo());
-            this.dailyRecordService.register(this.physicalCondition);
+            this.dailyRecordService.register();
 
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "登録しました。", null));
@@ -147,7 +128,7 @@ public class DailyRecordController implements Serializable {
      */
     public String loadYesterday() {
         this.today = this.today.minusDays(1);
-        this.physicalCondition = this.dailyRecordService.getRecord(this.today);
+        this.dailyRecordService.loadRecord(this.today);
         return null;
     }
 
@@ -158,7 +139,7 @@ public class DailyRecordController implements Serializable {
      */
     public String loadToday() {
         this.today = LocalDate.now();
-        this.physicalCondition = this.dailyRecordService.getRecord(this.today);
+        this.dailyRecordService.loadRecord(this.today);
         return null;
     }
 
@@ -169,7 +150,7 @@ public class DailyRecordController implements Serializable {
      */
     public String loadTomorrow() {
         this.today = this.today.plusDays(1);
-        this.physicalCondition = this.dailyRecordService.getRecord(today);
+        this.dailyRecordService.loadRecord(today);
         return null;
     }
 }

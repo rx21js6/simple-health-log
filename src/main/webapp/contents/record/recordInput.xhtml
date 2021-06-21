@@ -131,19 +131,19 @@
                     <b:column id="dailyRecordValuesMorning">
                         <b:panelGrid columns="3">
                             <b:inputText type="time"
-                                value="#{dailyRecordController.physicalCondition.awakeTime}"
+                                value="#{dailyRecordInputModel.physicalCondition.awakeTime}"
                                 converter="timeConverter" label="起床時刻:"
                                 labelStyle="width:100px;">
                             </b:inputText>
                             <b:inputText type="number" mask="99.9" p:step="0.1"
-                                value="#{dailyRecordController.physicalCondition.bodyTemperatureMorning}"
+                                value="#{dailyRecordInputModel.physicalCondition.bodyTemperatureMorning}"
                                 label="体温:" labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
                             </b:inputText>
                             <b:message for="@previous" />
 
                             <b:inputText type="number" mask="9{1,2}"
-                                value="#{dailyRecordController.physicalCondition.oxygenSaturationMorning}"
+                                value="#{dailyRecordInputModel.physicalCondition.oxygenSaturationMorning}"
                                 label="酸素飽和濃度:" labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
                             </b:inputText>
@@ -160,19 +160,19 @@
                     <b:column id="dailyRecordValuesEvening">
                         <b:panelGrid columns="3">
                             <b:inputText type="time"
-                                value="#{dailyRecordController.physicalCondition.bedTime}"
+                                value="#{dailyRecordInputModel.physicalCondition.bedTime}"
                                 converter="timeConverter" label="就寝時刻:"
                                 labelStyle="width:100px;">
                             </b:inputText>
                             <b:inputText type="number" mask="99.9" p:step="0.1"
-                                value="#{dailyRecordController.physicalCondition.bodyTemperatureEvening}"
+                                value="#{dailyRecordInputModel.physicalCondition.bodyTemperatureEvening}"
                                 label="体温:" labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
                             </b:inputText>
                             <b:message for="@previous" />
 
                             <b:inputText type="number" mask="9{1,2}"
-                                value="#{dailyRecordController.physicalCondition.oxygenSaturationEvening}"
+                                value="#{dailyRecordInputModel.physicalCondition.oxygenSaturationEvening}"
                                 label="酸素飽和濃度:" labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
                                 <b:message for="@previous" />
@@ -189,7 +189,7 @@
                 <b:row>
                     <b:column>
                         <b:inputTextarea
-                            value="#{dailyRecordController.physicalCondition.conditionNote}"
+                            value="#{dailyRecordInputModel.physicalCondition.conditionNote}"
                             label="特記事項等" labelStyle="width:100px;" maxlength="100">
                             <b:message for="@previous" />
                         </b:inputTextarea>
