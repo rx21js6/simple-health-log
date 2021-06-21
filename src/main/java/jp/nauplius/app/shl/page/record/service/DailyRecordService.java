@@ -23,6 +23,7 @@ import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.model.PhysicalConditionPK;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.record.backing.DailyRecordInputModel;
 import jp.nauplius.app.shl.page.record.bean.DailyRecord;
 
 @Named
@@ -33,6 +34,9 @@ public class DailyRecordService implements Serializable {
 
     @Inject
     private LoginInfo loginInfo;
+
+    @Inject
+    private DailyRecordInputModel dailyRecordInputModel;
 
     @PostConstruct
     public void init() {
@@ -46,7 +50,7 @@ public class DailyRecordService implements Serializable {
      * @return
      */
     @Transactional
-    public PhysicalCondition getRecord(LocalDate recordingDate) {
+    public PhysicalCondition loadRecord(LocalDate recordingDate) {
         this.em.flush();
 
         String dateText = recordingDate.format(ShlConstants.RECORDING_DATE_FORMATTER);
@@ -58,8 +62,13 @@ public class DailyRecordService implements Serializable {
 
         if (Objects.isNull(record)) {
             record = new PhysicalCondition();
+            pk.setId(null);
+            pk.setRecordingDate(dateText);
+            record.setUserInfo(this.loginInfo.getUserInfo());
             record.setId(pk);
         }
+
+        this.dailyRecordInputModel.setPhysicalCondition(record);
 
         return record;
     }
@@ -67,10 +76,10 @@ public class DailyRecordService implements Serializable {
     /**
      * 登録
      *
-     * @param physicalCondition
      */
     @Transactional
-    public void register(PhysicalCondition physicalCondition) {
+    public void register() {
+        PhysicalCondition physicalCondition = this.dailyRecordInputModel.getPhysicalCondition();
         PhysicalCondition tmpCondition = this.em.find(PhysicalCondition.class, physicalCondition.getId());
         LocalDateTime now = LocalDateTime.now();
         if (Objects.isNull(tmpCondition)) {
@@ -95,6 +104,11 @@ public class DailyRecordService implements Serializable {
         this.em.flush();
     }
 
+    /**
+     * 有効な利用者の指定日データ取得
+     * @param date 指定日
+     * @return
+     */
     public List<DailyRecord> getDailyRecords(LocalDate date) {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("SELECT NEW jp.nauplius.app.shl.page.record.bean.DailyRecord(u, p) ");
