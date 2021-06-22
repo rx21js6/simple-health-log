@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
@@ -43,7 +44,11 @@ public class SimpleHealthLogExceptionHandler extends ExceptionHandlerWrapper {
                 requestMap.put("error-class", throwable.getClass().getName());
                 requestMap.put("error-message", throwable.getMessage());
                 requestMap.put("error-stack", throwable.getStackTrace());
-                navigationHandler.handleNavigation(context, null, "/error/error.xhtml");
+
+                context.getExternalContext().getFlash().setKeepMessages(true);
+                context.addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "セッションが切れました。お手数ですが再度入力してください。", null));
+                navigationHandler.handleNavigation(context, null, "/contents/record/recordInput.xhtml?faces-redirect=true");
                 context.renderResponse();
 
             } finally {
