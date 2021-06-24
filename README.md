@@ -23,15 +23,32 @@
 
 ```java
 # development/productionおよびパスワード（**********）は必要に応じて変更
-# jp.nauplius.app.shl.setting.dbType=development
+#
+# simple-health-log DB settings
+#
 jp.nauplius.app.shl.setting.dbType=production
+# jp.nauplius.app.shl.setting.dbType=development
+## for production
+jp.nauplius.app.shl.setting.production.db.url=jdbc:postgresql://localhost:5432/simple_health_log_production
+jp.nauplius.app.shl.setting.production.db.user=healthlog
+jp.nauplius.app.shl.setting.production.db.password=**********
+## for development
+jp.nauplius.app.shl.setting.development.db.url=jdbc:postgresql://localhost:5432/simple_health_log_development
+jp.nauplius.app.shl.setting.development.db.user=healthlog
+jp.nauplius.app.shl.setting.development.db.password=**********
 
-jp.nauplius.app.shl.setting.production.dbUrl=jdbc:postgresql://localhost:5432/simple_health_log_production
-jp.nauplius.app.shl.setting.production.dbUser=healthlog
-jp.nauplius.app.shl.setting.production.dbPassword=**********
-jp.nauplius.app.shl.setting.development.dbUrl=jdbc:postgresql://localhost:5432/simple_health_log_development
-jp.nauplius.app.shl.setting.development.dbUser=healthlog
-jp.nauplius.app.shl.setting.development.dbPassword=**********
+#
+# simple-health-log mail settings
+#
+jp.nauplius.app.shl.setting.mail.active=true
+jp.nauplius.app.shl.setting.mail.smtp.host=localhost # or external server addr (eg smtp.gmail.com)
+jp.nauplius.app.shl.setting.mail.smtp.port=25 (or 587, 465...not tested yet...)
+# When authentication requered(eg. port=587), change below line to "true". And set userId, password.
+jp.nauplius.app.shl.setting.mail.smtp.auth=false
+jp.nauplius.app.shl.setting.mail.smtp.userId=**CHANGE THIS**
+jp.nauplius.app.shl.setting.mail.smtp.password=**********
+
+
 ```
 
 ### PostgreSQL

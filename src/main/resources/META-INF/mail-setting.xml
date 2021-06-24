@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mailSetting>
+    <mail.smtp.host>@jp.nauplius.app.shl.setting.mail.smtp.host@</mail.smtp.host>
+    <mail.smtp.port>@jp.nauplius.app.shl.setting.mail.smtp.port@</mail.smtp.port>
+    <mail.smtp.auth>@jp.nauplius.app.shl.setting.mail.smtp.auth@</mail.smtp.auth>
+    <mail.smtp.connectiontimeout>60000</mail.smtp.connectiontimeout>
+    <mail.smtp.timeout>60000</mail.smtp.timeout>
+    <mail.smtp.userId>@jp.nauplius.app.shl.setting.mail.smtp.userId@</mail.smtp.userId>
+    <mail.smtp.password>@jp.nauplius.app.shl.setting.mail.smtp.password@</mail.smtp.password>
+</mailSetting>

@@ -68,7 +68,16 @@
                         </b:panelGrid>
                     </b:column>
                     <b:column>
-                        <b:commandButton value="ログイン" action="#{loginController.login()}" />
+                        <b:commandButton value="ログイン" action="#{loginController.login()}"
+                            look="primary" size="lg" />
+                    </b:column>
+                </b:row>
+            </b:form>
+            <b:form>
+                <b:row>
+                    <b:column>
+                        <b:commandButton value="パスワード忘れた"
+                            action="#{passwordResetController.showPage()}" />
                     </b:column>
                 </b:row>
             </b:form>
@@ -198,9 +207,9 @@
                 <b:row>
                     <b:column>
                         <b:panelGrid columns="6">
-                            <b:commandButton
-                                value="#{msg['common.button.register']}" look="primary"
-                                size="lg" action="#{dailyRecordController.register()}" />
+                            <b:commandButton value="#{msg['common.button.register']}"
+                                look="primary" size="lg"
+                                action="#{dailyRecordController.register()}" />
                         </b:panelGrid>
 
                     </b:column>

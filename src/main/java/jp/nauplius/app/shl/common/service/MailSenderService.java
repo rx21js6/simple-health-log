@@ -1,75 +1,104 @@
 package jp.nauplius.app.shl.common.service;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.ui.bean.MailSenderBean;
 import jp.nauplius.app.shl.page.initial.backing.InitialSettingForm;
 
 @Named
 public class MailSenderService implements Serializable {
+    private static final String DEFAULT_MAIL_SENDER = "simple-health-log";
     private static final String CHARSET = StandardCharsets.UTF_8.toString();
+    private static final String SETTING_XML_PATH = "/META-INF/mail-setting.xml";
+    private static final String MAIL_CONTENT_TYPE = "text/plain;charset=UTF-8";
+
+    @Inject
+    private Logger logger;
 
     @Inject
     private FacesContext facesContext;
 
-    public void sendDummymail() {
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "localhost");
-        props.put("mail.smtp.port", 25);
+    private MailSenderBean mailSenderBean;
 
-        Session session = Session.getInstance(props);
+    private ResourceBundle msgBundle;
 
+    @PostConstruct
+    public void init() {
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setValidating(true);
+        factory.setIgnoringElementContentWhitespace(true);
         try {
-            MimeMessage messageContent = new MimeMessage(session);
-            messageContent.setFrom(new InternetAddress("mail_sender@foo.com", "mail sender name", CHARSET));
-            messageContent.addRecipient(Message.RecipientType.TO, new InternetAddress("to_address@foo.com"));
-            messageContent.setSubject("標題", CHARSET);
-            messageContent.setContent("メール本文。改行は\nで行う。", "text/plain;charset=UTF-8");
+            // XML読み込み
+            InputStream is = this.getClass().getResourceAsStream(SETTING_XML_PATH);
+            JAXBContext jaxbContext = JAXBContext.newInstance(MailSenderBean.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            this.mailSenderBean = (MailSenderBean) unmarshaller.unmarshal(is);
+            this.logger.info("host: " + this.mailSenderBean.getHost());
 
-            Transport.send(messageContent);
-        } catch (Exception e) {
+            // MessageBundle読み込み
+            this.msgBundle = ResourceBundle.getBundle("i18n.messages");
+
+        } catch (Throwable e) {
             throw new SimpleHealthLogException(e);
         }
     }
 
+    /**
+     * 初期設定メール送信
+     *
+     * @param initialSettingForm
+     */
     public void sendInitialSettingMail(InitialSettingForm initialSettingForm) {
-        String varName = "msg";
-        ResourceBundle bundle = PropertyResourceBundle.getBundle(varName);
-
-        String mailMessage = this.buildInitialMailMessageText(initialSettingForm, bundle);
+        String mailMessage = this.buildInitialMailMessageText(initialSettingForm);
         Properties props = new Properties();
-        props.put("mail.smtp.host", "localhost");
-        props.put("mail.smtp.port", 25);
+        props.put("mail.smtp.host", this.mailSenderBean.getHost());
+        props.put("mail.smtp.port", this.mailSenderBean.getPort());
 
-        Session session = Session.getDefaultInstance(props, null);
+        Session session = this.createSession(props);
 
         try {
             MimeMessage messageContent = new MimeMessage(session);
-            messageContent.setFrom(new InternetAddress(initialSettingForm.getMailAddress(), initialSettingForm.getName(), CHARSET));
-            messageContent.addRecipient(Message.RecipientType.TO, new InternetAddress(initialSettingForm.getMailAddress()));
-            String messageSubject = bundle.getString("initial.initialSetting.mail.subject");
+            messageContent.setFrom(
+                    new InternetAddress(initialSettingForm.getMailAddress(), initialSettingForm.getName(), CHARSET));
+            messageContent.addRecipient(Message.RecipientType.TO,
+                    new InternetAddress(initialSettingForm.getMailAddress()));
+            String messageSubject = this.msgBundle.getString("initial.initialSetting.mail.subject");
             messageContent.setSubject(messageSubject, CHARSET);
-            messageContent.setContent(mailMessage, "text/plain;charset=UTF-8");
+            messageContent.setContent(mailMessage, MAIL_CONTENT_TYPE);
 
             Transport.send(messageContent);
         } catch (Exception e) {
@@ -77,7 +106,13 @@ public class MailSenderService implements Serializable {
         }
     }
 
-    private String buildInitialMailMessageText(InitialSettingForm initialSettingForm, ResourceBundle bundle) {
+    /**
+     * 初期登録メール生成
+     *
+     * @param initialSettingForm
+     * @return
+     */
+    private String buildInitialMailMessageText(InitialSettingForm initialSettingForm) {
 
         try {
             StringBuilder mailMessageBuilder = new StringBuilder();
@@ -90,13 +125,13 @@ public class MailSenderService implements Serializable {
 
             InetAddress inet = InetAddress.getLocalHost();
             String hostName = inet.getHostName();
-            String messageBase1 = bundle.getString("initial.initialSetting.mail.format1");
+            String messageBase1 = this.msgBundle.getString("initial.initialSetting.mail.format1");
             MessageFormat format1 = new MessageFormat(messageBase1);
             format1.setLocale(locale);
             String message1 = format1
                     .format(new String[] { initialSettingForm.getLoginId(), initialSettingForm.getMailAddress() });
 
-            String messageBase2 = bundle.getString("initial.initialSetting.mail.format2");
+            String messageBase2 = this.msgBundle.getString("initial.initialSetting.mail.format2");
             MessageFormat format2 = new MessageFormat(messageBase2);
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append("http://");
@@ -119,4 +154,71 @@ public class MailSenderService implements Serializable {
         }
     }
 
+    /**
+     * パスワード初期化メール送信
+     *
+     * @param userInfo
+     */
+    public void sendPasswordResetMail(String passwordText, String toMailAddress, String adminMainAddress) {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", this.mailSenderBean.getHost());
+        props.put("mail.smtp.port", this.mailSenderBean.getPort());
+
+        Session session = this.createSession(props);
+
+        try {
+            String sender = DEFAULT_MAIL_SENDER + "@" + InetAddress.getLocalHost();
+
+            MimeMessage messageContent = new MimeMessage(session);
+            messageContent.setFrom(new InternetAddress(adminMainAddress, sender, CHARSET));
+            messageContent.addRecipient(Message.RecipientType.TO, new InternetAddress(toMailAddress));
+
+            String messageSubject = this.msgBundle.getString("resetPassword.resetPassword.title");
+            messageContent.setSubject(String.format("[%s]%s", sender, messageSubject), CHARSET);
+            messageContent.setContent(createPasswordResetMail(passwordText), MAIL_CONTENT_TYPE);
+
+            Transport.send(messageContent);
+        } catch (Exception e) {
+            throw new SimpleHealthLogException(e);
+        }
+    }
+
+    /**
+     * パスワード初期化メール作成
+     *
+     * @param passwordText
+     * @return
+     */
+    private String createPasswordResetMail(String passwordText) {
+        List<String> mailTexts = new ArrayList<>();
+        mailTexts.add("パスワードを初期化しました。");
+        mailTexts.add("新しいパスワードは以下の通りです。");
+        mailTexts.add(StringUtils.EMPTY);
+        mailTexts.add(passwordText);
+        mailTexts.add(StringUtils.EMPTY);
+        return mailTexts.stream().collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * セッション生成
+     *
+     * @param props
+     * @return
+     */
+    private Session createSession(Properties props) {
+        Session session = null;
+        if (this.mailSenderBean.isAuth()) {
+            // 587？
+            session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(mailSenderBean.getUserId(), mailSenderBean.getPassword());
+                }
+            });
+        } else {
+            // 25？
+            session = Session.getInstance(props, null);
+        }
+        return session;
+    }
 }
