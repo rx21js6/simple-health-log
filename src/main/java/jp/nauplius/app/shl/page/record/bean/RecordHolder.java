@@ -3,16 +3,13 @@ package jp.nauplius.app.shl.page.record.bean;
 import java.util.Objects;
 
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
+@Data
 public class RecordHolder {
-    @Getter
-    @Setter
     private String dateText;
-    @Getter
-    @Setter
     private PhysicalCondition physicalCondition;
+    private boolean today;
 
     public boolean recordExists() {
         return !Objects.isNull(this.physicalCondition);

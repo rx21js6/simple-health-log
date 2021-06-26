@@ -7,8 +7,23 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <title><h:outputText value="#{msg['common.title']}" /></title>
+    <style type="text/css">
+.monthly_record_header th {
+    background: #FFFFFF;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.monthly_record_today {
+    color: #0000AA;
+    font-weight: bold;
+}
+</style>
 </h:head>
 <h:body>
+    <h:outputStylesheet library="css" name="monthlyRecord.css"></h:outputStylesheet>
     <b:container>
         <b:form inline="true">
             <b:row>
@@ -50,52 +65,56 @@
                 </b:column>
             </b:row>
             <b:row>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>日付</th>
-                            <th>起床</th>
-                            <th>就寝</th>
-                            <th>体温（朝）</th>
-                            <th>体温（夜）</th>
-                            <th>酸素飽和度（朝）</th>
-                            <th>酸素飽和度（夜）</th>
-                            <th>記事</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ui:repeat var="record"
-                            value="#{monthlyRecordListController.monthlyRecords}">
+                <b:dataTable var="record" style-class="monthly_record_table"
+                    value="#{monthlyRecordListController.monthlyRecords}">
+                    <f:facet name="header">
+                        <thead class="monthly_record_header">
                             <tr>
-                                <td><h:outputText value="#{record.dateText}"
-                                        converter="stringDateConverter" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.awakeTime}"
-                                        converter="timeConverter" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.bedTime}"
-                                        converter="timeConverter" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.bodyTemperatureMorning}" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.bodyTemperatureEvening}" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.oxygenSaturationMorning}" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.oxygenSaturationEvening}" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.conditionNote}" /></td>
-                                <td><b:commandButton value="入力" icon="pencil"
-                                        action="#{dailyRecordController.showInput()}">
-                                        <f:setPropertyActionListener
-                                            value="#{record.physicalCondition.id.recordingDate}"
-                                            target="#{dailyRecordController.selectedDate}" />
-                                    </b:commandButton></td>
+                                <th>日付</th>
+                                <th>起床</th>
+                                <th>就寝</th>
+                                <th>体温（朝）</th>
+                                <th>体温（夜）</th>
+                                <th>酸素飽和度（朝）</th>
+                                <th>酸素飽和度（夜）</th>
+                                <th>記事</th>
+                                <th>操作</th>
                             </tr>
-                        </ui:repeat>
-                    </tbody>
-                </table>
+                        </thead>
+                    </f:facet>
+                    <b:dataTableColumn>
+                        <h:outputText value="#{record.dateText}"
+                            converter="stringDateConverter"
+                            styleClass="#{record.isToday() ? 'monthly_record_today' : ''}" />
+                    </b:dataTableColumn>
+                    <b:dataTableColumn>
+                        <h:outputText value="#{record.physicalCondition.awakeTime}"
+                            converter="timeConverter" />
+                    </b:dataTableColumn>
+                    <b:dataTableColumn>
+                        <h:outputText value="#{record.physicalCondition.bedTime}"
+                            converter="timeConverter" />
+                    </b:dataTableColumn>
+                    <b:dataTableColumn
+                        value="#{record.physicalCondition.bodyTemperatureMorning}" />
+                    <b:dataTableColumn
+                        value="#{record.physicalCondition.bodyTemperatureEvening}" />
+                    <b:dataTableColumn
+                        value="#{record.physicalCondition.oxygenSaturationMorning}" />
+                    <b:dataTableColumn
+                        value="#{record.physicalCondition.oxygenSaturationEvening}" />
+                    <b:dataTableColumn
+                        value="#{record.physicalCondition.conditionNote}" />
+                    <b:dataTableColumn>
+                        <b:commandButton value="入力" icon="edit"
+                            look="#{record.isToday() ? 'primary' : ''}"
+                            action="#{dailyRecordController.showInput()}">
+                            <f:setPropertyActionListener
+                                value="#{record.physicalCondition.id.recordingDate}"
+                                target="#{dailyRecordController.selectedDate}" />
+                        </b:commandButton>
+                    </b:dataTableColumn>
+                </b:dataTable>
             </b:row>
         </b:form>
     </b:container>
