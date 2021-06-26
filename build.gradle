@@ -109,31 +109,88 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
+    // https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.0.1'
+
 }
 
 
 task replaceToken {
     doLast {
+        def simpleHealthLogSettingPrefix = 'jp.nauplius.app.shl.setting'
+        // persistence.xml
         def persistenceXmlFile = 'build/resources/main/META-INF/persistence.xml'
-        def settingPrefix = 'jp.nauplius.app.shl.setting'
-        def dbType = project.property(settingPrefix + '.' + 'dbType')
-        def developmentDbUrl = project.property(settingPrefix + '.' + dbType + '.' + 'dbUrl')
-        def developmentDbuser = project.property(settingPrefix + '.' + dbType + '.' + 'dbUser')
-        def developmentDbPassword = project.property(settingPrefix + '.' + dbType + '.' + 'dbPassword')
+        def dbType = project.property(simpleHealthLogSettingPrefix + '.' + 'dbType')
+
+        def dbUrlToken = '@' + simpleHealthLogSettingPrefix + '.db.url@'
+        def dbUserToken = '@' + simpleHealthLogSettingPrefix + '.db.user@'
+        def dbPasswordToken = '@' + simpleHealthLogSettingPrefix + '.db.password@'
+
+        def dbUrlValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.url')
+        def dbUserValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.user')
+        def dbPasswordValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.password')
+
         ant.replace(
             file: persistenceXmlFile,
-            token: '@jp.nauplius.app.shl.setting.dbUrl@',
-            value: developmentDbUrl
+            token: dbUrlToken,
+            value: dbUrlValue
         )
         ant.replace(
             file: persistenceXmlFile,
-            token: '@jp.nauplius.app.shl.setting.dbUser@',
-            value: developmentDbuser
+            token: dbUserToken,
+            value: dbUserValue
         )
         ant.replace(
             file: persistenceXmlFile,
-            token: '@jp.nauplius.app.shl.setting.dbPassword@',
-            value: developmentDbPassword
+            token: dbPasswordToken,
+            value: dbPasswordValue
+        )
+
+        // mail-setting.xml
+        def mailSmtpSettingXmlFile = 'build/resources/main/META-INF/mail-setting.xml'
+        def mailActiveToken = '@' + simpleHealthLogSettingPrefix + '.mail.active@'
+        def mailSmtpHostToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.host@'
+        def mailSmtpPortToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.port@'
+        def mailSmtpAuthToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.auth@'
+        def mailSmtpUserIdToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.userId@'
+        def mailSmtpPasswordToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.password@'
+
+        def mailActiveValue = project.property(simpleHealthLogSettingPrefix + '.mail.active')
+        def mailSmtpHostValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.host')
+        def mailSmtpPortValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.port')
+        def mailSmtpAuthValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.auth')
+        def mailSmtpUserIdValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.userId')
+        def mailSmtpPasswordValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.password')
+
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailActiveToken,
+            value: mailActiveValue
+        )
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpHostToken,
+            value: mailSmtpHostValue
+        )
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpPortToken,
+            value: mailSmtpPortValue
+        )
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpAuthToken,
+            value: mailSmtpAuthValue
+        )
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpUserIdToken,
+            value: mailSmtpUserIdValue
+        )
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpPasswordToken,
+            value: mailSmtpPasswordValue
         )
     }
 }
