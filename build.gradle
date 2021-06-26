@@ -121,6 +121,7 @@ task replaceToken {
         // persistence.xml
         def persistenceXmlFile = 'build/resources/main/META-INF/persistence.xml'
         def dbType = project.property(simpleHealthLogSettingPrefix + '.' + 'dbType')
+        println("dbType: " + dbType)
 
         def dbUrlToken = '@' + simpleHealthLogSettingPrefix + '.db.url@'
         def dbUserToken = '@' + simpleHealthLogSettingPrefix + '.db.user@'
