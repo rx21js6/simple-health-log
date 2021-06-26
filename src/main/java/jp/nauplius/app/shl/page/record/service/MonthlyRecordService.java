@@ -32,9 +32,12 @@ public class MonthlyRecordService implements Serializable {
 
         LocalDate date = LocalDate.of(localDate.getYear(), localDate.getMonth(), 1);
         LocalDate firstDate = date;
+        LocalDate today = LocalDate.now();
 
         while (localDate.getMonth().equals(date.getMonth())) {
             RecordHolder tmpRec = new RecordHolder();
+            boolean isToday = today.equals(date) ? true : false;
+            tmpRec.setToday(isToday);
             tmpRec.setDateText(date.format(ShlConstants.RECORDING_DATE_FORMATTER));
             monthlyRecordHolders.add(tmpRec);
             System.out.println(tmpRec);
