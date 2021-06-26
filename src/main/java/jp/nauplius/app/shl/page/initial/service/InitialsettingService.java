@@ -51,7 +51,7 @@ public class InitialsettingService implements Serializable {
         // loginUser.setId(1); // serial型は不要
         loginUser.setLoginId(initialSettingForm.getLoginId());
         loginUser.setName(initialSettingForm.getName());
-        loginUser.setMailAddress(initialSettingForm.getMailAddress());
+        loginUser.setMailAddress(initialSettingForm.getMailAddress().toLowerCase());
         loginUser.setRoleId(0);
         loginUser.setDeleted(false);
         loginUser.setCreatedDate(timestamp);

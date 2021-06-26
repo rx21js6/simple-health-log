@@ -24,6 +24,7 @@ import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.user.bean.MaintUserInfo;
+import jp.nauplius.app.shl.user.bean.PasswordResetForm;
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 import jp.nauplius.app.shl.user.constants.UserStatus;
 
@@ -76,7 +77,7 @@ public class UserService implements Serializable {
 
         userInfo.setLoginId(maintUserInfo.getLoginId());
         userInfo.setName(maintUserInfo.getName());
-        userInfo.setMailAddress(maintUserInfo.getMailAddress());
+        userInfo.setMailAddress(maintUserInfo.getMailAddress().toLowerCase());
         userInfo.setRoleId(maintUserInfo.getRoleId());
         userInfo.setStatus(UserStatus.REGISTERED.getInt()); // いきなり本登録、本来は仮登録
         userInfo.setDeleted(false);
@@ -120,7 +121,7 @@ public class UserService implements Serializable {
         // 更新
         UserInfo userInfo = results.get(0);
         userInfo.setName(maintUserInfo.getName());
-        userInfo.setMailAddress(maintUserInfo.getMailAddress());
+        userInfo.setMailAddress(maintUserInfo.getMailAddress().toLowerCase());
         userInfo.setRoleId(maintUserInfo.getRoleId());
 
         LocalDateTime timestamp = LocalDateTime.now();

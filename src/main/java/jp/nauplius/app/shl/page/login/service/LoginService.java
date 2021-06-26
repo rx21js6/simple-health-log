@@ -2,6 +2,8 @@ package jp.nauplius.app.shl.page.login.service;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -20,10 +22,14 @@ import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.model.UserToken;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
+import jp.nauplius.app.shl.common.service.MailSenderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
+import jp.nauplius.app.shl.common.util.PasswordUtil;
+import jp.nauplius.app.shl.common.util.PasswordUtil.PasswordStrength;
 import jp.nauplius.app.shl.page.login.bean.LoginForm;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.login.bean.LoginResponse;
+import jp.nauplius.app.shl.user.bean.PasswordResetForm;
 import jp.nauplius.app.shl.ws.bean.GetUsersResponse;
 
 @Named
@@ -40,6 +46,9 @@ public class LoginService implements Serializable {
 
     @Inject
     private KeyIvHolderService keyIvHolderService;
+
+    @Inject
+    private MailSenderService meiMailSenderService;
 
     @Inject
     private LoginInfo loginInfo;
@@ -173,5 +182,67 @@ public class LoginService implements Serializable {
             e.printStackTrace();
             throw new SimpleHealthLogException(e);
         }
+    }
+
+    /**
+     * パスワード初期化
+     *
+     * @param passwordResetForm 初期化情報
+     */
+    @Transactional
+    public void resetPassword(PasswordResetForm passwordResetForm) {
+        // adminは不可
+        if (passwordResetForm.getLoginId().equals("admin")) {
+            throw new SimpleHealthLogException("管理者は変更できません。");
+        }
+
+        // ユーザ存在チェック
+        String loginId = passwordResetForm.getLoginId();
+        String name = passwordResetForm.getName();
+        String mailAddress = passwordResetForm.getMailAddress().toLowerCase();
+        TypedQuery<UserInfo> query = this.em.createQuery(
+                "SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId AND ui.deleted = cast('false' as boolean)",
+                UserInfo.class);
+        query.setParameter("loginId", loginId);
+        List<UserInfo> results = query.getResultList();
+        if (results.size() == 0) {
+            throw new SimpleHealthLogException("ログイン情報が不正です。");
+        }
+
+        UserInfo userInfo = results.get(0);
+        if (!userInfo.getName().equals(name) || !userInfo.getMailAddress().equals(mailAddress)) {
+            throw new SimpleHealthLogException("ログイン情報が不正です。");
+        }
+
+        // すべて一致したらパスワードをリセット
+        String randomPassword = PasswordUtil.createRandomText(PasswordStrength.SIMPLE);
+
+        byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
+        byte[] ivBytes = this.keyIvHolderService.getIvBytes();
+
+        userInfo.setEncryptedPassword(this.cipherUtil.encrypt(randomPassword, keyBytes, ivBytes));
+        userInfo.setModifiedBy(userInfo.getId());
+        userInfo.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
+        this.em.merge(userInfo);
+
+        // メール送信
+        this.meiMailSenderService.sendPasswordResetMail(randomPassword, mailAddress, getAdminMailAddress());
+
+        this.em.flush();
+
+    }
+
+    /**
+     * 管理者のメールアドレスを取得
+     *
+     * @return 管理者メールアドレス
+     */
+    private String getAdminMailAddress() {
+        TypedQuery<UserInfo> query = this.em.createQuery(
+                "SELECT ui FROM UserInfo ui WHERE ui.roleId = 0 AND ui.deleted = cast('false' as boolean)",
+                UserInfo.class);
+        List<UserInfo> results = query.getResultList();
+        UserInfo userInfo = results.get(0);
+        return userInfo.getMailAddress();
     }
 }

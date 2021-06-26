@@ -43,6 +43,9 @@ public class LoginFilter implements Filter {
     private static final List<String> ALLOWED_PATHS_INITIAL = Collections
             .unmodifiableList(Arrays.asList("/javax.faces.resource", "/rest", "/contents/initial"));
 
+    private static final List<String> ALLOWED_PASSWORD_RESET = Collections
+            .unmodifiableList(Arrays.asList("/contents/password/passwordReset.xhtml"));
+
     private static final List<String> ALLOWED_PATHS = Collections
             .unmodifiableList(Arrays.asList("/javax.faces.resource", "/rest", "/contents/record/recordInput.xhtml",
                     "/contents/initial/initialSettingComplete.xhtml"));
@@ -60,6 +63,7 @@ public class LoginFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         String requestUri = httpServletRequest.getRequestURI();
+        this.logger.info("doFilter" + requestUri);
 
         if (requestUri.startsWith(httpServletRequest.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER)) {
             // Skip JSF
@@ -77,22 +81,31 @@ public class LoginFilter implements Filter {
         String path = requestUri.substring(httpServletRequest.getContextPath().length()).replaceAll("[/]+$", "");
 
         if (!this.keyIvHolderService.isRegistered()) {
+            // 初期設定前
             this.logger.info("Not registered.");
             // 初期設定
             boolean pathAllowed = ALLOWED_PATHS_INITIAL.stream().anyMatch(allowedPath -> path.startsWith(allowedPath));
             if (pathAllowed) {
                 chain.doFilter(request, response);
-            } else {
-                httpServletResponse
-                        .sendRedirect(httpServletRequest.getContextPath() + "/contents/initial/initialSetting.xhtml");
+                return;
             }
+            // それ以外
+            httpServletResponse
+                    .sendRedirect(httpServletRequest.getContextPath() + "/contents/initial/initialSetting.xhtml");
+
         } else {
             // ログイン済み確認（restは許可）
             boolean loggedIn = !Objects.isNull(this.loginInfo.getUserInfo());
             boolean pathAllowed = ALLOWED_PATHS.stream().anyMatch(allowedPath -> path.startsWith(allowedPath));
+            boolean passwordResetAllowd = ALLOWED_PASSWORD_RESET.stream()
+                    .anyMatch(allowedPath -> path.startsWith(allowedPath));
+
             this.logger.debug(String.format("loggedIn: %s, pathAllowed: %s", loggedIn, pathAllowed));
 
-            if (loggedIn || pathAllowed) {
+            if (passwordResetAllowd) {
+                // パスワードリセット
+                chain.doFilter(request, response);
+            } else if (loggedIn || pathAllowed) {
                 if (!this.authService.isVisible(path, httpServletRequest.getContextPath())) {
                     // 表示権限がない場合
                     httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/error/authError.xhtml");
