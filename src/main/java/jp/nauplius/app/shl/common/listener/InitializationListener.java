@@ -1,6 +1,7 @@
 package jp.nauplius.app.shl.common.listener;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import jp.nauplius.app.shl.common.db.DbLoader;
 import jp.nauplius.app.shl.common.model.KeyIv;
 
+@Named
 @WebListener
 public class InitializationListener implements ServletContextListener {
     @Inject

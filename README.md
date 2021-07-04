@@ -1,5 +1,7 @@
 # simple-health-log
 
+2021-07-04
+
 ## 概要
 
 * 起床時刻
@@ -19,7 +21,7 @@
 
 ### gradle.properties
 
-~/.gradle/gralde.properties に以下を記載。必要に応じて適宜修正
+* ~/.gradle/gralde.properties に以下を記載。必要に応じて適宜修正
 
 ```java
 # development/productionおよびパスワード（**********）は必要に応じて変更
@@ -36,6 +38,10 @@ jp.nauplius.app.shl.setting.production.db.password=**********
 jp.nauplius.app.shl.setting.development.db.url=jdbc:postgresql://localhost:5432/simple_health_log_development
 jp.nauplius.app.shl.setting.development.db.user=healthlog
 jp.nauplius.app.shl.setting.development.db.password=**********
+## for test(2021-07-04- )
+jp.nauplius.app.shl.setting.test.db.url=jdbc:postgresql://localhost:5432/simple_health_log_test
+jp.nauplius.app.shl.setting.test.db.user=healthlog
+jp.nauplius.app.shl.setting.test.db.password=**********
 
 #
 # simple-health-log mail settings
@@ -53,10 +59,13 @@ jp.nauplius.app.shl.setting.mail.smtp.password=**********
 
 ### PostgreSQL
 
-create user "healthlog". And create database.
+* create user "healthlog". And create database.
 
 ```sql
 CREATE USER healthlog PASSWORD '**********' NOINHERIT VALID UNTIL 'infinity';
+
+-- test(2021-07-04- )
+CREATE DATABASE simple_health_log_test WITH OWNER='healthlog';
 
 -- development
 -- CREATE DATABASE simple_health_log_development WITH OWNER='healthlog';
