@@ -77,9 +77,33 @@ public class LoginService extends AbstractService {
 
         UserInfo userInfo = results.get(0);
         String encryptedPassword = userInfo.getEncryptedPassword();
-        String password = this.cipherUtil.decrypt(encryptedPassword, keyBytes, ivBytes);
+
+        String password = null;
+        boolean oldFormat = false;
+        try {
+            password = this.cipherUtil.decrypt(encryptedPassword, keyBytes, ivBytes);
+        } catch (SimpleHealthLogException e) {
+            // 旧型式でデコード
+            this.logger.warn("Cipher format is old. decrypt to new format.");
+            password = this.cipherUtil.decryptOld(encryptedPassword, keyBytes, ivBytes);
+            oldFormat = true;
+        }
+
         if (!password.equals(loginForm.getPassword())) {
             throw new SimpleHealthLogException("ログインIDかパスワードが不正です。");
+        }
+
+        if (oldFormat) {
+            // 旧型式の場合は一旦新形式にエンコードしなおして保存
+            this.logger.warn("Cipher format is old. Changing to new format.");
+            UserInfo userInfoForUpdate = this.entityManager.find(UserInfo.class, userInfo.getId());
+            String encrypedPasswordNew = this.cipherUtil.encrypt(password, keyBytes, ivBytes);
+            userInfoForUpdate.setEncryptedPassword(encrypedPasswordNew);
+            userInfoForUpdate.setModifiedBy(userInfo.getId());
+            userInfoForUpdate.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
+            this.entityManager.merge(userInfoForUpdate);
+            this.entityManager.flush();
+
         }
 
         // トークン登録
