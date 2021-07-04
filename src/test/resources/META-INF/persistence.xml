@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+    <persistence-unit name="simple-health-log_test">
+        <!-- Converters -->
+        <class>jp.nauplius.app.shl.common.model.converters.LocalDateAttributeConverter</class>
+        <class>jp.nauplius.app.shl.common.model.KeyIv</class>
+        <class>jp.nauplius.app.shl.common.model.PhysicalCondition</class>
+        <class>jp.nauplius.app.shl.common.model.PhysicalConditionPK</class>
+        <class>jp.nauplius.app.shl.common.model.UserInfo</class>
+        <class>jp.nauplius.app.shl.common.model.UserToken</class>
+
+        <!-- Entities / Model -->
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+            <property name="javax.persistence.jdbc.url"
+                value="@jp.nauplius.app.shl.setting.testDb.url@" />
+            <property name="javax.persistence.jdbc.user"
+                value="@jp.nauplius.app.shl.setting.testDb.user@" />
+            <property name="javax.persistence.jdbc.password"
+                value="@jp.nauplius.app.shl.setting.testDb.password@" />
+        </properties>
+    </persistence-unit>
+</persistence>

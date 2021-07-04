@@ -49,7 +49,10 @@ public class MailSenderService implements Serializable {
     private Logger logger;
 
     @Inject
-    private FacesContext facesContext;
+    private LocaleService localeService;
+
+    // @Inject
+    // private FacesContext facesContext;
 
     private MailSenderBean mailSenderBean;
 
@@ -82,8 +85,8 @@ public class MailSenderService implements Serializable {
      *
      * @param initialSettingForm
      */
-    public void sendInitialSettingMail(InitialSettingForm initialSettingForm) {
-        String mailMessage = this.buildInitialMailMessageText(initialSettingForm);
+    public void sendInitialSettingMail(String contextPath, InitialSettingForm initialSettingForm) {
+        String mailMessage = this.buildInitialMailMessageText(contextPath, initialSettingForm);
         Properties props = new Properties();
         props.put("mail.smtp.host", this.mailSenderBean.getHost());
         props.put("mail.smtp.port", this.mailSenderBean.getPort());
@@ -109,25 +112,27 @@ public class MailSenderService implements Serializable {
     /**
      * 初期登録メール生成
      *
+     * @param contextPath
      * @param initialSettingForm
      * @return
      */
-    private String buildInitialMailMessageText(InitialSettingForm initialSettingForm) {
+    private String buildInitialMailMessageText(String contextPath, InitialSettingForm initialSettingForm) {
 
         try {
             StringBuilder mailMessageBuilder = new StringBuilder();
-            ExternalContext externalContext = this.facesContext.getExternalContext();
-            HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-            String contextPath = request.getContextPath();
+            // ExternalContext externalContext = this.facesContext.getExternalContext();
+            // HttpServletRequest request = (HttpServletRequest)
+            // externalContext.getRequest();
+            // String contextPath = request.getContextPath();
 
-            HttpSession session = request.getSession();
-            Locale locale = (Locale) session.getAttribute("locale");
+            // HttpSession session = request.getSession();
+            // Locale locale = (Locale) session.getAttribute("locale");
 
             InetAddress inet = InetAddress.getLocalHost();
             String hostName = inet.getHostName();
             String messageBase1 = this.msgBundle.getString("initial.initialSetting.mail.format1");
             MessageFormat format1 = new MessageFormat(messageBase1);
-            format1.setLocale(locale);
+            format1.setLocale(this.localeService.getLocale());
             String message1 = format1
                     .format(new String[] { initialSettingForm.getLoginId(), initialSettingForm.getMailAddress() });
 

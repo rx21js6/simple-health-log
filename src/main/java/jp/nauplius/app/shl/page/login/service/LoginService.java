@@ -1,6 +1,5 @@
 package jp.nauplius.app.shl.page.login.service;
 
-import java.io.Serializable;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -11,7 +10,6 @@ import java.util.Objects;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,8 +19,9 @@ import org.slf4j.Logger;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.model.UserToken;
-import jp.nauplius.app.shl.common.service.KeyIvHolderService;
+import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.service.MailSenderService;
+import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.common.util.PasswordUtil;
 import jp.nauplius.app.shl.common.util.PasswordUtil.PasswordStrength;
@@ -32,20 +31,21 @@ import jp.nauplius.app.shl.page.login.bean.LoginResponse;
 import jp.nauplius.app.shl.user.bean.PasswordResetForm;
 import jp.nauplius.app.shl.ws.bean.GetUsersResponse;
 
+/**
+ * ログインサービス
+ *
+ */
 @Named
 @SessionScoped
-public class LoginService implements Serializable {
+public class LoginService extends AbstractService {
     @Inject
     private Logger logger;
-
-    @Inject
-    private transient EntityManager em;
 
     @Inject
     private CipherUtil cipherUtil;
 
     @Inject
-    private KeyIvHolderService keyIvHolderService;
+    private KeyIvHolder keyIvHolder;
 
     @Inject
     private MailSenderService meiMailSenderService;
@@ -63,10 +63,10 @@ public class LoginService implements Serializable {
 
         LoginResponse loginResponse = new LoginResponse();
 
-        byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
-        byte[] ivBytes = this.keyIvHolderService.getIvBytes();
+        byte[] keyBytes = this.keyIvHolder.getKeyBytes();
+        byte[] ivBytes = this.keyIvHolder.getIvBytes();
 
-        TypedQuery<UserInfo> query = this.em.createQuery(
+        TypedQuery<UserInfo> query = this.entityManager.createQuery(
                 "SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId AND ui.deleted = cast('false' as boolean)",
                 UserInfo.class);
         query.setParameter("loginId", loginForm.getLoginId());
@@ -95,18 +95,25 @@ public class LoginService implements Serializable {
         return loginResponse;
     }
 
+    /**
+     * ログアウト
+     */
     public void logout() {
         this.logger.info("LoginService#logout");
         // セッション削除
         this.loginInfo.setUserInfo(null);
     }
 
+    /**
+     * 利用者情報を取得
+     * @return
+     */
     @Transactional
     public GetUsersResponse getUsers() {
         GetUsersResponse response = new GetUsersResponse();
 
         // クエリの生成
-        TypedQuery<UserInfo> q = em.createQuery("SELECT ui FROM UserInfo ui", UserInfo.class);
+        TypedQuery<UserInfo> q = entityManager.createQuery("SELECT ui FROM UserInfo ui", UserInfo.class);
 
         // 抽出
         response.setUserInfos(q.getResultList());
@@ -114,12 +121,17 @@ public class LoginService implements Serializable {
         return response;
     }
 
+    /**
+     * トークンでログイン
+     * @param token
+     * @return
+     */
     public UserInfo loginFromToken(String token) {
         this.logger.info("loginFromToken");
 
         this.logger.debug(String.format("token: %s", token));
 
-        TypedQuery<UserInfo> query = this.em.createQuery(
+        TypedQuery<UserInfo> query = this.entityManager.createQuery(
                 "SELECT ui FROM UserInfo ui INNER JOIN UserToken ut ON ui.id = ut.id WHERE ut.token = :token AND ui.deleted = cast('false' as boolean)",
                 UserInfo.class);
         query.setParameter("token", token);
@@ -148,12 +160,12 @@ public class LoginService implements Serializable {
         UserToken userToken = null;
 
         try {
-            userToken = this.em.find(UserToken.class, userInfo.getId());
+            userToken = this.entityManager.find(UserToken.class, userInfo.getId());
             if (Objects.isNull(userToken)) {
                 userToken = new UserToken();
                 userToken.setId(userInfo.getId());
                 userToken.setToken(StringUtils.EMPTY);
-                this.em.persist(userToken);
+                this.entityManager.persist(userToken);
             }
 
             // 一次的に他の端末から参照する場合の対応（トークンを更新しない）
@@ -161,7 +173,7 @@ public class LoginService implements Serializable {
                 return userToken;
             }
 
-            TypedQuery<UserToken> query = this.em.createQuery("SELECT t FROM UserToken t WHERE t.token = :token",
+            TypedQuery<UserToken> query = this.entityManager.createQuery("SELECT t FROM UserToken t WHERE t.token = :token",
                     UserToken.class);
 
             String token = null;
@@ -175,8 +187,8 @@ public class LoginService implements Serializable {
             } while (0 < results.size());
 
             userToken.setToken(token);
-            this.em.merge(userToken);
-            this.em.flush();
+            this.entityManager.merge(userToken);
+            this.entityManager.flush();
             return userToken;
         } catch (Throwable e) {
             e.printStackTrace();
@@ -200,7 +212,7 @@ public class LoginService implements Serializable {
         String loginId = passwordResetForm.getLoginId();
         String name = passwordResetForm.getName();
         String mailAddress = passwordResetForm.getMailAddress().toLowerCase();
-        TypedQuery<UserInfo> query = this.em.createQuery(
+        TypedQuery<UserInfo> query = this.entityManager.createQuery(
                 "SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId AND ui.deleted = cast('false' as boolean)",
                 UserInfo.class);
         query.setParameter("loginId", loginId);
@@ -217,18 +229,18 @@ public class LoginService implements Serializable {
         // すべて一致したらパスワードをリセット
         String randomPassword = PasswordUtil.createRandomText(PasswordStrength.SIMPLE);
 
-        byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
-        byte[] ivBytes = this.keyIvHolderService.getIvBytes();
+        byte[] keyBytes = this.keyIvHolder.getKeyBytes();
+        byte[] ivBytes = this.keyIvHolder.getIvBytes();
 
         userInfo.setEncryptedPassword(this.cipherUtil.encrypt(randomPassword, keyBytes, ivBytes));
         userInfo.setModifiedBy(userInfo.getId());
         userInfo.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
-        this.em.merge(userInfo);
+        this.entityManager.merge(userInfo);
 
         // メール送信
         this.meiMailSenderService.sendPasswordResetMail(randomPassword, mailAddress, getAdminMailAddress());
 
-        this.em.flush();
+        this.entityManager.flush();
 
     }
 
@@ -238,7 +250,7 @@ public class LoginService implements Serializable {
      * @return 管理者メールアドレス
      */
     private String getAdminMailAddress() {
-        TypedQuery<UserInfo> query = this.em.createQuery(
+        TypedQuery<UserInfo> query = this.entityManager.createQuery(
                 "SELECT ui FROM UserInfo ui WHERE ui.roleId = 0 AND ui.deleted = cast('false' as boolean)",
                 UserInfo.class);
         List<UserInfo> results = query.getResultList();

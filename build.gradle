@@ -43,6 +43,15 @@ dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13'
 
+    // https://mvnrepository.com/artifact/org.dbunit/dbunit
+    testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.0'
+
+    // https://mvnrepository.com/artifact/org.jglue.cdi-unit/cdi-unit
+    testImplementation group: 'org.jglue.cdi-unit', name: 'cdi-unit', version: '4.1.0'
+
+    // https://mvnrepository.com/artifact/org.jboss.weld.se/weld-se-core
+    implementation group: 'org.jboss.weld.se', name: 'weld-se-core', version: '3.1.7.SP1'
+
     // Servlet + JSF
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 
@@ -114,9 +123,48 @@ dependencies {
 
 }
 
+task replaceTokenTest {
+    doFirst {
+        println("replaceTokenTest First")
+    }
+
+    doLast {
+        println("replaceTokenTest doLast")
+        def simpleHealthLogSettingPrefix = 'jp.nauplius.app.shl.setting'
+        // persistence.xml
+        def persistenceXmlFile = 'build/resources/test/META-INF/persistence.xml'
+        def dbType = "test"
+        println("dbType: " + dbType)
+
+        def dbUrlToken = '@' + simpleHealthLogSettingPrefix + '.testDb.url@'
+        def dbUserToken = '@' + simpleHealthLogSettingPrefix + '.testDb.user@'
+        def dbPasswordToken = '@' + simpleHealthLogSettingPrefix + '.testDb.password@'
+
+        def dbUrlValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.url')
+        def dbUserValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.user')
+        def dbPasswordValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.password')
+
+        ant.replace(
+            file: persistenceXmlFile,
+            token: dbUrlToken,
+            value: dbUrlValue
+        )
+        ant.replace(
+            file: persistenceXmlFile,
+            token: dbUserToken,
+            value: dbUserValue
+        )
+        ant.replace(
+            file: persistenceXmlFile,
+            token: dbPasswordToken,
+            value: dbPasswordValue
+        )
+    }
+}
 
 task replaceToken {
     doLast {
+        println("replaceToken doLast");
         def simpleHealthLogSettingPrefix = 'jp.nauplius.app.shl.setting'
         // persistence.xml
         def persistenceXmlFile = 'build/resources/main/META-INF/persistence.xml'
@@ -195,7 +243,8 @@ task replaceToken {
         )
     }
 }
-war.dependsOn replaceToken
+// war.dependsOn replaceToken
+// test.dependsOn replaceTokenTest
 
 
 application {
@@ -203,7 +252,21 @@ application {
     // mainClassName = 'learn_webapp_gradle.App'
 }
 
+test {
+    println("test")
+    testLogging {
+        exceptionFormat 'full'
+    }
+}
+
+testClasses {
+    println("testClasses")
+    dependsOn("replaceTokenTest")
+}
+
 war {
+    println("war")
+    dependsOn("replaceToken")
 }
 
 gretty {
