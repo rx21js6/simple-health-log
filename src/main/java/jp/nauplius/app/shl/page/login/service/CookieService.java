@@ -40,6 +40,7 @@ public class CookieService implements Serializable {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(ShlConstants.COOKIE_KEY_TOKEN)) {
                     loginInfoCookie = cookie;
+                    loginInfoCookie.setSecure(true);
                     break;
                 }
             }
@@ -47,6 +48,7 @@ public class CookieService implements Serializable {
 
         if (loginInfoCookie == null) {
             loginInfoCookie = new Cookie(ShlConstants.COOKIE_KEY_TOKEN, token);
+            loginInfoCookie.setSecure(true);
             loginInfoCookie.setMaxAge(60 * 60 * 24 * 10);
         }
         loginInfoCookie.setPath("/");
@@ -93,12 +95,14 @@ public class CookieService implements Serializable {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(ShlConstants.COOKIE_KEY_TOKEN)) {
                     loginInfoCookie = cookie;
+                    loginInfoCookie.setSecure(true);
                     break;
                 }
             }
         }
         if (loginInfoCookie == null) {
             loginInfoCookie = new Cookie(ShlConstants.COOKIE_KEY_TOKEN, null);
+            loginInfoCookie.setSecure(true);
         }
         loginInfoCookie.setValue(null);
         loginInfoCookie.setMaxAge(0);

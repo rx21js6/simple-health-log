@@ -30,7 +30,7 @@ import jp.nauplius.app.shl.ws.bean.GetUsersResponse;
  */
 @RunWith(CdiRunner.class)
 @ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class })
-public class LoginServicceTest extends AbstractServiceTest {
+public class LoginServiceTest extends AbstractServiceTest {
     @Inject
     private LoginService loginService;
 
@@ -88,15 +88,16 @@ public class LoginServicceTest extends AbstractServiceTest {
 
     @Test
     public void testGetUsers() {
-       GetUsersResponse response = this.loginService.getUsers();
-       assertEquals(1,response.getUserInfos().size());
+        this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
+        GetUsersResponse response = this.loginService.getUsers();
+        assertEquals(1, response.getUserInfos().size());
     }
-
 
     @Test
     public void testLoginFromToken() {
         this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
-        UserInfo userInfo = this.loginService.loginFromToken("0cn4Zn3GIJCIE6D8oPtvnFbL6i5d6xGyk3uvO++ea5ui2LDm0ZUZykFwuSLJgOiWBL36GVEM+GKsnJjG1pyb6A==");
+        UserInfo userInfo = this.loginService.loginFromToken(
+                "0cn4Zn3GIJCIE6D8oPtvnFbL6i5d6xGyk3uvO++ea5ui2LDm0ZUZykFwuSLJgOiWBL36GVEM+GKsnJjG1pyb6A==");
         assertEquals("admin", userInfo.getLoginId());
     }
 

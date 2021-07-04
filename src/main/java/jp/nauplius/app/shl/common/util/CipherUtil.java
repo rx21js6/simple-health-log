@@ -13,6 +13,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Named;
 
+import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+
 /**
  * 暗号ユーティリティ
  * @author developer
@@ -43,9 +45,16 @@ public class CipherUtil implements Serializable {
      */
     public static final int KEY_SIZE = 128;
     /**
-     * Cipher変換方式（AES/CBC/PKCS5Padding: 128bytes）
+     * Cipher変換方式（AES/GCM/NoPadding: 128bytes）
      */
-    public static final String CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding";
+    public static final String CIPHER_TRANSFORMATION = "AES";
+
+    /**
+     * Cipher変換方式（AES/CBC/PKCS5Padding: 128bytes）
+     * @deprecated because of weakness.
+     */
+    @Deprecated
+    public static final String CIPHER_TRANSFORMATION_OLD = "AES/CBC/PKCS5Padding";
 
     /**
      * Initial Vector生成
@@ -86,7 +95,7 @@ public class CipherUtil implements Serializable {
             IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 
             Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
-            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec);
 
             // 暗号化
             byte[] encryptedBytes = cipher.doFinal(textBytes);
@@ -110,9 +119,39 @@ public class CipherUtil implements Serializable {
             byte[] encryptedBytes = base64StringToBytes(base64EncryptedText);
 
             SecretKeySpec keySpec = new SecretKeySpec(keyBytes, KEY_ALGORITHM);
-            IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 
             Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec);
+
+            // 復号化
+            byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+
+            // 文字列に変換して返却
+            return new String(decryptedBytes);
+
+        } catch (GeneralSecurityException e) {
+            throw new SimpleHealthLogException(e);
+        } finally {
+
+        }
+
+    }
+
+    /**
+     * 旧型式でデコード
+     * @param base64EncryptedText
+     * @param keyBytes
+     * @param ivBytes
+     * @return
+     */
+    public  String decryptOld(String base64EncryptedText, byte[] keyBytes, byte[] ivBytes) {
+        try {
+            byte[] encryptedBytes = base64StringToBytes(base64EncryptedText);
+
+            SecretKeySpec keySpec = new SecretKeySpec(keyBytes, KEY_ALGORITHM);
+            IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+
+            Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION_OLD);
             cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
 
             // 復号化
@@ -122,12 +161,10 @@ public class CipherUtil implements Serializable {
             return new String(decryptedBytes);
 
         } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new SimpleHealthLogException(e);
         } finally {
 
         }
-
     }
 
     /**
