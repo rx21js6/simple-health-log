@@ -140,9 +140,21 @@ task replaceTokenTest {
         def dbUserToken = '@' + simpleHealthLogSettingPrefix + '.testDb.user@'
         def dbPasswordToken = '@' + simpleHealthLogSettingPrefix + '.testDb.password@'
 
-        def dbUrlValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.url')
-        def dbUserValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.user')
-        def dbPasswordValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.password')
+        def dbUrlPropKey = simpleHealthLogSettingPrefix + '.' + dbType + '.db.url'
+        def dbUrlValue = System.getenv()['SIMPLE_HEALTH_LOG_DB_URL_TEST']
+        if (project.hasProperty(dbUrlPropKey)) {
+            dbUrlValue = project.property(dbUrlPropKey)
+        }
+        def dbUserPropKey = simpleHealthLogSettingPrefix + '.' + dbType + '.db.user'
+        def dbUserValue = System.getenv()['SIMPLE_HEALTH_LOG_DB_USER_TEST']
+        if (project.hasProperty(dbUserPropKey)) {
+            dbUserValue = project.property(dbUserPropKey)
+        }
+        def dbPasswordValue = System.getenv()['SIMPLE_HEALTH_LOG_DB_PASSWORD_TEST']
+        def dbPasswordPropKey = simpleHealthLogSettingPrefix + '.' + dbType + '.db.password'
+        if (project.hasProperty(dbPasswordPropKey)) {
+            dbPasswordValue = project.property(dbPasswordPropKey)
+        }
 
         ant.replace(
             file: persistenceXmlFile,
@@ -175,9 +187,21 @@ task replaceToken {
         def dbUserToken = '@' + simpleHealthLogSettingPrefix + '.db.user@'
         def dbPasswordToken = '@' + simpleHealthLogSettingPrefix + '.db.password@'
 
-        def dbUrlValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.url')
-        def dbUserValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.user')
-        def dbPasswordValue = project.property(simpleHealthLogSettingPrefix + '.' + dbType + '.db.password')
+        def dbUrlPropKey = simpleHealthLogSettingPrefix + '.' + dbType + '.db.url'
+        def dbUrlValue = System.getenv()['SIMPLE_HEALTH_LOG_DB_URL']
+        if (project.hasProperty(dbUrlPropKey)) {
+            dbUrlValue = project.property(dbUrlPropKey)
+        }
+        def dbUserPropKey = simpleHealthLogSettingPrefix + '.' + dbType + '.db.user'
+        def dbUserValue = System.getenv()['SIMPLE_HEALTH_LOG_DB_USER']
+        if (project.hasProperty(dbUserPropKey)) {
+            dbUserValue = project.property(dbUserPropKey)
+        }
+        def dbPasswordValue = System.getenv()['SIMPLE_HEALTH_LOG_DB_PASSWORD']
+        def dbPasswordPropKey = simpleHealthLogSettingPrefix + '.' + dbType + '.db.password'
+        if (project.hasProperty(dbPasswordPropKey)) {
+            dbPasswordValue = project.property(dbPasswordPropKey)
+        }
 
         ant.replace(
             file: persistenceXmlFile,
@@ -204,12 +228,41 @@ task replaceToken {
         def mailSmtpUserIdToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.userId@'
         def mailSmtpPasswordToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.password@'
 
-        def mailActiveValue = project.property(simpleHealthLogSettingPrefix + '.mail.active')
-        def mailSmtpHostValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.host')
-        def mailSmtpPortValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.port')
-        def mailSmtpAuthValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.auth')
-        def mailSmtpUserIdValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.userId')
-        def mailSmtpPasswordValue = project.property(simpleHealthLogSettingPrefix + '.mail.smtp.password')
+        def mailActiveValue = 'false'
+        def mailActivePropKey = simpleHealthLogSettingPrefix + '.mail.active'
+        if (project.hasProperty(mailActivePropKey)) {
+            mailActiveValue = project.property(mailActivePropKey)
+        }
+
+        def mailSmtpHostValue = 'localhost'
+        def mailSmtpHostPropKey = simpleHealthLogSettingPrefix + '.mail.smtp.host'
+        if (project.hasProperty(mailSmtpHostPropKey)) {
+            mailSmtpHostValue = project.property(mailSmtpHostPropKey)
+        }
+
+        def mailSmtpPortValue = '25'
+        def mailSmtpPortPropKey = simpleHealthLogSettingPrefix + '.mail.smtp.port'
+        if (project.hasProperty(mailSmtpPortPropKey)) {
+            mailSmtpPortValue = project.property(mailSmtpPortPropKey)
+        }
+
+        def mailSmtpAuthValue = 'false'
+        def mailSmtpAuthPropKey = simpleHealthLogSettingPrefix + '.mail.smtp.auth'
+        if (project.hasProperty(mailSmtpAuthPropKey)) {
+            mailSmtpAuthValue = project.property(mailSmtpAuthPropKey)
+        }
+
+        def mailSmtpUserIdValue = ''
+        def mailSmtpUserIdPropKey = simpleHealthLogSettingPrefix + '.mail.smtp.userId'
+        if (project.hasProperty(mailSmtpUserIdPropKey)) {
+            mailSmtpUserIdValue = project.property(mailSmtpUserIdPropKey)
+        }
+
+        def mailSmtpPasswordValue = ''
+        def mailSmtpPasswordPropKey = simpleHealthLogSettingPrefix + '.mail.smtp.password'
+        if (project.hasProperty(mailSmtpPasswordPropKey)) {
+            mailSmtpPasswordValue = project.property(mailSmtpPasswordPropKey)
+        }
 
         ant.replace(
             file: mailSmtpSettingXmlFile,
