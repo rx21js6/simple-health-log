@@ -3,8 +3,10 @@ package jp.nauplius.app.shl.user.backing;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -43,6 +45,9 @@ public class MaintUserController implements Serializable, ModalControllerListene
 
     @Inject
     private CommonConfirmModalBean commonConfirmModalBean;
+
+    @Inject
+    private transient ResourceBundle messageBundle;
 
     @Getter
     @Setter
@@ -112,12 +117,14 @@ public class MaintUserController implements Serializable, ModalControllerListene
         try {
             this.selectedMaintUserInfo = this.userService.getMaintUsernfo(this.selectedId);
 
-            StringBuilder messageBuilder = new StringBuilder();
-            messageBuilder.append("利用者削除");
-            messageBuilder.append(this.selectedMaintUserInfo.getLoginId());
-            messageBuilder.append("を削除します。削除後は戻せません。");
+            String message = MessageFormat.format(
+                    this.messageBundle.getString("contents.maint.user.userList.msg.confirmDeletion"),
+                    this.selectedMaintUserInfo.getLoginId());
 
-            List<String> messages = Arrays.asList(new String[] { messageBuilder.toString(), "よろしいですか？" });
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder.append(message);
+            List<String> messages = Arrays.asList(
+                    new String[] { messageBuilder.toString(), this.messageBundle.getString("common.msg.sure") });
             this.commonConfirmModalBean.setTitle("利用者削除");
             this.commonConfirmModalBean.setMessages(messages);
             this.commonConfirmModalBean.setVisible(true);
@@ -135,6 +142,7 @@ public class MaintUserController implements Serializable, ModalControllerListene
 
     /**
      * 削除実行
+     *
      * @return
      */
     public String delete() {
@@ -142,7 +150,6 @@ public class MaintUserController implements Serializable, ModalControllerListene
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
-
 
         try {
             this.userService.delete(selectedMaintUserInfo);

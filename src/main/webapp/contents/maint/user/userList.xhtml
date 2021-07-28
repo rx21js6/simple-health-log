@@ -7,7 +7,8 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
     <h:head>
-        <title>利用者一覧</title>
+        <title><h:outputText
+                value="#{msg['contents.maint.user.userList.title']}" /></title>
         <f:metadata>
             <f:event type="preRenderView"
                 listener="#{maintUserController.loadUserInfos}" />
@@ -17,16 +18,20 @@
     <h:body>
         <b:container>
             <b:row>
-                <h2>利用者一覧</h2>
+                <h2>
+                    <h:outputText value="#{msg['contents.maint.user.userList.title']}" />
+                </h2>
             </b:row>
             <b:messages></b:messages>
             <b:row>
                 <h:form>
                     <b:column>
-                        <b:commandButton value="新規登録" icon="pencil"
-                            action="#{maintUserController.newData}"></b:commandButton>
-                        <b:commandButton value="体調入力" icon="heart-empty"
-                            action="#{dailyRecordController.showInput()}">
+                        <b:commandButton
+                            value="#{msg['contents.maint.user.userList.button.signUp']}"
+                            icon="pencil" action="#{maintUserController.newData}"></b:commandButton>
+                        <b:commandButton
+                            value="#{msg['contents.maint.user.userList.button.conditionInput']}"
+                            icon="heart-empty" action="#{dailyRecordController.showInput()}">
                         </b:commandButton>
                     </b:column>
                 </h:form>
@@ -34,22 +39,29 @@
             <b:row>
                 <b:dataTable value="#{maintUserController.userInfos}" var="userInfo"
                     searching="false">
-                    <b:dataTableColumn label="ログインID" orderable="false"
-                        value="#{userInfo.loginId}" />
-                    <b:dataTableColumn label="氏名" orderable="false"
-                        value="#{userInfo.name}" />
-                    <b:dataTableColumn label="区分" orderable="false">
+                    <b:dataTableColumn
+                        label="#{msg['contents.maint.user.userList.label.loginId']}"
+                        orderable="false" value="#{userInfo.loginId}" />
+                    <b:dataTableColumn
+                        label="#{msg['contents.maint.user.userList.label.name']}"
+                        orderable="false" value="#{userInfo.name}" />
+                    <b:dataTableColumn
+                        label="#{msg['contents.maint.user.userList.label.roleType']}"
+                        orderable="false">
                         <h:outputText value="#{userInfo.roleId}"
                             converter="userRoleIdConverter"></h:outputText>
                     </b:dataTableColumn>
-                    <b:dataTableColumn orderable="false" label="処理">
+                    <b:dataTableColumn orderable="false"
+                        label="#{msg['contents.maint.user.userList.label.operation']}">
                         <h:form>
-                            <b:commandButton icon="pencil" value="編集"
+                            <b:commandButton icon="pencil"
+                                value="#{msg['contents.maint.user.userList.button.edit']}"
                                 action="#{maintUserController.editData}">
                                 <f:setPropertyActionListener value="#{userInfo.id}"
                                     target="#{maintUserController.selectedId}" />
                             </b:commandButton>
-                            <b:commandButton icon="trash" value="削除"
+                            <b:commandButton icon="trash"
+                                value="#{msg['contents.maint.user.userList.button.delete']}"
                                 rendered="#{userInfo.id != loginInfoHolder.userInfo.id}"
                                 action="#{maintUserController.showDeletionModal}">
                                 <f:setPropertyActionListener value="#{userInfo.id}"

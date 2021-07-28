@@ -37,9 +37,11 @@
         </b:row>
         <b:row>
             <b:column>
-                <h:outputText value="ログインしていません。"
+                <h:outputText
+                    value="#{msg['contents.record.recordInput.notLoggedIn']}"
                     rendered="#{loginInfo.userInfo == null}" />
-                <h:outputText value="#{loginInfo.userInfo.name}さんようこそ"
+                <h:outputText
+                    value="#{loginInfo.userInfo.name} #{msg['contents.record.recordInput.welcome']}"
                     rendered="#{loginInfo.userInfo != null}" />
             </b:column>
         </b:row>
@@ -47,7 +49,9 @@
         <b:form inline="true">
             <b:row rendered="#{loginInfo.userInfo != null}">
                 <b:column>
-                    <b:commandButton action="#{loginController.logout()}">ログアウト</b:commandButton>
+                    <b:commandButton action="#{loginController.logout()}">
+                        <h:outputText value="#{msg['common.label.screen.logout']}" />
+                    </b:commandButton>
                 </b:column>
             </b:row>
         </b:form>
@@ -59,24 +63,26 @@
                     <b:column id="loginValues">
                         <b:panelGrid columns="1" cellpadding="5">
                             <b:inputText value="#{loginController.loginForm.loginId}"
-                                label="Login ID:" labelStyle="width:150px;" maxlength="10" />
+                                label="#{msg['common.label.loginId']}" labelStyle="width:150px;"
+                                maxlength="10" />
                             <b:inputSecret value="#{loginController.loginForm.password}"
-                                label="Password:" labelStyle="width:150px;" maxlength="32" />
+                                label="#{msg['common.label.password']}"
+                                labelStyle="width:150px;" maxlength="32" />
                             <b:selectBooleanCheckbox
-                                value="#{loginController.loginForm.keepLogin}" label="ログイン状態を保持"
-                                labelStyle="width:150px;" />
+                                value="#{loginController.loginForm.keepLogin}"
+                                label="#{msg['login.keepLoggedIn']}" labelStyle="width:150px;" />
                         </b:panelGrid>
                     </b:column>
                     <b:column>
-                        <b:commandButton value="ログイン" action="#{loginController.login()}"
-                            look="primary" size="lg" />
+                        <b:commandButton value="#{msg['common.button.login']}"
+                            action="#{loginController.login()}" look="primary" size="lg" />
                     </b:column>
                 </b:row>
             </b:form>
             <b:form>
                 <b:row>
                     <b:column>
-                        <b:commandButton value="パスワード忘れた"
+                        <b:commandButton value="#{msg['login.forgottenPassword']}"
                             action="#{passwordResetController.showPage()}" />
                     </b:column>
                 </b:row>
@@ -96,29 +102,32 @@
             <b:form>
                 <b:row>
                     <b:column>
-                        <b:commandButton value="月次" icon="list"
+                        <b:commandButton value="#{msg['common.label.monthly']}"
+                            icon="list"
                             action="#{monthlyRecordListController.showMonthlyList()}">
                             <f:setPropertyActionListener
                                 value="#{dailyRecordController.today}"
                                 target="#{monthlyRecordListController.today}" />
                         </b:commandButton>
-                        <b:commandButton value="全員" icon="list"
-                            action="#{dailyRecordListController.showDailyList()}"
+                        <b:commandButton value="#{msg['common.label.allUser']}"
+                            icon="list" action="#{dailyRecordListController.showDailyList()}"
                             rendered="#{loginInfo.userInfo.roleId == 0}">
                             <f:setPropertyActionListener
                                 value="#{dailyRecordController.today}"
                                 target="#{dailyRecordListController.today}" />
                         </b:commandButton>
                         <b:commandButton action="#{maintUserController.showList()}"
-                            value="利用者" icon="user"
+                            value="#{msg['common.label.user']}" icon="user"
                             rendered="#{loginInfo.userInfo.roleId == 0}" />
                     </b:column>
                     <b:column>
-                        <b:commandButton value="前日" icon="chevron-left"
+                        <b:commandButton value="#{msg['common.label.yesterday']}"
+                            icon="chevron-left"
                             action="#{dailyRecordController.loadYesterday()}" />
-                        <b:commandButton value="当日" icon="chevron-up"
-                            action="#{dailyRecordController.loadToday()}" />
-                        <b:commandButton value="翌日" icon="chevron-right"
+                        <b:commandButton value="#{msg['common.label.today']}"
+                            icon="chevron-up" action="#{dailyRecordController.loadToday()}" />
+                        <b:commandButton value="#{msg['common.label.tomorrow']}"
+                            icon="chevron-right"
                             action="#{dailyRecordController.loadTomorrow()}" />
                     </b:column>
                 </b:row>
@@ -126,14 +135,20 @@
 
             <b:row>
                 <b:column>
-                    <h3>体調</h3>
+                    <h3>
+                        <h:outputText
+                            value="#{msg['contents.record.recordInput.condition']}" />
+                    </h3>
                 </b:column>
             </b:row>
 
             <b:form inline="true">
                 <b:row>
                     <b:column>
-                        <h4>朝</h4>
+                        <h4>
+                            <h:outputText
+                                value="#{msg['contents.record.recordInput.morning']}" />
+                        </h4>
                     </b:column>
                 </b:row>
                 <b:row>
@@ -141,19 +156,22 @@
                         <b:panelGrid columns="3">
                             <b:inputText type="time"
                                 value="#{dailyRecordInputModel.physicalCondition.awakeTime}"
-                                converter="timeConverter" label="起床時刻:"
+                                converter="timeConverter"
+                                label="#{msg['contents.record.recordInput.awakeTime']}"
                                 labelStyle="width:100px;">
                             </b:inputText>
                             <b:inputText type="number" mask="99.9" p:step="0.1"
                                 value="#{dailyRecordInputModel.physicalCondition.bodyTemperatureMorning}"
-                                label="体温:" labelStyle="width:100px;" maxlength="4">
+                                label="#{msg['contents.record.recordInput.bodyTemperature']}"
+                                labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
                             </b:inputText>
                             <b:message for="@previous" />
 
                             <b:inputText type="number" mask="9{1,2}"
                                 value="#{dailyRecordInputModel.physicalCondition.oxygenSaturationMorning}"
-                                label="酸素飽和濃度:" labelStyle="width:100px;" maxlength="3">
+                                label="#{msg['contents.record.recordInput.oxygenSaturation']}"
+                                labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
                             </b:inputText>
                             <b:message for="@previous" />
@@ -162,7 +180,10 @@
                 </b:row>
                 <b:row>
                     <b:column>
-                        <h4>夜</h4>
+                        <h4>
+                            <h:outputText
+                                value="#{msg['contents.record.recordInput.evening']}" />
+                        </h4>
                     </b:column>
                 </b:row>
                 <b:row>
@@ -170,19 +191,22 @@
                         <b:panelGrid columns="3">
                             <b:inputText type="time"
                                 value="#{dailyRecordInputModel.physicalCondition.bedTime}"
-                                converter="timeConverter" label="就寝時刻:"
+                                converter="timeConverter"
+                                label="#{msg['contents.record.recordInput.bedTime']}"
                                 labelStyle="width:100px;">
                             </b:inputText>
                             <b:inputText type="number" mask="99.9" p:step="0.1"
                                 value="#{dailyRecordInputModel.physicalCondition.bodyTemperatureEvening}"
-                                label="体温:" labelStyle="width:100px;" maxlength="4">
+                                label="#{msg['contents.record.recordInput.bodyTemperature']}"
+                                labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
                             </b:inputText>
                             <b:message for="@previous" />
 
                             <b:inputText type="number" mask="9{1,2}"
                                 value="#{dailyRecordInputModel.physicalCondition.oxygenSaturationEvening}"
-                                label="酸素飽和濃度:" labelStyle="width:100px;" maxlength="3">
+                                label="#{msg['contents.record.recordInput.oxygenSaturation']}"
+                                labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
                                 <b:message for="@previous" />
 
@@ -192,14 +216,17 @@
                 </b:row>
                 <b:row>
                     <b:column>
-                        <h4>メモ</h4>
+                        <h4>
+                            <h:outputText value="#{msg['contents.record.recordInput.note']}" />
+                        </h4>
                     </b:column>
                 </b:row>
                 <b:row>
                     <b:column>
                         <b:inputTextarea
                             value="#{dailyRecordInputModel.physicalCondition.conditionNote}"
-                            label="特記事項等" labelStyle="width:100px;" maxlength="100">
+                            label="#{msg['contents.record.recordInput.conditionNote']}"
+                            labelStyle="width:100px;" maxlength="100">
                             <b:message for="@previous" />
                         </b:inputTextarea>
                     </b:column>
