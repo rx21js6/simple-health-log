@@ -62,7 +62,7 @@
                             </b:commandButton>
                             <b:commandButton icon="trash"
                                 value="#{msg['contents.maint.user.userList.button.delete']}"
-                                rendered="#{userInfo.id != loginInfoHolder.userInfo.id}"
+                                rendered="#{userInfo.id != loginInfo.userInfo.id}"
                                 action="#{maintUserController.showDeletionModal}">
                                 <f:setPropertyActionListener value="#{userInfo.id}"
                                     target="#{maintUserController.selectedId}" />

@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-import org.jboss.weld.context.bound.BoundSessionContext;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
@@ -33,9 +32,6 @@ import jp.nauplius.app.shl.ws.bean.GetUsersResponse;
 public class LoginServiceTest extends AbstractServiceTest {
     @Inject
     private LoginService loginService;
-
-    @Inject
-    private BoundSessionContext sessionContext;
 
     @Inject
     private InitializationListener initializationListener;

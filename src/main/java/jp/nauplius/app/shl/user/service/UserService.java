@@ -1,6 +1,5 @@
 package jp.nauplius.app.shl.user.service;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
@@ -12,7 +11,6 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -22,6 +20,7 @@ import org.slf4j.Logger;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.model.UserToken;
+import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
@@ -33,7 +32,7 @@ import jp.nauplius.app.shl.user.constants.UserStatus;
  * 利用者サービス
  */
 @Named
-public class UserService implements Serializable {
+public class UserService extends AbstractService {
     @Inject
     private Logger logger;
 
@@ -42,9 +41,6 @@ public class UserService implements Serializable {
 
     @Inject
     private LoginInfo loginInfo;
-
-    @Inject
-    private EntityManager em;
 
     @Inject
     private CipherUtil cipherUtil;
@@ -62,7 +58,7 @@ public class UserService implements Serializable {
 
         // ユーザ存在チェック
         String loginId = maintUserInfo.getLoginId();
-        TypedQuery<UserInfo> userInfoQuery = this.em
+        TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
         userInfoQuery.setParameter("loginId", loginId);
         List<UserInfo> results = userInfoQuery.getResultList();
@@ -91,14 +87,14 @@ public class UserService implements Serializable {
         userInfo.setCreatedDate(Timestamp.valueOf(timestamp));
         userInfo.setModifiedBy(this.loginInfo.getUserInfo().getId());
         userInfo.setModifiedDate(Timestamp.valueOf(timestamp));
-        this.em.persist(userInfo);
+        this.entityManager.persist(userInfo);
 
         // 仮トークン生成
         // token = this.createToken(userInfo, true);
         // TODO: メールで送信
 
-        this.em.flush();
-        this.em.clear();
+        this.entityManager.flush();
+        this.entityManager.clear();
 
     }
 
@@ -112,7 +108,7 @@ public class UserService implements Serializable {
 
         // ユーザ存在チェック
         String loginId = maintUserInfo.getLoginId();
-        TypedQuery<UserInfo> userInfoQuery = this.em
+        TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
         userInfoQuery.setParameter("loginId", loginId);
         List<UserInfo> results = userInfoQuery.getResultList();
@@ -140,9 +136,9 @@ public class UserService implements Serializable {
         }
         userInfo.setModifiedBy(this.loginInfo.getUserInfo().getId());
         userInfo.setModifiedDate(Timestamp.valueOf(timestamp));
-        this.em.merge(userInfo);
-        this.em.flush();
-        this.em.clear();
+        this.entityManager.merge(userInfo);
+        this.entityManager.flush();
+        this.entityManager.clear();
 
         // TODO: メールで送信
 
@@ -157,7 +153,7 @@ public class UserService implements Serializable {
     public void delete(MaintUserInfo maintUserInfo) {
         // ユーザ存在チェック
         String loginId = maintUserInfo.getLoginId();
-        TypedQuery<UserInfo> userInfoQuery = this.em
+        TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
         userInfoQuery.setParameter("loginId", loginId);
         List<UserInfo> results = userInfoQuery.getResultList();
@@ -168,14 +164,20 @@ public class UserService implements Serializable {
         }
         UserInfo tmpUserInfo = results.get(0);
 
+        // 自身は削除できない
+        if (tmpUserInfo.getId().equals(this.loginInfo.getUserInfo().getId())) {
+            throw new SimpleHealthLogException(
+                    this.messageBundle.getString("contents.maint.user.userList.msg.deleteOwnAccount"));
+        }
+
         Timestamp updatedDate = Timestamp.valueOf(LocalDateTime.now());
         tmpUserInfo.setDeleted(true);
         tmpUserInfo.setDeletedDate(updatedDate);
         tmpUserInfo.setModifiedBy(this.loginInfo.getUserInfo().getId());
         tmpUserInfo.setModifiedDate(updatedDate);
-        this.em.merge(tmpUserInfo);
-        this.em.flush();
-        this.em.clear();
+        this.entityManager.merge(tmpUserInfo);
+        this.entityManager.flush();
+        this.entityManager.clear();
     }
 
     /**
@@ -188,8 +190,8 @@ public class UserService implements Serializable {
     private String createToken(UserInfo userInfo, boolean newRec) {
         try {
             SecureRandom random = new SecureRandom();
-            TypedQuery<UserToken> query = this.em.createQuery("SELECT t FROM UserToken t WHERE t.token = :token",
-                    UserToken.class);
+            TypedQuery<UserToken> query = this.entityManager
+                    .createQuery("SELECT t FROM UserToken t WHERE t.token = :token", UserToken.class);
 
             String token = null;
             List<UserToken> results = null;
@@ -205,12 +207,12 @@ public class UserService implements Serializable {
             if (newRec) {
                 userToken = new UserToken();
                 userToken.setId(userInfo.getId());
-                this.em.persist(userToken);
+                this.entityManager.persist(userToken);
             } else {
-                userToken = this.em.find(UserToken.class, userInfo.getId());
+                userToken = this.entityManager.find(UserToken.class, userInfo.getId());
             }
             userToken.setToken(token);
-            this.em.merge(userToken);
+            this.entityManager.merge(userToken);
 
             return token;
 
@@ -226,7 +228,7 @@ public class UserService implements Serializable {
      * @return
      */
     public List<UserInfo> loadMaintUserInfos() {
-        TypedQuery<UserInfo> query = this.em
+        TypedQuery<UserInfo> query = this.entityManager
                 .createQuery("SELECT u FROM UserInfo u WHERE u.deleted = FALSE ORDER BY u.id", UserInfo.class);
 
         return query.getResultList();
@@ -248,7 +250,7 @@ public class UserService implements Serializable {
     }
 
     public MaintUserInfo getMaintUsernfo(int id) {
-        UserInfo userInfo = this.em.find(UserInfo.class, id);
+        UserInfo userInfo = this.entityManager.find(UserInfo.class, id);
         if (userInfo == null) {
             throw new SimpleHealthLogException(
                     this.messageBundle.getString("contents.maint.user.userEditing.msg.notFound"));
