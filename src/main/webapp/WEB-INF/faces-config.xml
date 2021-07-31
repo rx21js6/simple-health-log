@@ -11,7 +11,7 @@
             <var>msg</var>
         </resource-bundle>
         <locale-config>
-            <default-locale>en</default-locale>
+            <default-locale>ja</default-locale>
             <supported-locale>en</supported-locale>
             <supported-locale>ja</supported-locale>
         </locale-config>
