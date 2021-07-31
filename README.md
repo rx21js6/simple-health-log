@@ -13,7 +13,7 @@
 
 ## 必要なもの
 
-* Gradle
+* Gradle 7.1+
 * Jetty9.4+（推奨）
 * PostgreSQL 12+
 
