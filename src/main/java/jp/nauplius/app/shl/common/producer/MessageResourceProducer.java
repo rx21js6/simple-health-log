@@ -1,5 +1,6 @@
 package jp.nauplius.app.shl.common.producer;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.enterprise.context.Dependent;
@@ -11,6 +12,6 @@ import javax.inject.Named;
 public class MessageResourceProducer {
     @Produces
     public ResourceBundle getMessageBundle() {
-        return ResourceBundle.getBundle("i18n.messages");
+        return ResourceBundle.getBundle("i18n.messages", Locale.getDefault());
     }
 }
