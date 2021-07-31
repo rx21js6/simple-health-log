@@ -3,8 +3,10 @@ package jp.nauplius.app.shl.user.backing;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -13,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
@@ -36,6 +39,9 @@ public class MaintUserController implements Serializable, ModalControllerListene
     private Logger logger;
 
     @Inject
+    private transient ResourceBundle messageBundle;
+
+    @Inject
     private UserService userService;
 
     @Inject
@@ -43,10 +49,6 @@ public class MaintUserController implements Serializable, ModalControllerListene
 
     @Inject
     private CommonConfirmModalBean commonConfirmModalBean;
-
-    @Getter
-    @Setter
-    private String dummyText;
 
     @Getter
     @Setter
@@ -69,7 +71,6 @@ public class MaintUserController implements Serializable, ModalControllerListene
 
     public void loadUserInfos() {
         this.userInfos = this.userService.loadMaintUserInfos();
-        this.dummyText = "ダミー";
     }
 
     public String showList() {
@@ -95,10 +96,12 @@ public class MaintUserController implements Serializable, ModalControllerListene
             if (this.selectedMaintUserInfo.isNewData()) {
                 this.userService.register(this.selectedMaintUserInfo);
 
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ユーザを作成しました。", null));
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        this.messageBundle.getString("contents.maint.user.userList.msg.userRegistered"), null));
             } else {
                 this.userService.update(this.selectedMaintUserInfo);
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ユーザを更新しました。", null));
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        this.messageBundle.getString("contents.maint.user.userList.msg.userUpdated"), null));
             }
 
         } catch (SimpleHealthLogException e) {
@@ -112,18 +115,20 @@ public class MaintUserController implements Serializable, ModalControllerListene
         try {
             this.selectedMaintUserInfo = this.userService.getMaintUsernfo(this.selectedId);
 
-            StringBuilder messageBuilder = new StringBuilder();
-            messageBuilder.append("利用者削除");
-            messageBuilder.append(this.selectedMaintUserInfo.getLoginId());
-            messageBuilder.append("を削除します。削除後は戻せません。");
+            String message = MessageFormat.format(
+                    this.messageBundle.getString("contents.maint.user.userList.msg.confirmDeletion"),
+                    this.selectedMaintUserInfo.getLoginId());
 
-            List<String> messages = Arrays.asList(new String[] { messageBuilder.toString(), "よろしいですか？" });
-            this.commonConfirmModalBean.setTitle("利用者削除");
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder.append(message);
+            List<String> messages = Arrays.asList(
+                    new String[] { messageBuilder.toString(), this.messageBundle.getString("common.msg.sure") });
+            this.commonConfirmModalBean.setTitle(this.messageBundle.getString("contents.maint.user.userList.label.userDeletion"));
             this.commonConfirmModalBean.setMessages(messages);
             this.commonConfirmModalBean.setVisible(true);
             this.commonConfirmModalBean.setCommandTypeName("delete");
-            this.commonConfirmModalBean.setOkButtonValue("実行");
-            this.commonConfirmModalBean.setCancelButtonValue("中止");
+            this.commonConfirmModalBean.setOkButtonValue(this.messageBundle.getString("common.label.run"));
+            this.commonConfirmModalBean.setCancelButtonValue(this.messageBundle.getString("common.label.cancel"));
             this.dispatchMethod = getActionMethod("delete");
         } catch (SimpleHealthLogException e) {
             FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -135,6 +140,7 @@ public class MaintUserController implements Serializable, ModalControllerListene
 
     /**
      * 削除実行
+     *
      * @return
      */
     public String delete() {
@@ -143,10 +149,10 @@ public class MaintUserController implements Serializable, ModalControllerListene
         FacesContext facesContext = FacesContext.getCurrentInstance();
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
-
         try {
             this.userService.delete(selectedMaintUserInfo);
-            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ユーザを削除しました。", null));
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    this.messageBundle.getString("contents.maint.user.userList.msg.userDeleted"), null));
         } catch (SimpleHealthLogException e) {
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, e.getMessage(), null));
         }
@@ -165,7 +171,7 @@ public class MaintUserController implements Serializable, ModalControllerListene
     @Override
     public void initModal() {
         this.logger.debug("initModal: " + selectedMaintUserInfo);
-        this.commonConfirmModalBean.setMessage("押してね！");
+        this.commonConfirmModalBean.setMessage(StringUtils.EMPTY);
         this.commonConfirmModalBean.setVisible(false);
         this.commonConfirmModalController.setModalControllerListener(this);
     }

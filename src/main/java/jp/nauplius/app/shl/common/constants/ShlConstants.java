@@ -11,5 +11,7 @@ public class ShlConstants {
 
     public static final String COOKIE_KEY_TOKEN = "token";
 
+    public static final String LOGIN_ID_ADMIN = "admin";
+
     public static final DateTimeFormatter RECORDING_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 }

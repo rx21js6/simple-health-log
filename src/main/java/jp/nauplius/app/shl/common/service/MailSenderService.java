@@ -8,14 +8,11 @@ import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.Authenticator;
@@ -25,8 +22,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,15 +44,15 @@ public class MailSenderService implements Serializable {
     private Logger logger;
 
     @Inject
+    private transient ResourceBundle messageBundle;
+
+    @Inject
     private LocaleService localeService;
 
     // @Inject
     // private FacesContext facesContext;
 
     private MailSenderBean mailSenderBean;
-
-    private ResourceBundle msgBundle;
-
     @PostConstruct
     public void init() {
 
@@ -71,9 +66,6 @@ public class MailSenderService implements Serializable {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             this.mailSenderBean = (MailSenderBean) unmarshaller.unmarshal(is);
             this.logger.info("host: " + this.mailSenderBean.getHost());
-
-            // MessageBundle読み込み
-            this.msgBundle = ResourceBundle.getBundle("i18n.messages");
 
         } catch (Throwable e) {
             throw new SimpleHealthLogException(e);
@@ -99,7 +91,7 @@ public class MailSenderService implements Serializable {
                     new InternetAddress(initialSettingForm.getMailAddress(), initialSettingForm.getName(), CHARSET));
             messageContent.addRecipient(Message.RecipientType.TO,
                     new InternetAddress(initialSettingForm.getMailAddress()));
-            String messageSubject = this.msgBundle.getString("initial.initialSetting.mail.subject");
+            String messageSubject = this.messageBundle.getString("initial.initialSetting.mail.subject");
             messageContent.setSubject(messageSubject, CHARSET);
             messageContent.setContent(mailMessage, MAIL_CONTENT_TYPE);
 
@@ -130,13 +122,13 @@ public class MailSenderService implements Serializable {
 
             InetAddress inet = InetAddress.getLocalHost();
             String hostName = inet.getHostName();
-            String messageBase1 = this.msgBundle.getString("initial.initialSetting.mail.format1");
+            String messageBase1 = this.messageBundle.getString("initial.initialSetting.mail.format1");
             MessageFormat format1 = new MessageFormat(messageBase1);
             format1.setLocale(this.localeService.getLocale());
             String message1 = format1
                     .format(new String[] { initialSettingForm.getLoginId(), initialSettingForm.getMailAddress() });
 
-            String messageBase2 = this.msgBundle.getString("initial.initialSetting.mail.format2");
+            String messageBase2 = this.messageBundle.getString("initial.initialSetting.mail.format2");
             MessageFormat format2 = new MessageFormat(messageBase2);
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append("http://");
@@ -178,7 +170,7 @@ public class MailSenderService implements Serializable {
             messageContent.setFrom(new InternetAddress(adminMainAddress, sender, CHARSET));
             messageContent.addRecipient(Message.RecipientType.TO, new InternetAddress(toMailAddress));
 
-            String messageSubject = this.msgBundle.getString("resetPassword.resetPassword.title");
+            String messageSubject = this.messageBundle.getString("resetPassword.resetPassword.title");
             messageContent.setSubject(String.format("[%s]%s", sender, messageSubject), CHARSET);
             messageContent.setContent(createPasswordResetMail(passwordText), MAIL_CONTENT_TYPE);
 
@@ -196,8 +188,7 @@ public class MailSenderService implements Serializable {
      */
     private String createPasswordResetMail(String passwordText) {
         List<String> mailTexts = new ArrayList<>();
-        mailTexts.add("パスワードを初期化しました。");
-        mailTexts.add("新しいパスワードは以下の通りです。");
+        mailTexts.add(this.messageBundle.getString("resetPassword.resetPassword.title"));
         mailTexts.add(StringUtils.EMPTY);
         mailTexts.add(passwordText);
         mailTexts.add(StringUtils.EMPTY);

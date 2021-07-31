@@ -21,7 +21,9 @@
             <b:row>
             </b:row>
             <b:column>
-                <h2>全利用者体調リスト</h2>
+                <h2>
+                    <h:outputText value="#{msg['contents.record.dailyRecord.title']}" />
+                </h2>
             </b:column>
             <b:row>
 
@@ -38,7 +40,7 @@
             </b:row>
             <b:row>
                 <b:column>
-                    <b:commandButton value="入力" icon="pencil"
+                    <b:commandButton value="#{msg['common.label.input']}" icon="pencil"
                         action="#{dailyRecordController.showInput()}">
                         <f:setPropertyActionListener
                             value="#{dailyRecordListController.getTodayText()}"
@@ -46,11 +48,14 @@
                     </b:commandButton>
                 </b:column>
                 <b:column>
-                    <b:commandButton value="前日" icon="chevron-left"
+                    <b:commandButton value="#{msg['common.label.yesterday']}"
+                        icon="chevron-left"
                         action="#{dailyRecordListController.loadYesterday()}" />
-                    <b:commandButton value="当日" icon="chevron-up"
+                    <b:commandButton value="#{msg['common.label.today']}"
+                        icon="chevron-up"
                         action="#{dailyRecordListController.loadToday()}" />
-                    <b:commandButton value="翌日" icon="chevron-right"
+                    <b:commandButton value="#{msg['common.label.tomorrow']}"
+                        icon="chevron-right"
                         action="#{dailyRecordListController.loadTomorrow()}" />
                 </b:column>
             </b:row>
@@ -58,14 +63,22 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>氏名</th>
-                            <th>起床</th>
-                            <th>就寝</th>
-                            <th>体温（朝）</th>
-                            <th>体温（夜）</th>
-                            <th>酸素飽和度（朝）</th>
-                            <th>酸素飽和度（夜）</th>
-                            <th>記事</th>
+                            <th><h:outputText
+                                    value="#{msg['contents.record.dailyRecord.label.name']}" /></th>
+                            <th><h:outputText
+                                    value="#{msg['contents.record.dailyRecord.label.awakeTime']}" /></th>
+                            <th><h:outputText
+                                    value="#{msg['contents.record.dailyRecord.label.bedTime']}" /></th>
+                            <th><h:outputText
+                                    value="#{msg['contents.record.dailyRecord.label.tempMorning']}" /></th>
+                            <th><h:outputText
+                                    value="#{msg['contents.record.dailyRecord.label.tempEvening']}" /></th>
+                            <th><h:outputText
+                                    value="#{msg['contents.record.dailyRecord.label.oxSatMorning']}" /></th>
+                            <th><h:outputText
+                                    value="#{msg['contents.record.dailyRecord.label.oxSatEvening']}" /></th>
+                            <th><h:outputText
+                                    value="#{msg['contents.record.dailyRecord.label.conditionNote']}" /></th>
                         </tr>
                     </thead>
                     <tbody>
