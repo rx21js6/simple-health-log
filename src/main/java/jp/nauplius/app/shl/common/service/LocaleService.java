@@ -17,7 +17,7 @@ import lombok.Setter;
 @SessionScoped
 public class LocaleService implements Serializable {
     public static final String SESSION_KEY = "locale";
-    public static final String DEFAULT_LANG = "en";
+    public static final String DEFAULT_LANG = "ja";
 
     @Getter
     private Locale locale;
