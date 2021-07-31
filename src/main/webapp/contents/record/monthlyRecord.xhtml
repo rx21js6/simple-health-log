@@ -127,8 +127,7 @@
                             value="#{msg['contents.record.monthlyRecord.label.input']}"
                             icon="edit" look="#{record.isToday() ? 'primary' : ''}"
                             action="#{dailyRecordController.showInput()}">
-                            <f:setPropertyActionListener
-                                value="#{record.physicalCondition.id.recordingDate}"
+                            <f:setPropertyActionListener value="#{record.dateText}"
                                 target="#{dailyRecordController.selectedDate}" />
                         </b:commandButton>
                     </b:dataTableColumn>
