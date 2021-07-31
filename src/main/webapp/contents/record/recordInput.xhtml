@@ -38,10 +38,10 @@
         <b:row>
             <b:column>
                 <h:outputText
-                    value="#{msg['contents.record.recordInput.notLoggedIn']}"
+                    value="#{msg['contents.record.recordInput.msg.notLoggedIn']}"
                     rendered="#{loginInfo.userInfo == null}" />
                 <h:outputText
-                    value="#{loginInfo.userInfo.name} #{msg['contents.record.recordInput.welcome']}"
+                    value="#{loginInfo.userInfo.name} #{msg['contents.record.recordInput.label.welcome']}"
                     rendered="#{loginInfo.userInfo != null}" />
             </b:column>
         </b:row>
@@ -137,7 +137,7 @@
                 <b:column>
                     <h3>
                         <h:outputText
-                            value="#{msg['contents.record.recordInput.condition']}" />
+                            value="#{msg['contents.record.recordInput.label.condition']}" />
                     </h3>
                 </b:column>
             </b:row>
@@ -147,7 +147,7 @@
                     <b:column>
                         <h4>
                             <h:outputText
-                                value="#{msg['contents.record.recordInput.morning']}" />
+                                value="#{msg['contents.record.recordInput.label.morning']}" />
                         </h4>
                     </b:column>
                 </b:row>
@@ -157,12 +157,12 @@
                             <b:inputText type="time"
                                 value="#{dailyRecordInputModel.physicalCondition.awakeTime}"
                                 converter="timeConverter"
-                                label="#{msg['contents.record.recordInput.awakeTime']}"
+                                label="#{msg['contents.record.recordInput.label.awakeTime']}"
                                 labelStyle="width:100px;">
                             </b:inputText>
                             <b:inputText type="number" mask="99.9" p:step="0.1"
                                 value="#{dailyRecordInputModel.physicalCondition.bodyTemperatureMorning}"
-                                label="#{msg['contents.record.recordInput.bodyTemperature']}"
+                                label="#{msg['contents.record.recordInput.label.bodyTemperature']}"
                                 labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
                             </b:inputText>
@@ -170,7 +170,7 @@
 
                             <b:inputText type="number" mask="9{1,2}"
                                 value="#{dailyRecordInputModel.physicalCondition.oxygenSaturationMorning}"
-                                label="#{msg['contents.record.recordInput.oxygenSaturation']}"
+                                label="#{msg['contents.record.recordInput.label.oxygenSaturation']}"
                                 labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
                             </b:inputText>
@@ -182,7 +182,7 @@
                     <b:column>
                         <h4>
                             <h:outputText
-                                value="#{msg['contents.record.recordInput.evening']}" />
+                                value="#{msg['contents.record.recordInput.label.evening']}" />
                         </h4>
                     </b:column>
                 </b:row>
@@ -192,12 +192,12 @@
                             <b:inputText type="time"
                                 value="#{dailyRecordInputModel.physicalCondition.bedTime}"
                                 converter="timeConverter"
-                                label="#{msg['contents.record.recordInput.bedTime']}"
+                                label="#{msg['contents.record.recordInput.label.bedTime']}"
                                 labelStyle="width:100px;">
                             </b:inputText>
                             <b:inputText type="number" mask="99.9" p:step="0.1"
                                 value="#{dailyRecordInputModel.physicalCondition.bodyTemperatureEvening}"
-                                label="#{msg['contents.record.recordInput.bodyTemperature']}"
+                                label="#{msg['contents.record.recordInput.label.bodyTemperature']}"
                                 labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
                             </b:inputText>
@@ -205,7 +205,7 @@
 
                             <b:inputText type="number" mask="9{1,2}"
                                 value="#{dailyRecordInputModel.physicalCondition.oxygenSaturationEvening}"
-                                label="#{msg['contents.record.recordInput.oxygenSaturation']}"
+                                label="#{msg['contents.record.recordInput.label.oxygenSaturation']}"
                                 labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
                                 <b:message for="@previous" />
@@ -217,7 +217,7 @@
                 <b:row>
                     <b:column>
                         <h4>
-                            <h:outputText value="#{msg['contents.record.recordInput.note']}" />
+                            <h:outputText value="#{msg['contents.record.recordInput.label.note']}" />
                         </h4>
                     </b:column>
                 </b:row>
@@ -225,7 +225,7 @@
                     <b:column>
                         <b:inputTextarea
                             value="#{dailyRecordInputModel.physicalCondition.conditionNote}"
-                            label="#{msg['contents.record.recordInput.conditionNote']}"
+                            label="#{msg['contents.record.recordInput.label.conditionNote']}"
                             labelStyle="width:100px;" maxlength="100">
                             <b:message for="@previous" />
                         </b:inputTextarea>

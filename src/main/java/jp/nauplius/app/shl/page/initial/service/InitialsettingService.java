@@ -2,6 +2,7 @@ package jp.nauplius.app.shl.page.initial.service;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,6 +22,9 @@ import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 @Named
 public class InitialsettingService implements Serializable {
     @Inject
+    private transient ResourceBundle messageBundle;
+
+    @Inject
     private EntityManager em;
 
     @Inject
@@ -38,12 +42,15 @@ public class InitialsettingService implements Serializable {
     @Transactional
     public void register(InitialSettingForm initialSettingForm) {
         if (this.KeyIvHolderService.isRegistered()) {
-            throw new DatabaseException(new RollbackException("already registered"));
+
+            throw new DatabaseException(new RollbackException(
+                    this.messageBundle.getString("initial.initialSetting.msg.alreadyRegistered")));
         }
         this.KeyIvHolderService.registerKeyIv();
 
         if (this.em.find(UserInfo.class, 1) != null) {
-            throw new DatabaseException(new RollbackException("already registered"));
+            throw new DatabaseException(new RollbackException(
+                    this.messageBundle.getString("initial.initialSetting.msg.alreadyRegistered")));
         }
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 

@@ -1,6 +1,7 @@
 package jp.nauplius.app.shl.page.initial.backing;
 
 import java.io.Serializable;
+import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -9,11 +10,15 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named
 @FacesValidator("passwordValidator")
 public class PasswordValidator implements Validator, Serializable {
+    @Inject
+    private transient ResourceBundle messageBundle;
+
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("password");
@@ -22,8 +27,8 @@ public class PasswordValidator implements Validator, Serializable {
         UIInput passwordReEnterInput = (UIInput) context.getViewRoot().findComponent("passwordReEnter");
         String passwordReEnter = (String) passwordReEnterInput.getSubmittedValue();
 
-        if  (password.equals(passwordReEnter)) {
-            FacesMessage message = new FacesMessage("ぱすわーどふいっち");
+        if (password.equals(passwordReEnter)) {
+            FacesMessage message = new FacesMessage(this.messageBundle.getString("common.msg.passwordUnmatch"));
             throw new ValidatorException(message);
         }
     }

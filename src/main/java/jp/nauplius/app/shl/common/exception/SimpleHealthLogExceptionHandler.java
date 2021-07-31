@@ -2,6 +2,7 @@ package jp.nauplius.app.shl.common.exception;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
@@ -46,9 +47,11 @@ public class SimpleHealthLogExceptionHandler extends ExceptionHandlerWrapper {
                 requestMap.put("error-stack", throwable.getStackTrace());
 
                 context.getExternalContext().getFlash().setKeepMessages(true);
-                context.addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_WARN, "セッションが切れました。お手数ですが再度入力してください。", null));
-                navigationHandler.handleNavigation(context, null, "/contents/record/recordInput.xhtml?faces-redirect=true");
+
+                String message = ResourceBundle.getBundle("i18n.messages").getString("common.msg.sessionExpired");
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, message, null));
+                navigationHandler.handleNavigation(context, null,
+                        "/contents/record/recordInput.xhtml?faces-redirect=true");
                 context.renderResponse();
 
             } finally {

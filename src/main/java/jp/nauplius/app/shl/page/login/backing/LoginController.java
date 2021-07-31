@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -31,6 +32,9 @@ public class LoginController implements Serializable {
     private Logger logger;
 
     @Inject
+    private transient ResourceBundle messageBundle;
+
+    @Inject
     private FacesContext facesContext;
 
     @Inject
@@ -43,7 +47,6 @@ public class LoginController implements Serializable {
 
     @Inject
     private CookieService cookieService;
-
 
     @Inject
     private DailyRecordService dailyRecordService;
@@ -72,6 +75,7 @@ public class LoginController implements Serializable {
 
     /**
      * ログイン処理
+     *
      * @return
      */
     public String login() {
@@ -87,8 +91,8 @@ public class LoginController implements Serializable {
 
             } catch (SimpleHealthLogException e) {
                 facesContext.getExternalContext().getFlash().setKeepMessages(true);
-                facesContext.addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_WARN, "認証に失敗しました。: " + e.getMessage(), null));
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                        this.messageBundle.getString("login.msg.failed") + e.getMessage(), null));
             }
         }
         return null;
@@ -103,7 +107,8 @@ public class LoginController implements Serializable {
             }
         } catch (SimpleHealthLogException e) {
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
-            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ログアウトしました。", null));
+            facesContext.addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, this.messageBundle.getString("logout.msg"), null));
         }
 
         return null;
@@ -112,7 +117,7 @@ public class LoginController implements Serializable {
     public void timeout() throws IOException {
         ExternalContext externalContext = this.facesContext.getExternalContext();
         this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
-        this.facesContext.addMessage(null, new FacesMessage("セッションが切れました。ログインしてください。"));
+        this.facesContext.addMessage(null, new FacesMessage(this.messageBundle.getString("login.msg.sessionTimeout")));
 
         externalContext.redirect(externalContext.getRequestContextPath() + "/login.xhtml");
     }

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -42,6 +43,9 @@ public class LoginService extends AbstractService {
     private Logger logger;
 
     @Inject
+    private transient ResourceBundle messageBundle;
+
+    @Inject
     private CipherUtil cipherUtil;
 
     @Inject
@@ -72,7 +76,7 @@ public class LoginService extends AbstractService {
         query.setParameter("loginId", loginForm.getLoginId());
         List<UserInfo> results = query.getResultList();
         if (results.size() == 0) {
-            throw new SimpleHealthLogException("ログインIDかパスワードが不正です。");
+            throw new SimpleHealthLogException(this.messageBundle.getString("login.login.msg.idPasswordInvalid"));
         }
 
         UserInfo userInfo = results.get(0);
@@ -90,7 +94,7 @@ public class LoginService extends AbstractService {
         }
 
         if (!password.equals(loginForm.getPassword())) {
-            throw new SimpleHealthLogException("ログインIDかパスワードが不正です。");
+            throw new SimpleHealthLogException(this.messageBundle.getString("login.login.msg.idPasswordInvalid"));
         }
 
         if (oldFormat) {
@@ -130,6 +134,7 @@ public class LoginService extends AbstractService {
 
     /**
      * 利用者情報を取得
+     *
      * @return
      */
     @Transactional
@@ -147,6 +152,7 @@ public class LoginService extends AbstractService {
 
     /**
      * トークンでログイン
+     *
      * @param token
      * @return
      */
@@ -197,8 +203,8 @@ public class LoginService extends AbstractService {
                 return userToken;
             }
 
-            TypedQuery<UserToken> query = this.entityManager.createQuery("SELECT t FROM UserToken t WHERE t.token = :token",
-                    UserToken.class);
+            TypedQuery<UserToken> query = this.entityManager
+                    .createQuery("SELECT t FROM UserToken t WHERE t.token = :token", UserToken.class);
 
             String token = null;
 
@@ -229,7 +235,7 @@ public class LoginService extends AbstractService {
     public void resetPassword(PasswordResetForm passwordResetForm) {
         // adminは不可
         if (passwordResetForm.getLoginId().equals("admin")) {
-            throw new SimpleHealthLogException("管理者は変更できません。");
+            throw new SimpleHealthLogException(this.messageBundle.getString("resetPassword.resetPassword.msg.admin"));
         }
 
         // ユーザ存在チェック
@@ -242,7 +248,8 @@ public class LoginService extends AbstractService {
         query.setParameter("loginId", loginId);
         List<UserInfo> results = query.getResultList();
         if (results.size() == 0) {
-            throw new SimpleHealthLogException("ログイン情報が不正です。");
+            throw new SimpleHealthLogException(
+                    this.messageBundle.getString("resetPassword.resetPassword.msg.invalidLoginInfo"));
         }
 
         UserInfo userInfo = results.get(0);
