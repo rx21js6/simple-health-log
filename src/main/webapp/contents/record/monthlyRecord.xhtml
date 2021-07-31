@@ -36,7 +36,9 @@
             <b:row>
             </b:row>
             <b:column>
-                <h2>月次リスト</h2>
+                <h2>
+                    <h:outputText value="#{msg['contents.record.monthlyRecord.title']}" />
+                </h2>
             </b:column>
             <b:row>
 
@@ -56,11 +58,17 @@
             </b:row>
             <b:row>
                 <b:column>
-                    <b:commandButton value="前月" icon="chevron-left"
+                    <b:commandButton
+                        value="#{msg['contents.record.monthlyRecord.label.previousMonth']}"
+                        icon="chevron-left"
                         action="#{monthlyRecordListController.loadPreviousMonth()}" />
-                    <b:commandButton value="当月" icon="chevron-up"
+                    <b:commandButton
+                        value="#{msg['contents.record.monthlyRecord.label.currentMonth']}"
+                        icon="chevron-up"
                         action="#{monthlyRecordListController.loadCurrentMonth()}" />
-                    <b:commandButton value="翌月" icon="chevron-right"
+                    <b:commandButton
+                        value="#{msg['contents.record.monthlyRecord.label.nextMonth']}"
+                        icon="chevron-right"
                         action="#{monthlyRecordListController.loadNextMonth()}" />
                 </b:column>
             </b:row>
@@ -70,15 +78,24 @@
                     <f:facet name="header">
                         <thead class="monthly_record_header">
                             <tr>
-                                <th>日付</th>
-                                <th>起床</th>
-                                <th>就寝</th>
-                                <th>体温（朝）</th>
-                                <th>体温（夜）</th>
-                                <th>酸素飽和度（朝）</th>
-                                <th>酸素飽和度（夜）</th>
-                                <th>記事</th>
-                                <th>操作</th>
+                                <th><h:outputText
+                                        value="#{msg['contents.record.monthlyRecord.label.date']}" /></th>
+                                <th><h:outputText
+                                        value="#{msg['contents.record.monthlyRecord.label.awakeTime']}" /></th>
+                                <th><h:outputText
+                                        value="#{msg['contents.record.monthlyRecord.label.bedTime']}" /></th>
+                                <th><h:outputText
+                                        value="#{msg['contents.record.monthlyRecord.label.tempMorning']}" /></th>
+                                <th><h:outputText
+                                        value="#{msg['contents.record.monthlyRecord.label.tempEvening']}" /></th>
+                                <th><h:outputText
+                                        value="#{msg['contents.record.monthlyRecord.label.oxSatMorning']}" /></th>
+                                <th><h:outputText
+                                        value="#{msg['contents.record.monthlyRecord.label.oxSatEvening']}" /></th>
+                                <th><h:outputText
+                                        value="#{msg['contents.record.monthlyRecord.label.conditionNote']}" /></th>
+                                <th><h:outputText
+                                        value="#{msg['contents.record.monthlyRecord.label.operation']}" /></th>
                             </tr>
                         </thead>
                     </f:facet>
@@ -106,8 +123,9 @@
                     <b:dataTableColumn
                         value="#{record.physicalCondition.conditionNote}" />
                     <b:dataTableColumn>
-                        <b:commandButton value="入力" icon="edit"
-                            look="#{record.isToday() ? 'primary' : ''}"
+                        <b:commandButton
+                            value="#{msg['contents.record.monthlyRecord.label.input']}"
+                            icon="edit" look="#{record.isToday() ? 'primary' : ''}"
                             action="#{dailyRecordController.showInput()}">
                             <f:setPropertyActionListener
                                 value="#{record.physicalCondition.id.recordingDate}"

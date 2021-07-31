@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,7 +26,6 @@ import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.user.bean.MaintUserInfo;
-import jp.nauplius.app.shl.user.bean.PasswordResetForm;
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 import jp.nauplius.app.shl.user.constants.UserStatus;
 
@@ -35,6 +36,9 @@ import jp.nauplius.app.shl.user.constants.UserStatus;
 public class UserService implements Serializable {
     @Inject
     private Logger logger;
+
+    @Inject
+    private transient ResourceBundle messageBundle;
 
     @Inject
     private LoginInfo loginInfo;
@@ -63,7 +67,9 @@ public class UserService implements Serializable {
         userInfoQuery.setParameter("loginId", loginId);
         List<UserInfo> results = userInfoQuery.getResultList();
         if (0 < results.size()) {
-            throw new SimpleHealthLogException(String.format("該当利用者は登録済みです。: %s", loginId));
+            String message = MessageFormat.format(
+                    this.messageBundle.getString("contents.maint.user.userEditing.msg.userAlreadyRegistered"), loginId);
+            throw new SimpleHealthLogException(message);
         }
 
         byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
@@ -112,7 +118,9 @@ public class UserService implements Serializable {
         List<UserInfo> results = userInfoQuery.getResultList();
 
         if (results.size() == 0) {
-            throw new SimpleHealthLogException(String.format("該当利用者が存在しません。: %s", loginId));
+            String message = MessageFormat
+                    .format(this.messageBundle.getString("contents.maint.user.userEditing.msg.userNotFound"), loginId);
+            throw new SimpleHealthLogException(message);
         }
 
         byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
@@ -154,7 +162,9 @@ public class UserService implements Serializable {
         userInfoQuery.setParameter("loginId", loginId);
         List<UserInfo> results = userInfoQuery.getResultList();
         if (results.size() == 0) {
-            throw new SimpleHealthLogException(String.format("該当利用者は削除済みです。: %s", loginId));
+            String message = MessageFormat.format(
+                    this.messageBundle.getString("contents.maint.user.userEditing.msg.userAlreadyDeleted"), loginId);
+            throw new SimpleHealthLogException(message);
         }
         UserInfo tmpUserInfo = results.get(0);
 
@@ -240,11 +250,13 @@ public class UserService implements Serializable {
     public MaintUserInfo getMaintUsernfo(int id) {
         UserInfo userInfo = this.em.find(UserInfo.class, id);
         if (userInfo == null) {
-            throw new SimpleHealthLogException("利用者が見つかりません。");
+            throw new SimpleHealthLogException(
+                    this.messageBundle.getString("contents.maint.user.userEditing.msg.notFound"));
         }
 
         if (userInfo.getDeleted()) {
-            throw new SimpleHealthLogException("利用者は削除済みです。");
+            throw new SimpleHealthLogException(
+                    this.messageBundle.getString("contents.maint.user.userEditing.msg.alreadyDeleted"));
         }
         MaintUserInfo maintUserInfo = new MaintUserInfo();
         try {

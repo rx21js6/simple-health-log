@@ -4,6 +4,7 @@ package jp.nauplius.app.shl.page.record.backing;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -35,6 +36,9 @@ import lombok.Setter;
 public class DailyRecordController implements Serializable {
     @Inject
     private Logger logger;
+
+    @Inject
+    private transient ResourceBundle messageBundle;
 
     @Inject
     private FacesContext facesContext;
@@ -103,10 +107,12 @@ public class DailyRecordController implements Serializable {
             this.dailyRecordService.register();
 
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
-            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "登録しました。", null));
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    this.messageBundle.getString("contents.record.recordInput.msg.registered"), null));
         } catch (SimpleHealthLogException e) {
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
-            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "認証に失敗しました。", null));
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                    this.messageBundle.getString("contents.record.recordInput.label.msg.registrationFailed"), null));
         }
 
         return null;

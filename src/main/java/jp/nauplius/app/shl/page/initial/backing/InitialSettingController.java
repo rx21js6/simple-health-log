@@ -1,6 +1,7 @@
 package jp.nauplius.app.shl.page.initial.backing;
 
 import java.io.Serializable;
+import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -8,9 +9,11 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.page.initial.service.InitialsettingService;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import lombok.Getter;
@@ -30,16 +33,16 @@ public class InitialSettingController implements Serializable {
     private InitialsettingService initialsettingService;
 
     @Inject
-    private LoginInfo loginInfo;
+    private transient ResourceBundle messageBundle;
 
     public void init() {
         LOGGER.info("init()");
-        this.initialSettingForm.setLoginId("admin");
-        this.initialSettingForm.setName("管理者");
-        this.initialSettingForm.setPassword("");
-        this.initialSettingForm.setPasswordReEnter("");
-        this.initialSettingForm.setMailAddress("");
-        this.initialSettingForm.setMailAddressReEnter("");
+        this.initialSettingForm.setLoginId(ShlConstants.LOGIN_ID_ADMIN);
+        this.initialSettingForm.setName(this.messageBundle.getString("initial.initialSetting.label.admin"));
+        this.initialSettingForm.setPassword(StringUtils.EMPTY);
+        this.initialSettingForm.setPasswordReEnter(StringUtils.EMPTY);
+        this.initialSettingForm.setMailAddress(StringUtils.EMPTY);
+        this.initialSettingForm.setMailAddressReEnter(StringUtils.EMPTY);
     }
 
     public String register() {
@@ -50,7 +53,9 @@ public class InitialSettingController implements Serializable {
         if (!password.contentEquals(passwordReEnter)) {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "パスワード不一致");
+
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
+                    this.messageBundle.getString("initial.initialSetting.msg.passwordUnmatch"));
             facesContext.addMessage("initialSettingValues", message);
             return null;
         }

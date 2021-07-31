@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:b="http://bootsfaces.net/ui"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core">
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
 <head>
 <meta charset="UTF-8" />
-<title>再度ログインしてください。</title>
+<title><h:outputText value="#{msg['loginTimeout.title']}" /></title>
 <f:metadata>
-    <f:viewAction action="#{loginController.timeout()}" />
+	<f:viewAction action="#{loginController.timeout()}" />
 </f:metadata>
 </head>
-<body>申し訳ありません。<a href="../login.xhtml">ログイン画面</a>から再度ログインしてください。
+<body>
+	<h:outputText value="#{msg['common.label.sorry.p']}" />
+	<h:outputText value="#{msg['loginTimeout.msg']}" />
+	<a href="../login.xhtml"><h:outputText
+			value="#{msg['common.label.screen.login']}" /></a>
+
 </body>
 </html>
