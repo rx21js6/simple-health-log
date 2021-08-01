@@ -123,7 +123,8 @@ public class MaintUserController implements Serializable, ModalControllerListene
             messageBuilder.append(message);
             List<String> messages = Arrays.asList(
                     new String[] { messageBuilder.toString(), this.messageBundle.getString("common.msg.sure") });
-            this.commonConfirmModalBean.setTitle(this.messageBundle.getString("contents.maint.user.userList.label.userDeletion"));
+            this.commonConfirmModalBean
+                    .setTitle(this.messageBundle.getString("contents.maint.user.userList.label.userDeletion"));
             this.commonConfirmModalBean.setMessages(messages);
             this.commonConfirmModalBean.setVisible(true);
             this.commonConfirmModalBean.setCommandTypeName("delete");

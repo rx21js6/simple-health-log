@@ -20,7 +20,7 @@
             </ui:fragment>
         </h:form>
         <b:container>
-            <h:form id="detailForm">
+            <h:form id="cancelForm">
                 <b:row>
                     <h2>
                         <h:outputText
@@ -34,63 +34,67 @@
                         </b:commandButton>
                     </b:row>
                 </b:row>
+            </h:form>
+        </b:container>
+        <b:container>
+            <h:form id="detailForm">
                 <b:row>
-                    <b:inputText
-                        value="#{maintUserController.selectedMaintUserInfo.loginId}"
-                        disabled="#{!maintUserController.selectedMaintUserInfo.newData}"
-                        label="#{msg['common.label.loginId']}" span="6" maxlength="100" />
-                </b:row>
-                <b:row>
-                    <b:inputText
-                        value="#{maintUserController.selectedMaintUserInfo.name}"
-                        label="#{msg['common.label.name']}" span="6" maxlength="100" />
-                </b:row>
-                <b:row>
-                    <b:inputText
-                        value="#{maintUserController.selectedMaintUserInfo.mailAddress}"
-                        label="#{msg['common.label.mailAddress']}" span="6"
-                        maxlength="100" />
-                </b:row>
-                <b:row>
-                    <b:inputSecret
-                        disabled="#{!maintUserController.selectedMaintUserInfo.passwordChanged}"
-                        value="#{maintUserController.selectedMaintUserInfo.password}"
-                        label="#{msg['common.label.password']}" span="6" maxlength="100" />
-                </b:row>
-                <b:row>
-                    <b:inputSecret
-                        disabled="#{!maintUserController.selectedMaintUserInfo.passwordChanged}"
-                        value="#{maintUserController.selectedMaintUserInfo.passwordRetype}"
-                        label="#{msg['common.label.passwordReenter']}" span="6"
-                        maxlength="100" />
-                </b:row>
-                <b:row>
-                    <b:selectBooleanCheckbox
-                        rendered="#{!maintUserController.selectedMaintUserInfo.newData}"
-                        value="#{maintUserController.selectedMaintUserInfo.passwordChanged}"
-                        caption="#{msg['common.label.change']}"
-                        label="#{msg['common.label.passwordChanging']}" update="@form"
-                        span="6"
-                        onchange="ajax:maintUserController.onPasswordCheckboxChanged()" />
-                </b:row>
-                <b:row>
-                    <b:selectOneMenu
-                        disabled="#{maintUserController.selectedMaintUserInfo.id == loginInfo.userInfo.id}"
-                        value="#{maintUserController.selectedMaintUserInfo.roleId}"
-                        label="#{msg['common.label.change']}" span="6" maxlength="100"
-                        converter="javax.faces.Integer">
-                        <f:selectItem
-                            itemLabel="#{msg['contents.maint.user.label.admin']}"
-                            itemValue="0" />
-                        <f:selectItem
-                            itemLabel="#{msg['contents.maint.user.label.normal']}"
-                            itemValue="1" />
-                    </b:selectOneMenu>
-                </b:row>
-                <b:row>
-                    <b:commandButton action="#{maintUserController.register()}">
-                        <h:outputText value="#{msg['common.label.registerUpdate']}" />
-                    </b:commandButton>
+                    <b:panelGrid columns="1" cellpadding="5">
+                        <b:inputText
+                            value="#{maintUserController.selectedMaintUserInfo.loginId}"
+                            disabled="#{!maintUserController.selectedMaintUserInfo.newData}"
+                            label="#{msg['common.label.loginId']}" span="6" maxlength="100" />
+                        <b:message for="@previous" />
+
+                        <b:inputText
+                            value="#{maintUserController.selectedMaintUserInfo.name}"
+                            label="#{msg['common.label.name']}" span="6" maxlength="100" />
+                        <b:message for="@previous" />
+
+                        <b:inputText
+                            value="#{maintUserController.selectedMaintUserInfo.mailAddress}"
+                            label="#{msg['common.label.mailAddress']}" span="6"
+                            maxlength="100" />
+                        <b:message for="@previous" />
+
+                        <b:inputSecret
+                            disabled="#{!maintUserController.selectedMaintUserInfo.passwordChanged}"
+                            value="#{maintUserController.selectedMaintUserInfo.password}"
+                            label="#{msg['common.label.password']}" span="6" maxlength="100" />
+                        <b:message for="@previous" />
+
+                        <b:inputSecret
+                            disabled="#{!maintUserController.selectedMaintUserInfo.passwordChanged}"
+                            value="#{maintUserController.selectedMaintUserInfo.passwordRetype}"
+                            label="#{msg['common.label.passwordReenter']}" span="6"
+                            maxlength="100" />
+                        <b:message for="@previous" />
+
+                        <b:selectBooleanCheckbox
+                            rendered="#{!maintUserController.selectedMaintUserInfo.newData}"
+                            value="#{maintUserController.selectedMaintUserInfo.passwordChanged}"
+                            caption="#{msg['common.label.change']}"
+                            label="#{msg['common.label.passwordChanging']}" update="@form"
+                            span="6"
+                            onchange="ajax:maintUserController.onPasswordCheckboxChanged()" />
+
+                        <b:selectOneMenu
+                            disabled="#{maintUserController.selectedMaintUserInfo.id == loginInfo.userInfo.id}"
+                            value="#{maintUserController.selectedMaintUserInfo.roleId}"
+                            label="#{msg['common.label.change']}" span="6" maxlength="100"
+                            converter="javax.faces.Integer">
+                            <f:selectItem
+                                itemLabel="#{msg['contents.maint.user.label.admin']}"
+                                itemValue="0" />
+                            <f:selectItem
+                                itemLabel="#{msg['contents.maint.user.label.normal']}"
+                                itemValue="1" />
+                        </b:selectOneMenu>
+
+                        <b:commandButton action="#{maintUserController.register()}">
+                            <h:outputText value="#{msg['common.label.registerUpdate']}" />
+                        </b:commandButton>
+                    </b:panelGrid>
                 </b:row>
             </h:form>
         </b:container>
