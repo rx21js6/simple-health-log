@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.page.initial.service.InitialsettingService;
-import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import lombok.Getter;
 import lombok.Setter;
 
