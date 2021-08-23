@@ -14,6 +14,7 @@ import javax.persistence.TypedQuery;
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.record.backing.MonthlyRecordModel;
 import jp.nauplius.app.shl.page.record.bean.RecordHolder;
 
 @Named
@@ -25,10 +26,15 @@ public class MonthlyRecordService implements Serializable {
     @Inject
     private transient EntityManager em;
 
-    public List<RecordHolder> getMontylyRecords(LocalDate localDate) {
+    @Inject
+    private MonthlyRecordModel monthlyRecordModel;
+
+    public List<RecordHolder> loadMonthlyRecords() {
 
         // 当月の1日～月末までのリストを作成
         List<RecordHolder> monthlyRecordHolders = new ArrayList<>();
+
+        LocalDate localDate = this.monthlyRecordModel.getToday();
 
         LocalDate date = LocalDate.of(localDate.getYear(), localDate.getMonth(), 1);
         LocalDate firstDate = date;
@@ -63,6 +69,8 @@ public class MonthlyRecordService implements Serializable {
                 }
             }
         }
+
+        this.monthlyRecordModel.setMonthlyRecords(monthlyRecordHolders);
 
         return monthlyRecordHolders;
     }

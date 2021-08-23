@@ -99,12 +99,12 @@
                     </h4>
                 </b:column>
             </b:row>
-            <b:form>
+            <b:form inline="true">
                 <b:row>
                     <b:column>
                         <b:commandButton value="#{msg['common.label.monthly']}"
                             icon="list"
-                            action="#{monthlyRecordListController.showMonthlyList()}">
+                            action="#{dailyRecordController.showMonthlyList(false)}">
                             <f:setPropertyActionListener
                                 value="#{dailyRecordController.today}"
                                 target="#{monthlyRecordListController.today}" />
@@ -123,26 +123,26 @@
                     <b:column>
                         <b:commandButton value="#{msg['common.label.yesterday']}"
                             icon="chevron-left"
-                            action="#{dailyRecordController.loadYesterday()}" />
+                            action="#{dailyRecordController.loadYesterday(false)}" />
                         <b:commandButton value="#{msg['common.label.today']}"
-                            icon="chevron-up" action="#{dailyRecordController.loadToday()}" />
+                            icon="chevron-up"
+                            action="#{dailyRecordController.loadToday(false)}" />
                         <b:commandButton value="#{msg['common.label.tomorrow']}"
                             icon="chevron-right"
-                            action="#{dailyRecordController.loadTomorrow()}" />
+                            action="#{dailyRecordController.loadTomorrow(false)}" />
                     </b:column>
                 </b:row>
-            </b:form>
 
-            <b:row>
-                <b:column>
-                    <h3>
-                        <h:outputText
-                            value="#{msg['contents.record.recordInput.label.condition']}" />
-                    </h3>
-                </b:column>
-            </b:row>
+                <b:row>
+                    <b:column>
+                        <h3>
+                            <h:outputText
+                                value="#{msg['contents.record.recordInput.label.condition']}" />
+                        </h3>
+                    </b:column>
+                </b:row>
 
-            <b:form inline="true">
+
                 <b:row>
                     <b:column>
                         <h4>
@@ -217,7 +217,8 @@
                 <b:row>
                     <b:column>
                         <h4>
-                            <h:outputText value="#{msg['contents.record.recordInput.label.note']}" />
+                            <h:outputText
+                                value="#{msg['contents.record.recordInput.label.note']}" />
                         </h4>
                     </b:column>
                 </b:row>
@@ -242,7 +243,15 @@
                     </b:column>
                 </b:row>
             </b:form>
-
+            <b:row>
+                <h:form id="modalForm">
+                    <ui:fragment rendered="#{commonConfirmModalBean.visible}">
+                        <ui:insert>
+                            <ui:include src="/contents/common/commonConfirmModal.jsf" />
+                        </ui:insert>
+                    </ui:fragment>
+                </h:form>
+            </b:row>
         </ui:fragment>
 
     </b:container>

@@ -2,13 +2,11 @@ package jp.nauplius.app.shl.page.record.backing;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import jp.nauplius.app.shl.page.record.bean.RecordHolder;
 import jp.nauplius.app.shl.page.record.service.MonthlyRecordService;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,19 +15,19 @@ import lombok.Setter;
 @SessionScoped
 public class MonthlyRecordListController implements Serializable {
     @Inject
-    private MonthlyRecordService monthlyRecordService;;
+    private MonthlyRecordService monthlyRecordService;
+
+    @Inject
+    private MonthlyRecordModel monthlyRecordModel;
 
     @Getter
     @Setter
     private LocalDate today;
 
-    @Getter
-    @Setter
-    private List<RecordHolder> monthlyRecords;
 
     public String showMonthlyList() {
         this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
-        this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);
+        this.monthlyRecordModel.setToday(this.today);
 
         return "/contents/record/monthlyRecord.xhtml?faces-redirect=true";
     }
@@ -40,7 +38,8 @@ public class MonthlyRecordListController implements Serializable {
      */
     public String loadPreviousMonth() {
         this.today = this.today.plusMonths(-1);
-        this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);
+        this.monthlyRecordModel.setToday(this.today);
+        this.monthlyRecordService.loadMonthlyRecords();
 
         return null;
     }
@@ -52,7 +51,8 @@ public class MonthlyRecordListController implements Serializable {
     public String loadCurrentMonth() {
         this.today = LocalDate.now();
         this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
-        this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);
+        this.monthlyRecordModel.setToday(this.today);
+        this.monthlyRecordService.loadMonthlyRecords();
 
         return null;
     }
@@ -63,7 +63,8 @@ public class MonthlyRecordListController implements Serializable {
      */
     public String loadNextMonth() {
         this.today = this.today.plusMonths(1);
-        this.monthlyRecords = this.monthlyRecordService.getMontylyRecords(this.today);
+        this.monthlyRecordModel.setToday(this.today);
+        this.monthlyRecordService.loadMonthlyRecords();
 
         return null;
     }
