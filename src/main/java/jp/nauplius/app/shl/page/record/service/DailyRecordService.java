@@ -102,10 +102,18 @@ public class DailyRecordService implements Serializable {
             }
         }
         this.em.flush();
+
+        // ミラー更新するため読み直し
+        LocalDate recordingDate = LocalDate.parse(
+                this.dailyRecordInputModel.getPhysicalCondition().getId().getRecordingDate(),
+                ShlConstants.RECORDING_DATE_FORMATTER);
+
+        this.loadRecord(recordingDate);
     }
 
     /**
      * 有効な利用者の指定日データ取得
+     *
      * @param date 指定日
      * @return
      */

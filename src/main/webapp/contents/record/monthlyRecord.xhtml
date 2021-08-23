@@ -45,7 +45,7 @@
                 <b:column>
                     <h3>
                         <h:outputText
-                            value="#{monthlyRecordListController.monthlyRecords.get(0).dateText}"
+                            value="#{monthlyRecordModel.monthlyRecords.get(0).dateText}"
                             converter="stringDateConverter" />
                         <h:outputText value="～" />
                     </h3>
@@ -74,7 +74,7 @@
             </b:row>
             <b:row>
                 <b:dataTable var="record" style-class="monthly_record_table"
-                    value="#{monthlyRecordListController.monthlyRecords}">
+                    value="#{monthlyRecordModel.monthlyRecords}">
                     <f:facet name="header">
                         <thead class="monthly_record_header">
                             <tr>
