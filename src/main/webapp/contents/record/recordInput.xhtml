@@ -102,33 +102,35 @@
             <b:form inline="true">
                 <b:row>
                     <b:column>
-                        <b:commandButton value="#{msg['common.label.monthly']}"
-                            icon="list"
+                        <b:commandButton id="monthlyListButton"
+                            value="#{msg['common.label.monthly']}" icon="list"
                             action="#{dailyRecordController.showMonthlyList(false)}">
                             <f:setPropertyActionListener
                                 value="#{dailyRecordController.today}"
                                 target="#{monthlyRecordListController.today}" />
                         </b:commandButton>
-                        <b:commandButton value="#{msg['common.label.allUser']}"
-                            icon="list" action="#{dailyRecordListController.showDailyList()}"
+                        <b:commandButton id="dailyListButton"
+                            value="#{msg['common.label.allUser']}" icon="list"
+                            action="#{dailyRecordListController.showDailyList()}"
                             rendered="#{loginInfo.userInfo.roleId == 0}">
                             <f:setPropertyActionListener
                                 value="#{dailyRecordController.today}"
                                 target="#{dailyRecordListController.today}" />
                         </b:commandButton>
-                        <b:commandButton action="#{maintUserController.showList()}"
+                        <b:commandButton id="listsButton"
+                            action="#{maintUserController.showList()}"
                             value="#{msg['common.label.user']}" icon="user"
                             rendered="#{loginInfo.userInfo.roleId == 0}" />
                     </b:column>
                     <b:column>
-                        <b:commandButton value="#{msg['common.label.yesterday']}"
-                            icon="chevron-left"
+                        <b:commandButton id="yesterdayButton"
+                            value="#{msg['common.label.yesterday']}" icon="chevron-left"
                             action="#{dailyRecordController.loadYesterday(false)}" />
-                        <b:commandButton value="#{msg['common.label.today']}"
-                            icon="chevron-up"
+                        <b:commandButton id="todayButton"
+                            value="#{msg['common.label.today']}" icon="chevron-up"
                             action="#{dailyRecordController.loadToday(false)}" />
-                        <b:commandButton value="#{msg['common.label.tomorrow']}"
-                            icon="chevron-right"
+                        <b:commandButton id="tomorrowButton"
+                            value="#{msg['common.label.tomorrow']}" icon="chevron-right"
                             action="#{dailyRecordController.loadTomorrow(false)}" />
                     </b:column>
                 </b:row>
@@ -235,11 +237,11 @@
                 <b:row>
                     <b:column>
                         <b:panelGrid columns="6">
-                            <b:commandButton value="#{msg['common.button.register']}"
-                                look="primary" size="lg"
-                                action="#{dailyRecordController.register()}" />
+                            <b:commandButton id="registrationButton"
+                                value="#{msg['common.button.register']}" look="primary"
+                                size="lg" action="#{dailyRecordController.register()}" />
                         </b:panelGrid>
-
+                        <b:defaultCommand target="registrationButton" />
                     </b:column>
                 </b:row>
             </b:form>
