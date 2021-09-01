@@ -1,6 +1,5 @@
 package jp.nauplius.app.shl.page.record.service;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -12,7 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -22,25 +20,27 @@ import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.model.PhysicalConditionPK;
+import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.record.backing.DailyRecordInputModel;
+import jp.nauplius.app.shl.page.record.backing.DailyRecordListModel;
 import jp.nauplius.app.shl.page.record.bean.DailyRecord;
 
 @Named
 @SessionScoped
-public class DailyRecordService implements Serializable {
-    @Inject
-    private transient EntityManager em;
-
+public class DailyRecordService extends AbstractService {
     @Inject
     private LoginInfo loginInfo;
 
     @Inject
     private DailyRecordInputModel dailyRecordInputModel;
 
+    @Inject
+    private DailyRecordListModel dailyRecordListModel;
+
     @PostConstruct
     public void init() {
-        System.out.println("DailyRecordService#init() em: " + this.em);
+        // System.out.println("DailyRecordService#init() entityManager: " + this.entityManager);
     }
 
     /**
@@ -51,14 +51,14 @@ public class DailyRecordService implements Serializable {
      */
     @Transactional
     public PhysicalCondition loadRecord(LocalDate recordingDate) {
-        this.em.flush();
+        this.entityManager.flush();
 
         String dateText = recordingDate.format(ShlConstants.RECORDING_DATE_FORMATTER);
 
         PhysicalConditionPK pk = new PhysicalConditionPK();
         pk.setId(this.loginInfo.getUserInfo().getId());
         pk.setRecordingDate(dateText);
-        PhysicalCondition record = this.em.find(PhysicalCondition.class, pk);
+        PhysicalCondition record = this.entityManager.find(PhysicalCondition.class, pk);
 
         if (Objects.isNull(record)) {
             record = new PhysicalCondition();
@@ -80,28 +80,28 @@ public class DailyRecordService implements Serializable {
     @Transactional
     public void register() {
         PhysicalCondition physicalCondition = this.dailyRecordInputModel.getPhysicalCondition();
-        PhysicalCondition tmpCondition = this.em.find(PhysicalCondition.class, physicalCondition.getId());
+        PhysicalCondition tmpCondition = this.entityManager.find(PhysicalCondition.class, physicalCondition.getId());
         LocalDateTime now = LocalDateTime.now();
         if (Objects.isNull(tmpCondition)) {
             // 新規
-            this.em.persist(physicalCondition);
+            this.entityManager.persist(physicalCondition);
             physicalCondition.setModifiedBy(physicalCondition.getId().getId());
             physicalCondition.setModifiedDate(Timestamp.valueOf(now));
             physicalCondition.setModifiedBy(physicalCondition.getId().getId());
             physicalCondition.setModifiedDate(Timestamp.valueOf(now));
-            this.em.merge(physicalCondition);
+            this.entityManager.merge(physicalCondition);
         } else {
             // 更新
             try {
                 BeanUtils.copyProperties(tmpCondition, physicalCondition);
                 tmpCondition.setModifiedBy(physicalCondition.getId().getId());
                 tmpCondition.setModifiedDate(Timestamp.valueOf(now));
-                this.em.merge(tmpCondition);
+                this.entityManager.merge(tmpCondition);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new SimpleHealthLogException(e);
             }
         }
-        this.em.flush();
+        this.entityManager.flush();
 
         // ミラー更新するため読み直し
         LocalDate recordingDate = LocalDate.parse(
@@ -117,7 +117,7 @@ public class DailyRecordService implements Serializable {
      * @param date 指定日
      * @return
      */
-    public List<DailyRecord> getDailyRecords(LocalDate date) {
+    public List<DailyRecord> loadDailyRecords(LocalDate date) {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("SELECT NEW jp.nauplius.app.shl.page.record.bean.DailyRecord(u, p) ");
         queryBuilder.append("FROM UserInfo u ");
@@ -126,9 +126,11 @@ public class DailyRecordService implements Serializable {
         queryBuilder.append("AND p.id.recordingDate = :date ");
         queryBuilder.append("WHERE u.deleted = false ");
         queryBuilder.append("ORDER BY u.id");
-        TypedQuery<DailyRecord> query = this.em.createQuery(queryBuilder.toString(), DailyRecord.class);
+        TypedQuery<DailyRecord> query = this.entityManager.createQuery(queryBuilder.toString(), DailyRecord.class);
         query.setParameter("date", date.format(ShlConstants.RECORDING_DATE_FORMATTER));
         List<DailyRecord> results = query.getResultList();
+
+        this.dailyRecordListModel.setDailyRecords(results);
         return results;
     }
 }

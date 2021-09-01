@@ -24,10 +24,11 @@ public class MonthlyRecordListController implements Serializable {
     @Setter
     private LocalDate today;
 
-
+    @Deprecated
     public String showMonthlyList() {
         this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
         this.monthlyRecordModel.setToday(this.today);
+        this.monthlyRecordService.loadMonthlyRecords();
 
         return "/contents/record/monthlyRecord.xhtml?faces-redirect=true";
     }
