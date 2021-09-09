@@ -83,7 +83,7 @@
                     </thead>
                     <tbody>
                         <ui:repeat var="record"
-                            value="#{dailyRecordListController.dailyRecords}">
+                            value="#{dailyRecordListModel.dailyRecords}">
                             <tr>
                                 <td><h:outputText value="#{record.userInfo.name}" /></td>
                                 <td><h:outputText

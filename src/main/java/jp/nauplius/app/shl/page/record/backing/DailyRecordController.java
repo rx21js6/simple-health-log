@@ -157,7 +157,8 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     /**
      * 前日表示
      *
-     * @return null
+     * @param force
+     * @return
      */
     public String loadYesterday(boolean force) {
         this.commonConfirmModalBean.setVisible(false);
@@ -175,7 +176,8 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     /**
      * 当日表示
      *
-     * @return null
+     * @param force
+     * @return
      */
     public String loadToday(boolean force) {
         this.commonConfirmModalBean.setVisible(false);
@@ -193,7 +195,8 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     /**
      * 翌日表示
      *
-     * @return null
+     * @param force
+     * @return
      */
     public String loadTomorrow(boolean force) {
         this.commonConfirmModalBean.setVisible(false);
@@ -211,6 +214,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     /**
      * 月次表示
      *
+     * @param force
      * @return
      */
     public String showMonthlyList(boolean force) {
@@ -228,6 +232,23 @@ public class DailyRecordController implements Serializable, ModalControllerListe
         return "/contents/record/monthlyRecord.xhtml?faces-redirect=true";
     }
 
+    /**
+     * 全利用者の日次表示
+     *
+     * @param force
+     * @return
+     */
+    public String showDailyList(boolean force) {
+        if (!force && this.isFormEdited()) {
+            this.setModal("showMonthlyList");
+            return null;
+        }
+
+        this.dailyRecordInputModel.reset();
+        this.dailyRecordService.loadDailyRecords(this.today);
+        return "/contents/record/dailyRecord.xhtml?faces-redirect=true";
+    }
+
     @Override
     public void initModal() {
         this.logger.debug("initModa");
@@ -240,7 +261,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     public String fireAction(ModalController modalAction, String commandTypeName, String buttonName) {
         String res = null;
         try {
-            res = (String)this.dispatchMethod.invoke(this, true);
+            res = (String) this.dispatchMethod.invoke(this, true);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new SimpleHealthLogException(e);
         }

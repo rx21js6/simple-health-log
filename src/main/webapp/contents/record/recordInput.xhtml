@@ -111,7 +111,7 @@
                         </b:commandButton>
                         <b:commandButton id="dailyListButton"
                             value="#{msg['common.label.allUser']}" icon="list"
-                            action="#{dailyRecordListController.showDailyList()}"
+                            action="#{dailyRecordController.showDailyList(false)}"
                             rendered="#{loginInfo.userInfo.roleId == 0}">
                             <f:setPropertyActionListener
                                 value="#{dailyRecordController.today}"

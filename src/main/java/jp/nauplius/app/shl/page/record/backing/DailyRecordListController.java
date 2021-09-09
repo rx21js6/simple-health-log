@@ -2,14 +2,12 @@ package jp.nauplius.app.shl.page.record.backing;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
-import jp.nauplius.app.shl.page.record.bean.DailyRecord;
 import jp.nauplius.app.shl.page.record.service.DailyRecordService;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,24 +16,11 @@ import lombok.Setter;
 @SessionScoped
 public class DailyRecordListController implements Serializable {
     @Getter
-    private List<DailyRecord> dailyRecords;
-
-    @Getter
     @Setter
     private LocalDate today;
 
     @Inject
     private DailyRecordService dailyRecordService;
-
-    /**
-     * 全利用者リスト
-     *
-     * @return
-     */
-    public String showDailyList() {
-        this.dailyRecords = this.dailyRecordService.getDailyRecords(this.today);
-        return "/contents/record/dailyRecord.xhtml?faces-redirect=true";
-    }
 
     /**
      * 前日表示
@@ -44,7 +29,7 @@ public class DailyRecordListController implements Serializable {
      */
     public String loadYesterday() {
         this.today = this.today.minusDays(1);
-        this.dailyRecords = this.dailyRecordService.getDailyRecords(this.today);
+        this.dailyRecordService.loadDailyRecords(this.today);
         return null;
     }
 
@@ -55,7 +40,7 @@ public class DailyRecordListController implements Serializable {
      */
     public String loadToday() {
         this.today = LocalDate.now();
-        this.dailyRecords = this.dailyRecordService.getDailyRecords(this.today);
+        this.dailyRecordService.loadDailyRecords(this.today);
         return null;
     }
 
@@ -66,12 +51,16 @@ public class DailyRecordListController implements Serializable {
      */
     public String loadTomorrow() {
         this.today = this.today.plusDays(1);
-        this.dailyRecords = this.dailyRecordService.getDailyRecords(today);
+        this.dailyRecordService.loadDailyRecords(today);
         return null;
     }
 
+    /**
+     * 当日の日付フォーマット
+     *
+     * @return
+     */
     public String getTodayText() {
         return this.today.format(ShlConstants.RECORDING_DATE_FORMATTER);
     }
-
 }
