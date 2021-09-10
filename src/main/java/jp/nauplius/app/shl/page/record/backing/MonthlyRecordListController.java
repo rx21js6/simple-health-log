@@ -7,6 +7,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import jp.nauplius.app.shl.page.record.service.MonthlyRecordService;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,17 +26,18 @@ public class MonthlyRecordListController implements Serializable {
     @Setter
     private LocalDate today;
 
-    @Deprecated
-    public String showMonthlyList() {
-        this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
-        this.monthlyRecordModel.setToday(this.today);
-        this.monthlyRecordService.loadMonthlyRecords();
-
-        return "/contents/record/monthlyRecord.xhtml?faces-redirect=true";
+    /**
+     * 月次画面の初期表示
+     */
+    public void init() {
+        if (CollectionUtils.isEmpty(this.monthlyRecordModel.getMonthlyRecords())) {
+            this.monthlyRecordService.loadMonthlyRecords();
+        }
     }
 
     /**
      * 前月表示
+     *
      * @return null
      */
     public String loadPreviousMonth() {
@@ -47,6 +50,7 @@ public class MonthlyRecordListController implements Serializable {
 
     /**
      * 当月表示
+     *
      * @return null
      */
     public String loadCurrentMonth() {
@@ -60,6 +64,7 @@ public class MonthlyRecordListController implements Serializable {
 
     /**
      * 翌月表示
+     *
      * @return null
      */
     public String loadNextMonth() {

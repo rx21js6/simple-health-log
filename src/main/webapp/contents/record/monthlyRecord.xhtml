@@ -6,6 +6,9 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
+    <f:metadata>
+        <f:viewAction action="#{monthlyRecordListController.init()}" />
+    </f:metadata>
     <title><h:outputText value="#{msg['common.title']}" /></title>
     <style type="text/css">
 .monthly_record_header th {
