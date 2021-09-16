@@ -117,9 +117,9 @@
       <value>97</value>
       <value>98</value>
       <value>テスト</value>
-      <null/>
-      <null/>
-      <null/>
+      <value>2</value>
+      <value><![CDATA[2021-07-31 21:57:06.600936]]></value>
+      <value>2</value>
       <value><![CDATA[2021-07-31 21:57:06.600936]]></value>
     </row>
     <row>
@@ -132,9 +132,9 @@
       <value>97</value>
       <value>98</value>
       <value>テスト</value>
-      <null/>
-      <null/>
-      <null/>
+      <value>2</value>
+      <value><![CDATA[2021-07-31 21:57:06.600936]]></value>
+      <value>2</value>
       <value><![CDATA[2021-07-31 21:57:06.600936]]></value>
     </row>
     <row>
@@ -147,9 +147,9 @@
       <value>98</value>
       <value>98</value>
       <value>検索されない前提</value>
-      <null/>
-      <null/>
-      <null/>
+      <value>2</value>
+      <value><![CDATA[2021-07-31 21:57:06.600936]]></value>
+      <value>2</value>
       <value><![CDATA[2021-07-31 21:57:06.600936]]></value>
     </row>
   </table>
