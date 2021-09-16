@@ -44,7 +44,7 @@ public class DailyRecordService extends AbstractService {
     }
 
     /**
-     * レコード取得
+     * 指定日のレコード取得
      *
      * @param recordingDate
      * @return
@@ -80,26 +80,26 @@ public class DailyRecordService extends AbstractService {
     @Transactional
     public void register() {
         PhysicalCondition physicalCondition = this.dailyRecordInputModel.getPhysicalCondition();
-        PhysicalCondition tmpCondition = this.entityManager.find(PhysicalCondition.class, physicalCondition.getId());
+        PhysicalCondition conditionForUpdate = this.entityManager.find(PhysicalCondition.class, physicalCondition.getId());
         LocalDateTime now = LocalDateTime.now();
-        if (Objects.isNull(tmpCondition)) {
+        if (Objects.isNull(conditionForUpdate)) {
             // 新規
             this.entityManager.persist(physicalCondition);
-            physicalCondition.setModifiedBy(physicalCondition.getId().getId());
-            physicalCondition.setModifiedDate(Timestamp.valueOf(now));
-            physicalCondition.setModifiedBy(physicalCondition.getId().getId());
+            physicalCondition.setCreatedBy(this.loginInfo.getUserInfo().getId());
+            physicalCondition.setCreatedDate(Timestamp.valueOf(now));
+            physicalCondition.setModifiedBy(this.loginInfo.getUserInfo().getId());
             physicalCondition.setModifiedDate(Timestamp.valueOf(now));
             this.entityManager.merge(physicalCondition);
         } else {
             // 更新
             try {
-                BeanUtils.copyProperties(tmpCondition, physicalCondition);
-                tmpCondition.setModifiedBy(physicalCondition.getId().getId());
-                tmpCondition.setModifiedDate(Timestamp.valueOf(now));
-                this.entityManager.merge(tmpCondition);
+                BeanUtils.copyProperties(conditionForUpdate, physicalCondition);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new SimpleHealthLogException(e);
             }
+            conditionForUpdate.setModifiedBy(this.loginInfo.getUserInfo().getId());
+            conditionForUpdate.setModifiedDate(Timestamp.valueOf(now));
+            this.entityManager.merge(conditionForUpdate);
         }
         this.entityManager.flush();
 

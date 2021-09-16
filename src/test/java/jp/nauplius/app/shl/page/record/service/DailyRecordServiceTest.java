@@ -3,10 +3,12 @@ package jp.nauplius.app.shl.page.record.service;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 
@@ -76,6 +78,7 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
 
     @Test
     public void testRegisterNew() {
+        LocalDateTime now = LocalDateTime.now();
         UserInfo userInfo = new UserInfo();
         userInfo.setId(2);
         this.loginInfo.setUserInfo(userInfo);
@@ -106,10 +109,15 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         assertThat(conditionResult.getBodyTemperatureEvening(),
                 is(conditionForRegistration.getBodyTemperatureEvening()));
         assertThat(conditionResult.getConditionNote(), is(conditionForRegistration.getConditionNote()));
+        assertThat(conditionResult.getCreatedBy(), is(userInfo.getId()));
+        assertTrue(now.isBefore(conditionResult.getCreatedDate().toLocalDateTime()));
+        assertThat(conditionResult.getModifiedBy(), is(userInfo.getId()));
+        assertTrue(now.isBefore(conditionResult.getModifiedDate().toLocalDateTime()));
     }
 
     @Test
     public void testRegisterUpdate() {
+        LocalDateTime now = LocalDateTime.now();
         UserInfo userInfo = new UserInfo();
         userInfo.setId(2);
         this.loginInfo.setUserInfo(userInfo);
@@ -137,7 +145,10 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         assertThat(conditionResult.getBodyTemperatureMorning(), is(conditionForUpdate.getBodyTemperatureMorning()));
         assertThat(conditionResult.getBodyTemperatureEvening(), is(conditionForUpdate.getBodyTemperatureEvening()));
         assertThat(conditionResult.getConditionNote(), is(conditionForUpdate.getConditionNote()));
+        assertThat(conditionResult.getCreatedBy(), is(userInfo.getId()));
+        assertTrue(now.isAfter(conditionResult.getCreatedDate().toLocalDateTime()));
         assertThat(conditionResult.getModifiedBy(), is(userInfo.getId()));
+        assertTrue(now.isBefore(conditionResult.getModifiedDate().toLocalDateTime()));
     }
 
     @Test
