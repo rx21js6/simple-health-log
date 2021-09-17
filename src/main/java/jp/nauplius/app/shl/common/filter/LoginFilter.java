@@ -41,14 +41,14 @@ public class LoginFilter implements Filter {
     private LoginInfo loginInfo;
 
     private static final List<String> ALLOWED_PATHS_INITIAL = Collections
-            .unmodifiableList(Arrays.asList("/javax.faces.resource", "/rest", "/contents/initial"));
+            .unmodifiableList(Arrays.asList(ResourceHandler.RESOURCE_IDENTIFIER, "/rest", "/contents/initial"));
 
     private static final List<String> ALLOWED_PASSWORD_RESET = Collections
             .unmodifiableList(Arrays.asList("/contents/password/passwordReset.xhtml"));
 
     private static final List<String> ALLOWED_PATHS = Collections
-            .unmodifiableList(Arrays.asList("/javax.faces.resource", "/rest", "/contents/record/recordInput.xhtml",
-                    "/contents/initial/initialSettingComplete.xhtml"));
+            .unmodifiableList(Arrays.asList(ResourceHandler.RESOURCE_IDENTIFIER, "/rest",
+                    "/contents/record/recordInput.xhtml", "/contents/initial/initialSettingComplete.xhtml"));
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -106,7 +106,12 @@ public class LoginFilter implements Filter {
                 // パスワードリセット
                 chain.doFilter(request, response);
             } else if (loggedIn || pathAllowed) {
-                if (!this.authService.isVisible(path, httpServletRequest.getContextPath())) {
+                if (httpServletRequest.getServletPath().equals("/")) {
+                    // 入力画面に遷移
+                    httpServletResponse
+                            .sendRedirect(httpServletRequest.getContextPath() + "/contents/record/recordInput.xhtml");
+                    return;
+                } else if (!this.authService.isVisible(path, httpServletRequest.getContextPath())) {
                     // 表示権限がない場合
                     httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/error/authError.xhtml");
                 }
