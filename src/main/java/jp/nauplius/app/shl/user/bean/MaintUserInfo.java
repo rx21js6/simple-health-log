@@ -2,7 +2,7 @@ package jp.nauplius.app.shl.user.bean;
 
 import java.io.Serializable;
 
-import javax.faces.view.ViewScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -11,15 +11,15 @@ import javax.validation.constraints.Size;
 
 import lombok.Data;
 
-@ViewScoped
 @Named
+@SessionScoped
 @Data
 public class MaintUserInfo implements Serializable {
     private int id;
 
     @NotEmpty(message = "入力してください。")
     @Size(min = 5, max = 10)
-    @Pattern(regexp = "~[a-z]+[a-z0-9_]+$", message = "英数小文字で入力してください。")
+    @Pattern(regexp = "[a-z]+[a-z0-9_]+", message = "英数小文字で入力してください。")
     private String loginId;
 
     @NotEmpty(message = "入力してください。")
