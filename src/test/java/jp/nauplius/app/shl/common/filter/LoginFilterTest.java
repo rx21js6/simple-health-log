@@ -141,6 +141,71 @@ public class LoginFilterTest extends AbstractServiceTest {
 
     }
 
+
+    /**
+     * ログイン済み、一般、不許可ページ
+     *
+     * @throws IOException
+     * @throws ServletException
+     */
+    @Test
+    public void testDoFilterNormalNotAuthorized() throws IOException, ServletException {
+        UserInfo normalUserInfo = new UserInfo();
+        normalUserInfo.setId(2);
+        normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
+        this.loginInfo.setUserInfo(normalUserInfo);
+
+        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "/dbunit/LoginFilterTest_data01.xml");
+
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
+        request.setRequestURI("/simple-health-log/contents/maint/user/userList.xhtml");
+        request.setServletPath("/contents/maint/user/userList.xhtml");
+        request.setContextPath("/simple-health-log");
+
+        MockHttpServletResponseImpl response = new MockHttpServletResponseImpl();
+
+        this.loginFilter.doFilter(request, response, createDummyFilterChain());
+
+        // 結果確認
+        String location = response.getHeader("Location");
+        // 権限エラー画面に遷移
+        assertTrue(location.endsWith("/error/authError.xhtml"));
+    }
+
+    /**
+     * ログイン済み、管理者、制限ページ
+     *
+     * @throws IOException
+     * @throws ServletException
+     */
+    @Test
+    public void testDoFilterAdmin() throws IOException, ServletException {
+        UserInfo normalUserInfo = new UserInfo();
+        normalUserInfo.setId(2);
+        normalUserInfo.setRoleId(UserRoleId.ADMIN.getInt());
+        this.loginInfo.setUserInfo(normalUserInfo);
+
+        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "/dbunit/LoginFilterTest_data01.xml");
+
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
+        request.setRequestURI("/simple-health-log/contents/maint/user/userList.xhtml");
+        request.setServletPath("/contents/maint/user/userList.xhtml");
+        request.setContextPath("/simple-health-log");
+
+        MockHttpServletResponseImpl response = new MockHttpServletResponseImpl();
+
+        this.loginFilter.doFilter(request, response, createDummyFilterChain());
+
+        // 結果確認
+        String location = response.getHeader("Location");
+        // 遷移しない
+        assertNull(location);
+    }
+
+    /**
+     * ダミーのFilterChain生成
+     * @return
+     */
     private FilterChain createDummyFilterChain() {
         return new FilterChain() {
             @Override

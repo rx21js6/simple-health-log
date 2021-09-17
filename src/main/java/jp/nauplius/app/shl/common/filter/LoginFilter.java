@@ -64,6 +64,8 @@ public class LoginFilter implements Filter {
 
         String requestUri = httpServletRequest.getRequestURI();
         this.logger.info("doFilter" + requestUri);
+        String contextPath = httpServletRequest.getContextPath();
+        String servletPath = httpServletRequest.getServletPath();
 
         if (requestUri.startsWith(httpServletRequest.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER)) {
             // Skip JSF
@@ -78,7 +80,7 @@ public class LoginFilter implements Filter {
         }
 
         // セッション確認
-        String path = requestUri.substring(httpServletRequest.getContextPath().length()).replaceAll("[/]+$", "");
+        String path = requestUri.substring(contextPath.length()).replaceAll("[/]+$", "");
 
         if (!this.keyIvHolderService.isRegistered()) {
             // 初期設定前
@@ -90,8 +92,7 @@ public class LoginFilter implements Filter {
                 return;
             }
             // それ以外
-            httpServletResponse
-                    .sendRedirect(httpServletRequest.getContextPath() + "/contents/initial/initialSetting.xhtml");
+            httpServletResponse.sendRedirect(contextPath + "/contents/initial/initialSetting.xhtml");
 
         } else {
             // ログイン済み確認（restは許可）
@@ -102,28 +103,24 @@ public class LoginFilter implements Filter {
 
             this.logger.debug(String.format("loggedIn: %s, pathAllowed: %s", loggedIn, pathAllowed));
 
-            if (passwordResetAllowd) {
+            if (passwordResetAllowd || pathAllowed) {
                 // パスワードリセット
                 chain.doFilter(request, response);
-            } else if (loggedIn || pathAllowed) {
-                if (httpServletRequest.getServletPath().equals("/")) {
+            } else if (loggedIn) {
+                if (servletPath.equals("/")) {
                     // 入力画面に遷移
-                    httpServletResponse
-                            .sendRedirect(httpServletRequest.getContextPath() + "/contents/record/recordInput.xhtml");
+                    httpServletResponse.sendRedirect(contextPath + "/contents/record/recordInput.xhtml");
                     return;
-                } else if (!this.authService.isVisible(path, httpServletRequest.getContextPath())) {
+                } else if (!this.authService.isNormalUserVisible(servletPath)) {
                     // 表示権限がない場合
-                    httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/error/authError.xhtml");
+                    httpServletResponse.sendRedirect(contextPath + "/error/authError.xhtml");
+                    return;
                 }
 
                 chain.doFilter(request, response);
             } else {
                 this.logger.debug("redirect to recordInput.xhtml");
-                // httpServletResponse.sendRedirect(httpServletRequest.getContextPath() +
-                // "/contents/login/login.xhtml");
-                httpServletResponse
-                        .sendRedirect(httpServletRequest.getContextPath() + "/contents/record/recordInput.xhtml");
-                // chain.doFilter(request, response);
+                httpServletResponse.sendRedirect(contextPath + "/contents/record/recordInput.xhtml");
             }
         }
 
