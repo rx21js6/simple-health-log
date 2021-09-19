@@ -1,8 +1,8 @@
 # simple-health-log
 
-2021-07-04
+2021-09-19
 
-## 概要
+## Summary
 
 * 起床時刻
 * 体温（摂氏）（朝夕）
@@ -11,20 +11,41 @@
 
 を記録する（だけ）のアプリ
 
-## 必要なもの
+## Requirement
 
+* JDK 1.8
 * Gradle 7.1+
-* Jetty9.4+（推奨）
+* Jetty9.4+（Reccomended）
 * PostgreSQL 12+
 
-## 準備
+## Preparations
+
+### PostgreSQL
+
+* Create user "healthlog". And create database.
+* Change '**〜' to appropriate password (set same value as gradle.properties).
+* As needed, change 'postgresql.conf' and 'pg_hba.conf'.
+
+```sql
+CREATE USER healthlog PASSWORD '**********' NOINHERIT VALID UNTIL 'infinity';
+
+-- test
+CREATE DATABASE simple_health_log_test WITH OWNER='healthlog' ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+
+-- development
+-- CREATE DATABASE simple_health_log_development WITH OWNER='healthlog' ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+
+-- production
+CREATE DATABASE simple_health_log_production WITH OWNER='healthlog' ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+
+```
 
 ### gradle.properties
 
-* ~/.gradle/gralde.properties に以下を記載。必要に応じて適宜修正
+* Add below text to ~/.gradle/gralde.properties.
 
 ```java
-# development/productionおよびパスワード（**********）は必要に応じて変更
+# Change '**********' to appropriate password.
 #
 # simple-health-log DB settings
 #
@@ -38,7 +59,7 @@ jp.nauplius.app.shl.setting.production.db.password=**********
 jp.nauplius.app.shl.setting.development.db.url=jdbc:postgresql://localhost:5432/simple_health_log_development
 jp.nauplius.app.shl.setting.development.db.user=healthlog
 jp.nauplius.app.shl.setting.development.db.password=**********
-## for test(2021-07-04- )
+## for test
 jp.nauplius.app.shl.setting.test.db.url=jdbc:postgresql://localhost:5432/simple_health_log_test
 jp.nauplius.app.shl.setting.test.db.user=healthlog
 jp.nauplius.app.shl.setting.test.db.password=**********
@@ -54,28 +75,12 @@ jp.nauplius.app.shl.setting.mail.smtp.auth=false
 jp.nauplius.app.shl.setting.mail.smtp.userId=**CHANGE THIS**
 jp.nauplius.app.shl.setting.mail.smtp.password=**********
 
-
-```
-
-### PostgreSQL
-
-* create user "healthlog". And create database.
-
-```sql
-CREATE USER healthlog PASSWORD '**********' NOINHERIT VALID UNTIL 'infinity';
-
--- test(2021-07-04- )
-CREATE DATABASE simple_health_log_test WITH OWNER='healthlog';
-
--- development
--- CREATE DATABASE simple_health_log_development WITH OWNER='healthlog';
-
--- production
-CREATE DATABASE simple_health_log_production WITH OWNER='healthlog';
-
-
 ```
 
 ### Build and Deploy war.
 
 Run `gradle war` and deploy war.
+
+## License
+
+MIT
