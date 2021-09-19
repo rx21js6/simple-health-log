@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -17,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.transaction.Transactional;
 
-import org.eclipse.persistence.sessions.DatabaseLogin;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.model.KeyIv;
@@ -87,7 +83,7 @@ public class DbLoader {
         }
     }
 
-    public String loadSqlString() {
+    private String loadSqlString() {
         StringBuilder sqlBuilder = new StringBuilder();
         String sqlPath = "/sql/create_tables.sql";
 

@@ -4,10 +4,21 @@
 package jp.nauplius.app.shl;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
+import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
+
 import static org.junit.Assert.*;
 
+import org.jglue.cdiunit.ActivatedAlternatives;
+import org.jglue.cdiunit.CdiRunner;
+
+@RunWith(CdiRunner.class)
+@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class })
 public class AppTest {
-    @Test public void testAppHasAGreeting() {
+    @Test
+    public void testAppHasAGreeting() {
         App classUnderTest = new App();
         assertNotNull("app should have a greeting", classUnderTest.getGreeting());
     }
