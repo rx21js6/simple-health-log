@@ -63,7 +63,7 @@ public class LoginService extends AbstractService {
     @Transactional
     public LoginResponse login(LoginForm loginForm) {
         this.logger.info(String.format("login: loginId: %s / keepLogin: %n", loginForm.getLoginId()),
-                loginForm.isKeepLogin());
+                loginForm.isLoggingPersistent());
 
         LoginResponse loginResponse = new LoginResponse();
 
@@ -112,8 +112,8 @@ public class LoginService extends AbstractService {
 
         // トークン登録
         UserToken userToken = null;
-        if (loginForm.isKeepLogin()) {
-            userToken = this.createToken(userInfo, loginForm.isKeepLogin());
+        if (loginForm.isLoggingPersistent()) {
+            userToken = this.createToken(userInfo, loginForm.isLoggingPersistent());
         }
 
         this.loginInfo.setUserInfo(userInfo);
