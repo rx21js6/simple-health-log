@@ -40,37 +40,21 @@ public class DailyRecordService extends AbstractService {
 
     @PostConstruct
     public void init() {
-        // System.out.println("DailyRecordService#init() entityManager: " + this.entityManager);
+        // System.out.println("DailyRecordService#init() entityManager: " +
+        // this.entityManager);
     }
 
     /**
-     * 指定日のレコード取得
+     * 指定日と前日のレコードを取得
      *
      * @param recordingDate
      * @return
      */
     @Transactional
-    public PhysicalCondition loadRecord(LocalDate recordingDate) {
-        this.entityManager.flush();
-
-        String dateText = recordingDate.format(ShlConstants.RECORDING_DATE_FORMATTER);
-
-        PhysicalConditionPK pk = new PhysicalConditionPK();
-        pk.setId(this.loginInfo.getUserInfo().getId());
-        pk.setRecordingDate(dateText);
-        PhysicalCondition record = this.entityManager.find(PhysicalCondition.class, pk);
-
-        if (Objects.isNull(record)) {
-            record = new PhysicalCondition();
-            pk.setId(null);
-            pk.setRecordingDate(dateText);
-            record.setUserInfo(this.loginInfo.getUserInfo());
-            record.setId(pk);
-        }
-
-        this.dailyRecordInputModel.setPhysicalCondition(record);
-
-        return record;
+    public void loadRecord(LocalDate recordingDate) {
+        this.dailyRecordInputModel.setPhysicalCondition(this.loadSelectedDateRecord(recordingDate));
+        LocalDate previousDate = recordingDate.minusDays(1);
+        this.dailyRecordInputModel.setPreviousPhysicalCondition(this.loadSelectedDateRecord(previousDate));
     }
 
     /**
@@ -80,7 +64,8 @@ public class DailyRecordService extends AbstractService {
     @Transactional
     public void register() {
         PhysicalCondition physicalCondition = this.dailyRecordInputModel.getPhysicalCondition();
-        PhysicalCondition conditionForUpdate = this.entityManager.find(PhysicalCondition.class, physicalCondition.getId());
+        PhysicalCondition conditionForUpdate = this.entityManager.find(PhysicalCondition.class,
+                physicalCondition.getId());
         LocalDateTime now = LocalDateTime.now();
         if (Objects.isNull(conditionForUpdate)) {
             // 新規
@@ -132,5 +117,31 @@ public class DailyRecordService extends AbstractService {
 
         this.dailyRecordListModel.setDailyRecords(results);
         return results;
+    }
+
+    /**
+     * 指定日のレコードを取得
+     *
+     * @param recordingDate
+     * @return
+     */
+    private PhysicalCondition loadSelectedDateRecord(LocalDate recordingDate) {
+        this.entityManager.flush();
+
+        String dateTextToday = recordingDate.format(ShlConstants.RECORDING_DATE_FORMATTER);
+
+        PhysicalConditionPK pkToday = new PhysicalConditionPK();
+        pkToday.setId(this.loginInfo.getUserInfo().getId());
+        pkToday.setRecordingDate(dateTextToday);
+        PhysicalCondition todayRecord = this.entityManager.find(PhysicalCondition.class, pkToday);
+
+        if (Objects.isNull(todayRecord)) {
+            todayRecord = new PhysicalCondition();
+            pkToday.setId(null);
+            pkToday.setRecordingDate(dateTextToday);
+            todayRecord.setUserInfo(this.loginInfo.getUserInfo());
+            todayRecord.setId(pkToday);
+        }
+        return todayRecord;
     }
 }

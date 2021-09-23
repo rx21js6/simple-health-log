@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import lombok.Getter;
+import lombok.Setter;
 
 @Named
 @SessionScoped
@@ -21,6 +22,10 @@ public class DailyRecordInputModel implements Serializable {
     @Inject
     @Getter
     private PhysicalCondition physicalCondition;
+
+    @Getter
+    @Setter
+    private PhysicalCondition previousPhysicalCondition;
 
     @Inject
     private PhysicalCondition conditionMirror;

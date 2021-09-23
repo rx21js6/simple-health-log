@@ -62,20 +62,20 @@
                 <b:row>
                     <b:column id="loginValues">
                         <b:panelGrid columns="1" cellpadding="5">
-                            <b:inputText value="#{loginController.loginForm.loginId}"
+                            <b:inputText value="#{loginFormModel.loginForm.loginId}"
                                 label="#{msg['common.label.loginId']}" labelStyle="width:150px;"
                                 maxlength="10" />
-                            <b:inputSecret value="#{loginController.loginForm.password}"
+                            <b:inputSecret value="#{loginFormModel.loginForm.password}"
                                 label="#{msg['common.label.password']}"
                                 labelStyle="width:150px;" maxlength="32" />
                             <b:selectBooleanCheckbox
-                                value="#{loginController.loginForm.keepLogin}"
+                                value="#{loginFormModel.loginForm.loggingPersistent}"
                                 label="#{msg['login.keepLoggedIn']}" labelStyle="width:150px;" />
                         </b:panelGrid>
                     </b:column>
                     <b:column>
                         <b:commandButton value="#{msg['common.button.login']}"
-                            action="#{loginController.login()}" look="primary" size="lg" />
+                            action="#{dailyRecordController.login()}" look="primary" size="lg" />
                     </b:column>
                 </b:row>
             </b:form>

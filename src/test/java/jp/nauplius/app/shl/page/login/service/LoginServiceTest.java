@@ -18,6 +18,7 @@ import jp.nauplius.app.shl.common.listener.InitializationListener;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
+import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.service.AbstractServiceTest;
 import jp.nauplius.app.shl.page.login.bean.LoginForm;
 import jp.nauplius.app.shl.page.login.bean.LoginResponse;
@@ -28,7 +29,8 @@ import jp.nauplius.app.shl.ws.bean.GetUsersResponse;
  *
  */
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class })
+@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class })
 public class LoginServiceTest extends AbstractServiceTest {
     @Inject
     private LoginService loginService;
@@ -54,6 +56,9 @@ public class LoginServiceTest extends AbstractServiceTest {
         this.sessionContext.deactivate();
     }
 
+    /**
+     * ログイン成功
+     */
     @Test
     public void testLoginSuccess() {
         this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
@@ -61,11 +66,14 @@ public class LoginServiceTest extends AbstractServiceTest {
         LoginForm loginForm = new LoginForm();
         loginForm.setLoginId("admin");
         loginForm.setPassword("password1234!\"$#");
-        loginForm.setKeepLogin(false);
+        loginForm.setLoggingPersistent(false);
         LoginResponse loginResponse = loginService.login(loginForm);
         assertEquals("admin", loginResponse.getUserInfo().getLoginId());
     }
 
+    /**
+     * ログイン失敗
+     */
     @Test(expected = SimpleHealthLogException.class)
     public void testLoginFailed() {
         this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
@@ -73,15 +81,21 @@ public class LoginServiceTest extends AbstractServiceTest {
         LoginForm loginForm = new LoginForm();
         loginForm.setLoginId("admin");
         loginForm.setPassword("unmatchedPassword1234");
-        loginForm.setKeepLogin(false);
+        loginForm.setLoggingPersistent(false);
         loginService.login(loginForm);
     }
 
+    /**
+     * ログアウト
+     */
     @Test
     public void testLogout() {
         this.loginService.logout();
     }
 
+    /**
+     * ユーザ取得
+     */
     @Test
     public void testGetUsers() {
         this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
@@ -89,6 +103,9 @@ public class LoginServiceTest extends AbstractServiceTest {
         assertEquals(1, response.getUserInfos().size());
     }
 
+    /**
+     * トークンからユーザ取得
+     */
     @Test
     public void testLoginFromToken() {
         this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");

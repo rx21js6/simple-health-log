@@ -4,14 +4,16 @@ package jp.nauplius.app.shl.page.record.backing;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -20,13 +22,15 @@ import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.ui.backing.CommonConfirmModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalControllerListener;
 import jp.nauplius.app.shl.common.ui.bean.CommonConfirmModalBean;
-import jp.nauplius.app.shl.page.login.bean.LoginForm;
+import jp.nauplius.app.shl.page.login.bean.LoginFormModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.login.bean.LoginResponse;
 import jp.nauplius.app.shl.page.login.service.CookieService;
 import jp.nauplius.app.shl.page.login.service.LoginService;
 import jp.nauplius.app.shl.page.record.service.DailyRecordService;
@@ -38,7 +42,7 @@ import lombok.Setter;
  * 日次入力画面コントローラ
  *
  */
-@SessionScoped
+@ViewScoped
 @Named
 public class DailyRecordController implements Serializable, ModalControllerListener {
     @Inject
@@ -80,7 +84,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     @Inject
     @Getter
     @Setter
-    private LoginForm loginForm;
+    private LoginFormModel loginFormModel;
 
     @Getter
     @Setter
@@ -117,28 +121,62 @@ public class DailyRecordController implements Serializable, ModalControllerListe
             this.today = !StringUtils.isEmpty(this.selectedDate)
                     ? LocalDate.parse(this.selectedDate, ShlConstants.RECORDING_DATE_FORMATTER)
                     : LocalDate.now();
-            this.dailyRecordService.loadRecord(this.today);
+            this.loadToday(true);
         }
 
         this.logger.info("DailyRecordController#init complete");
     }
 
-    public void loadRecord() {
-        this.logger.info("DailyRecordController#loadRecord");
-        this.dailyRecordService.loadRecord(today);
+    /**
+     * ログイン処理
+     *
+     * @return null
+     */
+    public String login() {
+        this.logger.info("login");
+        if (Objects.isNull(this.loginInfo.getUserInfo())) {
+            try {
+                LoginResponse loginResponse = this.loginService.login(this.loginFormModel.getLoginForm());
+                if (this.loginFormModel.getLoginForm().isLoggingPersistent()) {
+                    this.cookieService.registerToken(this.facesContext, loginResponse.getUserToken().getToken());
+                }
+
+                this.loadToday(true);
+
+            } catch (SimpleHealthLogException e) {
+                this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
+                this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                        this.messageBundle.getString("login.msg.failed") + e.getMessage(), null));
+            }
+        }
+        return null;
     }
 
+    /**
+     * レコード取得
+     */
+    public void loadRecord() {
+        this.logger.info("DailyRecordController#loadRecord");
+        this.dailyRecordService.loadRecord(this.today);
+        this.setMessage();
+    }
+
+    /**
+     * 登録
+     *
+     * @return
+     */
     public String register() {
         this.commonConfirmModalBean.setVisible(false);
         try {
             this.dailyRecordService.register();
 
-            facesContext.getExternalContext().getFlash().setKeepMessages(true);
-            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+            this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     this.messageBundle.getString("contents.record.recordInput.msg.registered"), null));
         } catch (SimpleHealthLogException e) {
-            facesContext.getExternalContext().getFlash().setKeepMessages(true);
-            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+            this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
                     this.messageBundle.getString("contents.record.recordInput.label.msg.registrationFailed"), null));
         }
 
@@ -170,6 +208,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
         this.dailyRecordInputModel.reset();
         this.today = this.today.minusDays(1);
         this.dailyRecordService.loadRecord(this.today);
+        this.setMessage();
         return null;
     }
 
@@ -189,6 +228,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
         this.dailyRecordInputModel.reset();
         this.today = LocalDate.now();
         this.dailyRecordService.loadRecord(this.today);
+        this.setMessage();
         return null;
     }
 
@@ -207,7 +247,8 @@ public class DailyRecordController implements Serializable, ModalControllerListe
 
         this.dailyRecordInputModel.reset();
         this.today = this.today.plusDays(1);
-        this.dailyRecordService.loadRecord(today);
+        this.dailyRecordService.loadRecord(this.today);
+        this.setMessage();
         return null;
     }
 
@@ -247,6 +288,33 @@ public class DailyRecordController implements Serializable, ModalControllerListe
         this.dailyRecordInputModel.reset();
         this.dailyRecordService.loadDailyRecords(this.today);
         return "/contents/record/dailyRecord.xhtml?faces-redirect=true";
+    }
+
+    /**
+     * メッセージを設定
+     */
+    private void setMessage() {
+        this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
+
+        PhysicalCondition previousPysicalCondition = this.dailyRecordInputModel.getPreviousPhysicalCondition();
+        if (Objects.isNull(previousPysicalCondition.getBedTime())) {
+            // 前日の就寝時刻未記入
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    this.messageBundle.getString("contents.record.recordInput.msg.prevBedTimeNotEntered"), null));
+        }
+
+        BigDecimal temperature = previousPysicalCondition.getBodyTemperatureEvening();
+        if (Objects.isNull(temperature)) {
+            // 前日の体温未記入
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    this.messageBundle.getString("contents.record.recordInput.msg.prevTemparetureNotEntered"), null));
+        } else {
+            // 前日夜の体温
+            String message = MessageFormat.format(
+                    this.messageBundle.getString("contents.record.recordInput.msg.prevTemperature"), temperature);
+
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, message, null));
+        }
     }
 
     @Override

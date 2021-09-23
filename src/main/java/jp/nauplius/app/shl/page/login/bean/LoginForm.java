@@ -18,5 +18,8 @@ public class LoginForm implements Serializable {
     @NotEmpty(message = "パスワードを入力してください。")
     private String password;
 
-    private boolean keepLogin;
+    /**
+     * ログイン状態維持
+     */
+    private boolean loggingPersistent;
 }

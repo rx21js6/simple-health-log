@@ -2,7 +2,6 @@ package jp.nauplius.app.shl.page.login.backing;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -18,10 +17,8 @@ import org.slf4j.Logger;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.page.login.bean.LoginForm;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
-import jp.nauplius.app.shl.page.login.bean.LoginResponse;
 import jp.nauplius.app.shl.page.login.service.CookieService;
 import jp.nauplius.app.shl.page.login.service.LoginService;
-import jp.nauplius.app.shl.page.record.service.DailyRecordService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -49,9 +46,6 @@ public class LoginController implements Serializable {
     private CookieService cookieService;
 
     @Inject
-    private DailyRecordService dailyRecordService;
-
-    @Inject
     @Getter
     @Setter
     private LoginInfo loginInfo;
@@ -71,31 +65,6 @@ public class LoginController implements Serializable {
 
     public String toInitial() {
         return "/contents/initial/initialSetting.xhtml?faces-redirect=true";
-    }
-
-    /**
-     * ログイン処理
-     *
-     * @return
-     */
-    public String login() {
-        this.logger.info("login");
-        if (Objects.isNull(this.loginInfo.getUserInfo())) {
-            try {
-                LoginResponse loginResponse = this.loginService.login(this.loginForm);
-                if (this.loginForm.isKeepLogin()) {
-                    this.cookieService.registerToken(this.facesContext, loginResponse.getUserToken().getToken());
-                }
-
-                dailyRecordService.loadRecord(LocalDate.now());
-
-            } catch (SimpleHealthLogException e) {
-                facesContext.getExternalContext().getFlash().setKeepMessages(true);
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                        this.messageBundle.getString("login.msg.failed") + e.getMessage(), null));
-            }
-        }
-        return null;
     }
 
     public String logout() {
