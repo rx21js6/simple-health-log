@@ -44,7 +44,7 @@
                         action="#{dailyRecordController.showInput()}">
                         <f:setPropertyActionListener
                             value="#{dailyRecordListController.getTodayText()}"
-                            target="#{dailyRecordController.selectedDate}" />
+                            target="#{dailyRecordInputModel.selectedDate}" />
                     </b:commandButton>
                 </b:column>
                 <b:column>
