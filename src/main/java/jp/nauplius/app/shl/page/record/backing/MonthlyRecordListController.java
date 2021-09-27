@@ -74,4 +74,13 @@ public class MonthlyRecordListController implements Serializable {
 
         return null;
     }
+
+    /**
+     * 日次入力画面表示
+     *
+     * @return 日次入力画面
+     */
+    public String showRecordInput() {
+        return "/contents/record/recordInput.xhtml?faces-redirect=true";
+    }
 }

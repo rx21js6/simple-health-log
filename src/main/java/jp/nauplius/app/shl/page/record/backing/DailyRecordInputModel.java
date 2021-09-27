@@ -2,6 +2,7 @@ package jp.nauplius.app.shl.page.record.backing;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.enterprise.context.SessionScoped;
@@ -11,6 +12,7 @@ import javax.inject.Named;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import lombok.Getter;
@@ -29,6 +31,10 @@ public class DailyRecordInputModel implements Serializable {
 
     @Inject
     private PhysicalCondition conditionMirror;
+
+    @Getter
+    @Setter
+    private String selectedDate;
 
     public void setPhysicalCondition(PhysicalCondition physicalCondition) {
         this.physicalCondition = physicalCondition;
@@ -68,4 +74,16 @@ public class DailyRecordInputModel implements Serializable {
                 && Objects.equals(this.physicalCondition.getConditionNote(), this.conditionMirror.getConditionNote()));
     }
 
+    /**
+     * 選択している日付をLocalDateに変換して返す。 未指定の場合はシステム日付を返す
+     *
+     * @return
+     */
+    public LocalDate parseSelectedDate() {
+        if (StringUtils.isEmpty(this.selectedDate)) {
+            this.selectedDate = LocalDate.now().format(ShlConstants.RECORDING_DATE_FORMATTER);
+        }
+
+        return LocalDate.parse(this.selectedDate, ShlConstants.RECORDING_DATE_FORMATTER);
+    }
 }

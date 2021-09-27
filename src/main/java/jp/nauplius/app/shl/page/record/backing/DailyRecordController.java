@@ -20,7 +20,6 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
-import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.model.UserInfo;
@@ -90,10 +89,6 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     @Setter
     private LocalDate today;
 
-    @Getter
-    @Setter
-    private String selectedDate;
-
     private Method dispatchMethod;
 
     @PostConstruct
@@ -116,12 +111,10 @@ public class DailyRecordController implements Serializable, ModalControllerListe
         }
 
         if (tmpUserInfo != null) {
-            // ログインできた場合は当日のレコードを取得
+            // ログインできた場合は選択日のレコードを取得
             this.loginInfo.setUserInfo(tmpUserInfo);
-            this.today = !StringUtils.isEmpty(this.selectedDate)
-                    ? LocalDate.parse(this.selectedDate, ShlConstants.RECORDING_DATE_FORMATTER)
-                    : LocalDate.now();
-            this.loadToday(true);
+            this.today = this.dailyRecordInputModel.parseSelectedDate();
+            this.load();
         }
 
         this.logger.info("DailyRecordController#init complete");
@@ -184,11 +177,12 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     }
 
     /**
-     * 入力画面表示 月次リストから遷移時に実行
+     * 入力画面表示 月次リスト以外から遷移時に実行
      *
      * @return
      */
     public String showInput() {
+        this.dailyRecordInputModel.setSelectedDate(StringUtils.EMPTY);
         return "/contents/record/recordInput.xhtml?faces-redirect=true";
     }
 
@@ -207,6 +201,19 @@ public class DailyRecordController implements Serializable, ModalControllerListe
 
         this.dailyRecordInputModel.reset();
         this.today = this.today.minusDays(1);
+        this.dailyRecordService.loadRecord(this.today);
+        this.setMessage();
+        return null;
+    }
+
+    /**
+     * 表示
+     *
+     * @param force
+     * @return
+     */
+    public String load() {
+        this.dailyRecordInputModel.reset();
         this.dailyRecordService.loadRecord(this.today);
         this.setMessage();
         return null;

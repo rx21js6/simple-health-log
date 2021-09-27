@@ -129,9 +129,9 @@
                         <b:commandButton
                             value="#{msg['contents.record.monthlyRecord.label.input']}"
                             icon="edit" look="#{record.isToday() ? 'primary' : ''}"
-                            action="#{dailyRecordController.showInput()}">
+                            action="#{monthlyRecordListController.showRecordInput()}">
                             <f:setPropertyActionListener value="#{record.dateText}"
-                                target="#{dailyRecordController.selectedDate}" />
+                                target="#{dailyRecordInputModel.selectedDate}" />
                         </b:commandButton>
                     </b:dataTableColumn>
                 </b:dataTable>
