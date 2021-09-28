@@ -49,17 +49,17 @@ public class InitialSettingForm implements Serializable {
     @Getter
     @Setter
     @NotEmpty
-    private String passwordReEnter;
+    private String passwordReenter;
 
     public void validate(ComponentSystemEvent e) {
-        if (!this.password.equals(this.passwordReEnter)) {
+        if (!this.password.equals(this.passwordReenter)) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "入力内容が不正です。", "テキスト・フィールドに正しい値が入力されていません。");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
         // パスワードチェック
         /*
          * UIComponent component = e.getComponent(); if
-         * (this.password.equals(this.getPasswordReEnter())) { FacesContext facesContext
+         * (this.password.equals(this.getpasswordReenter())) { FacesContext facesContext
          * = FacesContext.getCurrentInstance();
          * facesContext.getExternalContext().getFlash().setKeepMessages(true);
          * FacesMessage message = new FacesMessage("パスワードが一致しません。");

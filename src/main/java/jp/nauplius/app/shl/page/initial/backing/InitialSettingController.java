@@ -39,7 +39,7 @@ public class InitialSettingController implements Serializable {
         this.initialSettingForm.setLoginId(ShlConstants.LOGIN_ID_ADMIN);
         this.initialSettingForm.setName(this.messageBundle.getString("initial.initialSetting.label.admin"));
         this.initialSettingForm.setPassword(StringUtils.EMPTY);
-        this.initialSettingForm.setPasswordReEnter(StringUtils.EMPTY);
+        this.initialSettingForm.setPasswordReenter(StringUtils.EMPTY);
         this.initialSettingForm.setMailAddress(StringUtils.EMPTY);
         this.initialSettingForm.setMailAddressReEnter(StringUtils.EMPTY);
     }
@@ -48,8 +48,8 @@ public class InitialSettingController implements Serializable {
         System.out.println("initialSettingForm: " + initialSettingForm);
 
         String password = this.initialSettingForm.getPassword();
-        String passwordReEnter = this.initialSettingForm.getPasswordReEnter();
-        if (!password.contentEquals(passwordReEnter)) {
+        String passwordReenter = this.initialSettingForm.getPasswordReenter();
+        if (!password.contentEquals(passwordReenter)) {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
 

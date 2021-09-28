@@ -24,10 +24,10 @@ public class PasswordValidator implements Validator, Serializable {
         UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("password");
         String password = (String) passwordInput.getSubmittedValue();
 
-        UIInput passwordReEnterInput = (UIInput) context.getViewRoot().findComponent("passwordReEnter");
-        String passwordReEnter = (String) passwordReEnterInput.getSubmittedValue();
+        UIInput passwordReenterInput = (UIInput) context.getViewRoot().findComponent("passwordReenter");
+        String passwordReenter = (String) passwordReenterInput.getSubmittedValue();
 
-        if (password.equals(passwordReEnter)) {
+        if (password.equals(passwordReenter)) {
             FacesMessage message = new FacesMessage(this.messageBundle.getString("common.msg.passwordUnmatch"));
             throw new ValidatorException(message);
         }

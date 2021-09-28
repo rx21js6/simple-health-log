@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:head>
+        <title><h:outputText
+                value="#{msg['contents.maint.settings.cutomSetting.title']}" /></title>
+        <meta charset="UTF-8" />
+    </h:head>
+    <h:body>
+        <h:form id="modalForm">
+            <ui:fragment rendered="#{commonConfirmModalBean.visible}">
+                <ui:insert>
+                    <ui:include src="/contents/common/commonConfirmModal.jsf" />
+                </ui:insert>
+            </ui:fragment>
+        </h:form>
+        <b:container>
+            <h:form id="cancelForm">
+                <b:row>
+                    <h2>
+                        <h:outputText
+                            value="#{msg['contents.maint.settings.cutomSetting.title']}" />
+                    </h2>
+                </b:row>
+                <b:row>
+                    <b:row>
+                        <b:commandButton action="#{customSettingController.cancel()}">
+                            <h:outputText value="#{msg['common.button.return']}" />
+                        </b:commandButton>
+                    </b:row>
+                </b:row>
+            </h:form>
+        </b:container>
+
+
+        <b:container>
+            <h:form id="passwordChangingForm">
+                <b:row>
+                    <h3>
+                        <h:outputText
+                            value="#{msg['contents.maint.settings.cutomSetting.passwordChanging']}" />
+                    </h3>
+                </b:row>
+                <b:row>
+                    <b:panelGrid columns="1" cellpadding="5">
+                        <b:inputSecret
+                            value="#{customSettingPasswordModel.password}"
+                            label="#{msg['common.label.password']}" span="6" maxlength="100" />
+                        <b:message for="@previous" />
+
+                        <b:inputSecret
+                            value="#{customSettingPasswordModel.passwordReenter}"
+                            label="#{msg['common.label.passwordReenter']}" span="6"
+                            maxlength="100" />
+                        <b:message for="@previous" />
+
+                        <b:commandButton action="#{customSettingController.changePassword()}">
+                            <h:outputText value="#{msg['common.label.registerUpdate']}" />
+                        </b:commandButton>
+                    </b:panelGrid>
+                </b:row>
+            </h:form>
+        </b:container>
+
+        <b:container>
+            <h:form id="mailAddressChangingForm">
+                <b:row>
+                    <h3>
+                        <h:outputText
+                            value="#{msg['contents.maint.settings.cutomSetting.mailAddressChanging']}" />
+                    </h3>
+                </b:row>
+                <b:row>
+                    <b:panelGrid columns="1" cellpadding="5">
+                        <b:inputText
+                            value="#{customSettingMailAddressModel.mailAddress}"
+                            label="#{msg['common.label.mailAddress']}" span="6"
+                            maxlength="100" />
+                        <b:message for="@previous" />
+                        <b:commandButton action="#{customSettingController.changeMailAddress()}">
+                            <h:outputText value="#{msg['common.label.registerUpdate']}" />
+                        </b:commandButton>
+                    </b:panelGrid>
+                </b:row>
+            </h:form>
+        </b:container>
+        <b:container>
+            <b:row></b:row>
+        </b:container>
+    </h:body>
+</f:view>
+</html>
