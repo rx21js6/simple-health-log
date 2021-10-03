@@ -49,6 +49,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jglue.cdi-unit/cdi-unit
     testImplementation group: 'org.jglue.cdi-unit', name: 'cdi-unit', version: '4.1.0'
 
+    // https://mvnrepository.com/artifact/com.icegreen/greenmail
+    testImplementation group: 'com.icegreen', name: 'greenmail', version: '1.6.5'
+
     // https://mvnrepository.com/artifact/org.jboss.weld.se/weld-se-core
     implementation group: 'org.jboss.weld.se', name: 'weld-se-core', version: '3.1.7.SP1'
 
@@ -171,6 +174,48 @@ task replaceTokenTest {
             token: dbPasswordToken,
             value: dbPasswordValue
         )
+
+        // mail-setting.xml
+        def mailSmtpSettingXmlFile = 'build/resources/main/META-INF/mail-setting.xml'
+        def mailActiveToken = '@' + simpleHealthLogSettingPrefix + '.mail.active@'
+        def mailSmtpHostToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.host@'
+        def mailSmtpPortToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.port@'
+        def mailSmtpAuthToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.auth@'
+        // def mailSmtpUserIdToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.userId@'
+        // def mailSmtpPasswordToken = '@' + simpleHealthLogSettingPrefix + '.mail.smtp.password@'
+
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailActiveToken,
+            value: 'true'
+        )
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpHostToken,
+            value: 'localhost'
+        )
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpPortToken,
+            value: '3025'
+        )
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpAuthToken,
+            value: 'false'
+        )
+/*
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpUserIdToken,
+            value: mailSmtpUserIdValue
+        )
+        ant.replace(
+            file: mailSmtpSettingXmlFile,
+            token: mailSmtpPasswordToken,
+            value: mailSmtpPasswordValue
+        )
+*/
     }
 }
 

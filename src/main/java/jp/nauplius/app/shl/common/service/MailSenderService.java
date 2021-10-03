@@ -35,24 +35,22 @@ import jp.nauplius.app.shl.page.initial.backing.InitialSettingForm;
 
 @Named
 public class MailSenderService implements Serializable {
-    private static final String DEFAULT_MAIL_SENDER = "simple-health-log";
-    private static final String CHARSET = StandardCharsets.UTF_8.toString();
-    private static final String SETTING_XML_PATH = "/META-INF/mail-setting.xml";
-    private static final String MAIL_CONTENT_TYPE = "text/plain;charset=UTF-8";
+    public static final String DEFAULT_MAIL_SENDER = "simple-health-log";
+    public static final String CHARSET = StandardCharsets.UTF_8.toString();
+    public static final String SETTING_XML_PATH = "/META-INF/mail-setting.xml";
+    public static final String MAIL_CONTENT_TYPE = "text/plain;charset=UTF-8";
 
     @Inject
-    private Logger logger;
+    protected Logger logger;
 
     @Inject
-    private transient ResourceBundle messageBundle;
+    protected transient ResourceBundle messageBundle;
 
     @Inject
-    private LocaleService localeService;
+    protected LocaleService localeService;
 
-    // @Inject
-    // private FacesContext facesContext;
+    protected MailSenderBean mailSenderBean;
 
-    private MailSenderBean mailSenderBean;
     @PostConstruct
     public void init() {
 
@@ -201,7 +199,7 @@ public class MailSenderService implements Serializable {
      * @param props
      * @return
      */
-    private Session createSession(Properties props) {
+    protected Session createSession(Properties props) {
         Session session = null;
         if (this.mailSenderBean.isAuth()) {
             // 587？

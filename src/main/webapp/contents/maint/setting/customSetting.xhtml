@@ -29,8 +29,9 @@
                 </b:row>
                 <b:row>
                     <b:row>
-                        <b:commandButton action="#{customSettingController.cancel()}">
-                            <h:outputText value="#{msg['common.button.return']}" />
+                        <b:commandButton icon="pencil"
+                            value="#{msg['record.dailyRecord.physicalCondition']}"
+                            action="#{customSettingController.cancel()}">
                         </b:commandButton>
                     </b:row>
                 </b:row>
@@ -48,8 +49,7 @@
                 </b:row>
                 <b:row>
                     <b:panelGrid columns="1" cellpadding="5">
-                        <b:inputSecret
-                            value="#{customSettingPasswordModel.password}"
+                        <b:inputSecret value="#{customSettingPasswordModel.password}"
                             label="#{msg['common.label.password']}" span="6" maxlength="100" />
                         <b:message for="@previous" />
 
@@ -59,8 +59,8 @@
                             maxlength="100" />
                         <b:message for="@previous" />
 
-                        <b:commandButton action="#{customSettingController.changePassword()}">
-                            <h:outputText value="#{msg['common.label.registerUpdate']}" />
+                        <b:commandButton value="#{msg['common.label.change']}"
+                            action="#{customSettingController.changePassword()}">
                         </b:commandButton>
                     </b:panelGrid>
                 </b:row>
@@ -77,13 +77,15 @@
                 </b:row>
                 <b:row>
                     <b:panelGrid columns="1" cellpadding="5">
-                        <b:inputText
-                            value="#{customSettingMailAddressModel.mailAddress}"
+                        <b:inputText value="#{customSettingMailAddressModel.mailAddress}"
                             label="#{msg['common.label.mailAddress']}" span="6"
                             maxlength="100" />
                         <b:message for="@previous" />
-                        <b:commandButton action="#{customSettingController.changeMailAddress()}">
-                            <h:outputText value="#{msg['common.label.registerUpdate']}" />
+                        <b:commandButton icon="send" value="#{msg['common.label.change']}"
+                            action="#{customSettingController.sendTestMail()}">
+                        </b:commandButton>
+                        <b:commandButton value="#{msg['common.label.change']}"
+                            action="#{customSettingController.changeMailAddress()}">
                         </b:commandButton>
                     </b:panelGrid>
                 </b:row>

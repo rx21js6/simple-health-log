@@ -14,6 +14,10 @@ import lombok.Setter;
 public class CustomSettingMailAddressModel implements Serializable {
     @Getter
     @Setter
+    private String currentMailAddress;
+
+    @Getter
+    @Setter
     @Email(regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", message = "{common.mailAddress.invalid}")
     private String mailAddress;
 }
