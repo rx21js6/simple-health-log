@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mailSetting>
+    <mail.active>@jp.nauplius.app.shl.setting.mail.active@</mail.active>
     <mail.smtp.host>@jp.nauplius.app.shl.setting.mail.smtp.host@</mail.smtp.host>
     <mail.smtp.port>@jp.nauplius.app.shl.setting.mail.smtp.port@</mail.smtp.port>
     <mail.smtp.auth>@jp.nauplius.app.shl.setting.mail.smtp.auth@</mail.smtp.auth>
