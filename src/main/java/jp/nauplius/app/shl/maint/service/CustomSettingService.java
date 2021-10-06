@@ -10,6 +10,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
@@ -20,6 +21,7 @@ import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.maint.backing.CustomSettingMailAddressModel;
 import jp.nauplius.app.shl.maint.backing.CustomSettingPasswordModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import lombok.Getter;
 
 @Named
 @SessionScoped
@@ -37,6 +39,7 @@ public class CustomSettingService extends AbstractService {
     private KeyIvHolderService keyIvHolderService;
 
     @Inject
+    @Getter
     private CustomSettingPasswordModel customSettingPasswordModel;
 
     @Inject
@@ -59,11 +62,21 @@ public class CustomSettingService extends AbstractService {
         }
 
         this.customSettingMailAddressModel.setCurrentMailAddress(userInfo.getMailAddress());
+        this.customSettingMailAddressModel.setMailAddress(StringUtils.EMPTY);
+
+        this.customSettingPasswordModel.setPassword(StringUtils.EMPTY);
+        this.customSettingPasswordModel.setPasswordReenter(StringUtils.EMPTY);
+
+        if (!this.customSettingMailSender.isActive()) {
+            String message = MessageFormat.format(this.messageBundle.getString("common.msg.mailSendingDisabled"), id);
+            throw new SimpleHealthLogException(message);
+        }
     }
 
     /**
      * パスワード変更
      */
+    @Transactional
     public void changePassword() {
         // ユーザ存在チェック
         int id = this.loginInfo.getUserInfo().getId();
@@ -90,7 +103,12 @@ public class CustomSettingService extends AbstractService {
         // ログインセッション更新
         this.loginInfo.setUserInfo(userInfo);
 
-        // TODO: メールで送信
+        // メール送信
+        this.customSettingMailSender.sendPasswordChangedMail(this.loginInfo.getUserInfo().getMailAddress(),
+                this.getAdminMailAddress());
+
+        this.customSettingPasswordModel.setPassword(StringUtils.EMPTY);
+        this.customSettingPasswordModel.setPasswordReenter(StringUtils.EMPTY);
 
     }
 
@@ -98,7 +116,8 @@ public class CustomSettingService extends AbstractService {
      * テストメール送信
      */
     public void sendTestMail() {
-        this.customSettingMailSender.sendTestMail(this.customSettingMailAddressModel.getMailAddress());
+        String mailAddress = this.customSettingMailAddressModel.getMailAddress().strip();
+        this.customSettingMailSender.sendTestMail(mailAddress, this.getAdminMailAddress());
     }
 
     /**
@@ -116,7 +135,8 @@ public class CustomSettingService extends AbstractService {
         }
 
         // 更新
-        userInfo.setMailAddress(this.customSettingMailAddressModel.getMailAddress());
+        String mailAddress = this.customSettingMailAddressModel.getMailAddress().strip();
+        userInfo.setMailAddress(mailAddress);
         userInfo.setModifiedBy(this.loginInfo.getUserInfo().getId());
         userInfo.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
         this.entityManager.merge(userInfo);
@@ -126,6 +146,11 @@ public class CustomSettingService extends AbstractService {
         // ログインセッション更新
         this.loginInfo.setUserInfo(userInfo);
 
-        this.customSettingMailSender.sendChangedMail(this.customSettingMailAddressModel.getMailAddress());
+        // メール送信
+        this.customSettingMailSender.sendAddressChangedMail(this.customSettingMailAddressModel.getMailAddress(),
+                this.getAdminMailAddress());
+
+        this.customSettingMailAddressModel.setCurrentMailAddress(mailAddress);
+        this.customSettingMailAddressModel.setMailAddress(StringUtils.EMPTY);
     }
 }

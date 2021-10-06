@@ -71,6 +71,9 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         this.greenMail.stop();
     }
 
+    /**
+     * 画面ロード
+     */
     @Test
     public void testLoad() {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
@@ -87,6 +90,9 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
                 is("normal_test@maybe.noexistant.nauplius.jp"));
     }
 
+    /**
+     * パスワード変更
+     */
     @Test
     public void testChangePassword() {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
@@ -108,6 +114,11 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         assertNotEquals(currentEncryptedPassword, this.loginInfo.getUserInfo().getEncryptedPassword());
     }
 
+    /**
+     * テストメール送信
+     *
+     * @throws MessagingException
+     */
     @Test
     public void testSendTestMail() throws MessagingException {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
@@ -128,6 +139,11 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         assertThat(actual.getRecipients(RecipientType.TO)[0].toString(), CoreMatchers.is(mailAddress));
     }
 
+    /**
+     * メールアドレス変更
+     *
+     * @throws MessagingException
+     */
     @Test
     public void testChangeMailAddress() throws MessagingException {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
@@ -150,6 +166,8 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         assertThat(this.greenMail.getReceivedMessages().length, is(1));
         MimeMessage actual = this.greenMail.getReceivedMessages()[0];
         assertThat(actual.getRecipients(RecipientType.TO)[0].toString(), CoreMatchers.is(mailAddress));
+
+        assertThat(this.customSettingMailAddressModel.getCurrentMailAddress(), is(mailAddress));
 
     }
 

@@ -16,7 +16,7 @@ public class AuthInfo {
             "/error/authError.xhtml", // 権限エラー
             "/contents/record/recordInput.xhtml", // 日次入力
             "/contents/record/monthlyRecord.xhtml", // 月次表示
-            "/contents/maint/settings/customSetting.xhtml", // カスタム設定
+            "/contents/maint/setting/customSetting.xhtml", // カスタム設定
 
     };
 

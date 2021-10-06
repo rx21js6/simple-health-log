@@ -21,7 +21,6 @@ import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.model.UserToken;
 import jp.nauplius.app.shl.common.service.AbstractService;
-import jp.nauplius.app.shl.common.service.MailSenderService;
 import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.common.util.PasswordUtil;
@@ -52,7 +51,7 @@ public class LoginService extends AbstractService {
     private KeyIvHolder keyIvHolder;
 
     @Inject
-    private MailSenderService meiMailSenderService;
+    private LoginMailSender loginMailSender;
 
     @Inject
     private LoginInfo loginInfo;
@@ -269,23 +268,9 @@ public class LoginService extends AbstractService {
         this.entityManager.merge(userInfo);
 
         // メール送信
-        this.meiMailSenderService.sendPasswordResetMail(randomPassword, mailAddress, getAdminMailAddress());
+        this.loginMailSender.sendPasswordResetMail(randomPassword, mailAddress, getAdminMailAddress());
 
         this.entityManager.flush();
 
-    }
-
-    /**
-     * 管理者のメールアドレスを取得
-     *
-     * @return 管理者メールアドレス
-     */
-    private String getAdminMailAddress() {
-        TypedQuery<UserInfo> query = this.entityManager.createQuery(
-                "SELECT ui FROM UserInfo ui WHERE ui.roleId = 0 AND ui.deleted = cast('false' as boolean)",
-                UserInfo.class);
-        List<UserInfo> results = query.getResultList();
-        UserInfo userInfo = results.get(0);
-        return userInfo.getMailAddress();
     }
 }

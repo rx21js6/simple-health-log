@@ -8,7 +8,10 @@
 <f:view>
     <h:head>
         <title><h:outputText
-                value="#{msg['contents.maint.settings.cutomSetting.title']}" /></title>
+                value="#{msg['contents.maint.settings.cutomSetting.label.title']}" /></title>
+        <f:metadata>
+            <f:viewAction action="#{customSettingController.init()}" />
+        </f:metadata>
         <meta charset="UTF-8" />
     </h:head>
     <h:body>
@@ -20,13 +23,18 @@
             </ui:fragment>
         </h:form>
         <b:container>
+            <b:row>
+                <h2>
+                    <h:outputText
+                        value="#{msg['contents.maint.settings.cutomSetting.label.title']}" />
+                </h2>
+            </b:row>
+            <b:row>
+                <b:column>
+                    <b:messages globalOnly="true"></b:messages>
+                </b:column>
+            </b:row>
             <h:form id="cancelForm">
-                <b:row>
-                    <h2>
-                        <h:outputText
-                            value="#{msg['contents.maint.settings.cutomSetting.title']}" />
-                    </h2>
-                </b:row>
                 <b:row>
                     <b:row>
                         <b:commandButton icon="pencil"
@@ -44,7 +52,7 @@
                 <b:row>
                     <h3>
                         <h:outputText
-                            value="#{msg['contents.maint.settings.cutomSetting.passwordChanging']}" />
+                            value="#{msg['contents.maint.settings.cutomSetting.label.passwordChanging']}" />
                     </h3>
                 </b:row>
                 <b:row>
@@ -60,6 +68,7 @@
                         <b:message for="@previous" />
 
                         <b:commandButton value="#{msg['common.label.change']}"
+                            look="primary" size="lg"
                             action="#{customSettingController.changePassword()}">
                         </b:commandButton>
                     </b:panelGrid>
@@ -72,19 +81,36 @@
                 <b:row>
                     <h3>
                         <h:outputText
-                            value="#{msg['contents.maint.settings.cutomSetting.mailAddressChanging']}" />
+                            value="#{msg['contents.maint.settings.cutomSetting.label.mailAddressChanging']}" />
                     </h3>
                 </b:row>
                 <b:row>
+                    <h4>
+                        <h:outputText
+                            value="#{msg['contents.maint.settings.cutomSetting.label.currentMailAddress']}" />
+                    </h4>
+
+
+                    <h:outputText
+                        value="#{customSettingMailAddressModel.currentMailAddress}" />
+                </b:row>
+                <b:row>
+                    <h4>
+                        <h:outputText
+                            value="#{msg['contents.maint.settings.cutomSetting.label.mailAddressChanging']}" />
+                    </h4>
                     <b:panelGrid columns="1" cellpadding="5">
                         <b:inputText value="#{customSettingMailAddressModel.mailAddress}"
                             label="#{msg['common.label.mailAddress']}" span="6"
                             maxlength="100" />
                         <b:message for="@previous" />
-                        <b:commandButton icon="send" value="#{msg['common.label.change']}"
+                        <b:commandButton icon="send"
+                            value="#{msg['contents.maint.settings.cutomSetting.buton.testMailSending']}"
+                            disabled="#{!customSettingMailSender.isActive()}"
                             action="#{customSettingController.sendTestMail()}">
                         </b:commandButton>
                         <b:commandButton value="#{msg['common.label.change']}"
+                            look="primary" size="lg"
                             action="#{customSettingController.changeMailAddress()}">
                         </b:commandButton>
                     </b:panelGrid>

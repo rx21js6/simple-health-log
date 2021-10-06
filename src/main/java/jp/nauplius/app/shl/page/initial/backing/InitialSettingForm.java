@@ -1,10 +1,13 @@
+
 package jp.nauplius.app.shl.page.initial.backing;
 
 import java.io.Serializable;
+import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -16,6 +19,9 @@ import lombok.Setter;
 
 @Named
 public class InitialSettingForm implements Serializable {
+    @Inject
+    private transient ResourceBundle messageBundle;
+
     @Getter
     @Setter
     @NotEmpty(message = "入力してください。")
@@ -53,20 +59,11 @@ public class InitialSettingForm implements Serializable {
 
     public void validate(ComponentSystemEvent e) {
         if (!this.password.equals(this.passwordReenter)) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "入力内容が不正です。", "テキスト・フィールドに正しい値が入力されていません。");
+            String title = this.messageBundle.getString("common.label.inputValueInvalid");
+            String message = this.messageBundle.getString("common.msg.passwordUnmatch");
+
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, title, message);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-        // パスワードチェック
-        /*
-         * UIComponent component = e.getComponent(); if
-         * (this.password.equals(this.getpasswordReenter())) { FacesContext facesContext
-         * = FacesContext.getCurrentInstance();
-         * facesContext.getExternalContext().getFlash().setKeepMessages(true);
-         * FacesMessage message = new FacesMessage("パスワードが一致しません。");
-         * message.setSeverity(FacesMessage.SEVERITY_ERROR);
-         * facesContext.addMessage(component.getClientId(), message);
-         * facesContext.renderResponse(); }
-         */
-        // メールアドレスチェック
     }
 }

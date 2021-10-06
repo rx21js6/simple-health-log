@@ -11,17 +11,20 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
-import jp.nauplius.app.shl.page.initial.service.InitialsettingService;
+import jp.nauplius.app.shl.page.initial.service.InitialSettingService;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named
 @ViewScoped
 public class InitialSettingController implements Serializable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(InitialSettingController.class);
+    @Inject
+    private Logger logger;
+
+    @Inject
+    private FacesContext facesContext;
 
     @Inject
     @Getter
@@ -29,13 +32,13 @@ public class InitialSettingController implements Serializable {
     private InitialSettingForm initialSettingForm;
 
     @Inject
-    private InitialsettingService initialsettingService;
+    private InitialSettingService initialSettingService;
 
     @Inject
     private transient ResourceBundle messageBundle;
 
     public void init() {
-        LOGGER.info("init()");
+        this.logger.info("init()");
         this.initialSettingForm.setLoginId(ShlConstants.LOGIN_ID_ADMIN);
         this.initialSettingForm.setName(this.messageBundle.getString("initial.initialSetting.label.admin"));
         this.initialSettingForm.setPassword(StringUtils.EMPTY);
@@ -45,24 +48,24 @@ public class InitialSettingController implements Serializable {
     }
 
     public String register() {
-        System.out.println("initialSettingForm: " + initialSettingForm);
+        this.logger.info("initialSettingForm: " + initialSettingForm);
 
         String password = this.initialSettingForm.getPassword();
         String passwordReenter = this.initialSettingForm.getPasswordReenter();
         if (!password.contentEquals(passwordReenter)) {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.getExternalContext().getFlash().setKeepMessages(true);
+            this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
                     this.messageBundle.getString("initial.initialSetting.msg.passwordUnmatch"));
-            facesContext.addMessage("initialSettingValues", message);
+            this.facesContext.addMessage("initialSettingValues", message);
             return null;
         }
 
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.getExternalContext().getFlash().setKeepMessages(true);
+        this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
-        this.initialsettingService.register(this.initialSettingForm);
+        this.initialSettingService
+                .register(this.facesContext.getExternalContext().getApplicationContextPath(),
+                this.initialSettingForm);
         return "/contents/initial/initialSettingComplete.xhtml?faces-redirect=true";
     }
 
