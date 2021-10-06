@@ -116,7 +116,7 @@ public class CustomSettingService extends AbstractService {
      * テストメール送信
      */
     public void sendTestMail() {
-        String mailAddress = this.customSettingMailAddressModel.getMailAddress().strip();
+        String mailAddress = this.customSettingMailAddressModel.getMailAddress();
         this.customSettingMailSender.sendTestMail(mailAddress, this.getAdminMailAddress());
     }
 
@@ -135,7 +135,7 @@ public class CustomSettingService extends AbstractService {
         }
 
         // 更新
-        String mailAddress = this.customSettingMailAddressModel.getMailAddress().strip();
+        String mailAddress = this.customSettingMailAddressModel.getMailAddress();
         userInfo.setMailAddress(mailAddress);
         userInfo.setModifiedBy(this.loginInfo.getUserInfo().getId());
         userInfo.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
