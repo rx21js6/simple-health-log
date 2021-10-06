@@ -14,13 +14,12 @@ import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import jp.nauplius.app.shl.common.exception.DatabaseException;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
-import jp.nauplius.app.shl.common.service.MailSenderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.page.initial.backing.InitialSettingForm;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @Named
-public class InitialsettingService implements Serializable {
+public class InitialSettingService implements Serializable {
     @Inject
     private transient ResourceBundle messageBundle;
 
@@ -34,13 +33,19 @@ public class InitialsettingService implements Serializable {
     private CipherUtil cipherUtil;
 
     @Inject
-    private MailSenderService mailSenderService;
+    private InitialSettingMailSender initialSettingMailSender;
 
     @Inject
     private LoginInfo loginInfo;
 
+    /**
+     * 初期登録
+     *
+     * @param contextPath
+     * @param initialSettingForm
+     */
     @Transactional
-    public void register(InitialSettingForm initialSettingForm) {
+    public void register(String contextPath, InitialSettingForm initialSettingForm) {
         if (this.KeyIvHolderService.isRegistered()) {
 
             throw new DatabaseException(new RollbackException(
@@ -73,8 +78,7 @@ public class InitialsettingService implements Serializable {
         this.em.flush();
 
         // メール送信
-        // TODO: 後で戻す
-        // this.mailSenderService.sendInitialSettingMail(initialSettingForm);
+        this.initialSettingMailSender.sendInitialSettingMail(contextPath, initialSettingForm);
 
         this.loginInfo.setUserInfo(loginUser);
     }

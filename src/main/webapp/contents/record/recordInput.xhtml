@@ -75,7 +75,8 @@
                     </b:column>
                     <b:column>
                         <b:commandButton value="#{msg['common.button.login']}"
-                            action="#{dailyRecordController.login()}" look="primary" size="lg" />
+                            action="#{dailyRecordController.login()}" look="primary"
+                            size="lg" />
                     </b:column>
                 </b:row>
             </b:form>
@@ -121,7 +122,11 @@
                             action="#{maintUserController.showList()}"
                             value="#{msg['common.label.user']}" icon="user"
                             rendered="#{loginInfo.userInfo.roleId == 0}" />
+                        <b:commandButton id="settingButton"
+                            action="#{dailyRecordController.showCustomSetting(false)}"
+                            value="#{msg['common.label.setting']}" icon="cog" />
                     </b:column>
+                    <!-- Date changing -->
                     <b:column>
                         <b:commandButton id="yesterdayButton"
                             value="#{msg['common.label.yesterday']}" icon="chevron-left"

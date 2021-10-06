@@ -11,8 +11,12 @@ public class AuthInfo {
     public static final String INITAL_SETTING_COMPLETE = "/contents/initial/initialSettingComplete.xhtml";
 
     // 一般ユーザが遷移可能なページ
-    private static final String[] TMP_NORMAL_VISIBLE_PAGES = { "/index.xhtml", "/loginTimeout.xhtml",
-            "/error/authError.xhtml", "/contents/record/recordInput.xhtml", "/contents/record/monthlyRecord.xhtml",
+    private static final String[] TMP_NORMAL_VISIBLE_PAGES = { "/index.xhtml", // index
+            "/loginTimeout.xhtml", // タイムアウト
+            "/error/authError.xhtml", // 権限エラー
+            "/contents/record/recordInput.xhtml", // 日次入力
+            "/contents/record/monthlyRecord.xhtml", // 月次表示
+            "/contents/maint/setting/customSetting.xhtml", // カスタム設定
 
     };
 

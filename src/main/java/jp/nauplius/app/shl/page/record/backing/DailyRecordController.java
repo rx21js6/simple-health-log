@@ -298,6 +298,27 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     }
 
     /**
+     * カスタム設定表示
+     *
+     * @param force
+     * @return
+     */
+    public String showCustomSetting(boolean force) {
+        this.commonConfirmModalBean.setVisible(false);
+        if (!force && this.isFormEdited()) {
+            this.setModal("showCustomSetting");
+            return null;
+        }
+
+        this.dailyRecordInputModel.reset();
+        this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
+        this.monthlyRecordModel.setToday(this.today);
+        this.monthlyRecordService.loadMonthlyRecords();
+
+        return "/contents/maint/setting/customSetting.xhtml?faces-redirect=true";
+    }
+
+    /**
      * メッセージを設定
      */
     private void setMessage() {
