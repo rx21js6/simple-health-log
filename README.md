@@ -1,21 +1,22 @@
 # simple-health-log
 
-2021-09-19
+2021-10-06
 
 ## Summary
 
-* 起床時刻
-* 体温（摂氏）（朝夕）
-* 酸素飽和度（朝夕）
-* 就寝時刻
+This app is recording only (below)..
 
-を記録する（だけ）のアプリ
+* Awake time
+* Body Temperatre(morning/evening)
+* Oxygen saturation(morning/evening)
+* Bed time
+* Condition notes(Free style)
 
 ## Requirement
 
 * JDK 1.8
 * Gradle 7.1+
-* Jetty9.4+（Reccomended）
+* Jetty9.4+（Recommended）
 * PostgreSQL 12+
 
 ## Preparations
@@ -67,7 +68,7 @@ jp.nauplius.app.shl.setting.test.db.password=**********
 #
 # simple-health-log mail settings
 #
-jp.nauplius.app.shl.setting.mail.active=true
+jp.nauplius.app.shl.setting.mail.active=true # when unused, set 'false'.
 jp.nauplius.app.shl.setting.mail.smtp.host=localhost # or external server addr (eg smtp.gmail.com)
 jp.nauplius.app.shl.setting.mail.smtp.port=25 (or 587, 465...not tested yet...)
 # When authentication requered(eg. port=587), change below line to "true". And set userId, password.
