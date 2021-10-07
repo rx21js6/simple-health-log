@@ -29,31 +29,33 @@
                         <b:panelGrid columns="1" cellpadding="5">
                             <b:inputText
                                 value="#{initialSettingController.initialSettingForm.loginId}"
-                                label="#{msg['common.label.loginId']}" labelStyle="width:200px;" disabled="true"
-                                maxlength="10" />
+                                label="#{msg['common.label.loginId']}" labelStyle="width:200px;"
+                                disabled="true" maxlength="10" />
                             <b:inputText
                                 value="#{initialSettingController.initialSettingForm.name}"
-                                label="#{msg['common.label.name']}" labelStyle="width:200px;" disabled="true"
-                                maxlength="10" />
+                                label="#{msg['common.label.name']}" labelStyle="width:200px;"
+                                disabled="true" maxlength="10" />
 
                             <b:inputText
                                 value="#{initialSettingController.initialSettingForm.mailAddress}"
-                                mask="#{msg['common.label.mailAddress']}" label="E-mail:" labelStyle="width:200px;"
-                                maxlength="255" />
+                                mask="#{msg['common.label.mailAddress']}" label="E-mail:"
+                                labelStyle="width:200px;" maxlength="255" />
                             <b:message for="@previous" />
                             <b:inputSecret
                                 value="#{initialSettingController.initialSettingForm.password}"
-                                label="#{msg['common.label.password']}" labelStyle="width:200px;" maxlength="32" />
+                                label="#{msg['common.label.password']}"
+                                labelStyle="width:200px;" maxlength="32" />
                             <b:message for="@previous" />
                             <b:inputSecret
                                 value="#{initialSettingController.initialSettingForm.passwordReenter}"
-                                label="#{msg['common.label.passwordReenter']}" labelStyle="width:200px;" maxlength="32" />
+                                label="#{msg['common.label.passwordReenter']}"
+                                labelStyle="width:200px;" maxlength="32" />
                             <b:message for="@previous" />
                             <b:commandButton value="#{msg['common.button.register']}"
                                 action="#{initialSettingController.register()}" />
                         </b:panelGrid>
                     </b:form>
-                    <b:messages />
+                    <b:messages globalOnly="true" />
                 </b:column>
             </b:row>
         </b:container>
