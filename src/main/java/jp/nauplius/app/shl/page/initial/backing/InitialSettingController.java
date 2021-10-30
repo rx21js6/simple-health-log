@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
+import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.page.initial.service.InitialSettingService;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,9 +64,15 @@ public class InitialSettingController implements Serializable {
 
         this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
-        this.initialSettingService
-                .register(this.facesContext.getExternalContext().getApplicationContextPath(),
-                this.initialSettingForm);
+        try {
+            this.initialSettingService.register(this.facesContext.getExternalContext().getApplicationContextPath(),
+                    this.initialSettingForm);
+        } catch (SimpleHealthLogException e) {
+
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+            return null;
+        }
+
         return "/contents/initial/initialSettingComplete.xhtml?faces-redirect=true";
     }
 

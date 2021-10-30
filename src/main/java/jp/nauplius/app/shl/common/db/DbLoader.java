@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.transaction.Transactional;
 
+import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.model.KeyIv;
@@ -108,5 +110,19 @@ public class DbLoader {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * DB更新
+     */
+    @Transactional
+    public void updateDb() {
+        Map<String, Object> properties = this.em.getEntityManagerFactory().getProperties();
+        String dbUrl = String.valueOf(properties.get("javax.persistence.jdbc.url"));
+        String dbUser = String.valueOf(properties.get("javax.persistence.jdbc.user"));
+        String dbPassword = String.valueOf(properties.get("javax.persistence.jdbc.password"));
+        Flyway flyway = Flyway.configure().dataSource(dbUrl, dbUser, dbPassword).load();
+        flyway.baseline();
+        flyway.migrate();
     }
 }

@@ -30,7 +30,12 @@ public class InitializationListener implements ServletContextListener {
         this.logger.info("InitializationListener#contextInitialized() em: " + this.em);
 
         this.checkDbInitialized();
+        this.dbLoader.updateDb();
+    }
 
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        System.out.println("InitializationListener#contextDestroyed()");
     }
 
     private void checkDbInitialized() {
@@ -49,12 +54,6 @@ public class InitializationListener implements ServletContextListener {
 
         System.out.println("KeyIv not found.");
         // this.dbLoader.loadKeyIvData();
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        System.out.println("InitializationListener#contextDestroyed()");
-
     }
 
 }
