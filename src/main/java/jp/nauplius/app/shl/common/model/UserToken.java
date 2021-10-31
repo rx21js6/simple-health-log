@@ -2,6 +2,7 @@ package jp.nauplius.app.shl.common.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 
 /**
@@ -18,6 +19,9 @@ public class UserToken implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 
+	@Column(name="expiration_date")
+	private Timestamp expirationDate;
+
 	private String token;
 
 	public UserToken() {
@@ -29,6 +33,14 @@ public class UserToken implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Timestamp getExpirationDate() {
+		return this.expirationDate;
+	}
+
+	public void setExpirationDate(Timestamp expirationDate) {
+		this.expirationDate = expirationDate;
 	}
 
 	public String getToken() {

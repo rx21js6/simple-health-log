@@ -51,9 +51,11 @@
   <table name="user_token">
     <column>id</column>
     <column>token</column>
+    <column>expiration_date</column>
     <row>
       <value>1</value>
       <value>0cn4Zn3GIJCIE6D8oPtvnFbL6i5d6xGyk3uvO++ea5ui2LDm0ZUZykFwuSLJgOiWBL36GVEM+GKsnJjG1pyb6A==</value>
+      <value><![CDATA[9999-01-09 04:00:54.000]]></value>
     </row>
   </table>
 </dataset>
