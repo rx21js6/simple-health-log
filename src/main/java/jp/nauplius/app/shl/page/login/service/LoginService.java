@@ -213,7 +213,7 @@ public class LoginService extends AbstractService {
 
             // 一次的に他の端末から参照する場合の対応（トークンを更新しない）
             if (!tokenUpdate && !StringUtils.isEmpty(userToken.getToken())) {
-                // 日付のみ更新ｎ
+                // 日付のみ更新
                 userToken.setExpirationDate(Timestamp.valueOf(now.plusDays(DEFAULT_EXPIRATION_DATE)));
                 this.entityManager.merge(userToken);
                 this.entityManager.flush();
@@ -235,6 +235,7 @@ public class LoginService extends AbstractService {
             } while (0 < findUserTokenResults.size());
 
             userToken.setToken(token);
+            userToken.setExpirationDate(Timestamp.valueOf(now.plusDays(DEFAULT_EXPIRATION_DATE)));
             this.entityManager.merge(userToken);
 
             // 期限切れのトークンが存在する場合は削除
