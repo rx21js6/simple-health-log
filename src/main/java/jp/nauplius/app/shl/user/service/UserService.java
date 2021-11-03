@@ -1,12 +1,11 @@
 package jp.nauplius.app.shl.user.service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
@@ -15,7 +14,6 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
-import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.UserInfo;
@@ -33,9 +31,6 @@ import jp.nauplius.app.shl.user.constants.UserStatus;
  */
 @Named
 public class UserService extends AbstractService {
-    @Inject
-    private Logger logger;
-
     @Inject
     private transient ResourceBundle messageBundle;
 
@@ -153,6 +148,7 @@ public class UserService extends AbstractService {
     public void delete(MaintUserInfo maintUserInfo) {
         // ユーザ存在チェック
         String loginId = maintUserInfo.getLoginId();
+
         TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
         userInfoQuery.setParameter("loginId", loginId);
@@ -170,6 +166,13 @@ public class UserService extends AbstractService {
                     this.messageBundle.getString("contents.maint.user.userList.msg.deleteOwnAccount"));
         }
 
+        // トークン削除
+        UserToken tmpUserToken = this.entityManager.find(UserToken.class, tmpUserInfo.getId());
+        if (Objects.nonNull(tmpUserToken)) {
+            this.entityManager.remove(tmpUserToken);
+        }
+
+        // 削除フラグを追加
         Timestamp updatedDate = Timestamp.valueOf(LocalDateTime.now());
         tmpUserInfo.setDeleted(true);
         tmpUserInfo.setDeletedDate(updatedDate);
@@ -178,48 +181,6 @@ public class UserService extends AbstractService {
         this.entityManager.merge(tmpUserInfo);
         this.entityManager.flush();
         this.entityManager.clear();
-    }
-
-    /**
-     * トークン文字列生成～更新
-     *
-     * @param userInfo {@link UserInfo}
-     * @param newRec   新規作成の場合true
-     * @return 生成したトークン文字列
-     */
-    private String createToken(UserInfo userInfo, boolean newRec) {
-        try {
-            SecureRandom random = new SecureRandom();
-            TypedQuery<UserToken> query = this.entityManager
-                    .createQuery("SELECT t FROM UserToken t WHERE t.token = :token", UserToken.class);
-
-            String token = null;
-            List<UserToken> results = null;
-
-            do {
-                byte[] randomBytes = random.generateSeed(64);
-                token = Base64.getEncoder().encodeToString(randomBytes);
-                query.setParameter("token", token);
-                results = query.getResultList();
-            } while (0 < results.size());
-
-            UserToken userToken = null;
-            if (newRec) {
-                userToken = new UserToken();
-                userToken.setId(userInfo.getId());
-                this.entityManager.persist(userToken);
-            } else {
-                userToken = this.entityManager.find(UserToken.class, userInfo.getId());
-            }
-            userToken.setToken(token);
-            this.entityManager.merge(userToken);
-
-            return token;
-
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw e;
-        }
     }
 
     /**
