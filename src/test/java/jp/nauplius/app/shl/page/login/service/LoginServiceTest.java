@@ -1,6 +1,6 @@
 package jp.nauplius.app.shl.page.login.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
@@ -67,6 +67,21 @@ public class LoginServiceTest extends AbstractServiceTest {
         loginForm.setLoginId("admin");
         loginForm.setPassword("password1234!\"$#");
         loginForm.setLoggingPersistent(false);
+        LoginResponse loginResponse = loginService.login(loginForm);
+        assertEquals("admin", loginResponse.getUserInfo().getLoginId());
+    }
+
+    /**
+     * ログイン成功（トークン更新あり）
+     */
+    @Test
+    public void testLoginSuccessWithLoggingPersistent() {
+        this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
+
+        LoginForm loginForm = new LoginForm();
+        loginForm.setLoginId("admin");
+        loginForm.setPassword("password1234!\"$#");
+        loginForm.setLoggingPersistent(true);
         LoginResponse loginResponse = loginService.login(loginForm);
         assertEquals("admin", loginResponse.getUserInfo().getLoginId());
     }

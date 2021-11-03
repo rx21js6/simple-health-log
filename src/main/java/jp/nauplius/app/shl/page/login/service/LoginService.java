@@ -56,6 +56,8 @@ public class LoginService extends AbstractService {
     @Inject
     private LoginInfo loginInfo;
 
+    private static final int DEFAULT_EXPIRATION_DATE = 3;
+
     /**
      * ログイン
      */
@@ -153,17 +155,24 @@ public class LoginService extends AbstractService {
      * トークンでログイン
      *
      * @param token
-     * @return
+     * @return 存在、かつ期限内の情報がある場合はログイン情報、ヒットしない場合はnull
      */
+    @Transactional
     public UserInfo loginFromToken(String token) {
         this.logger.info("loginFromToken");
 
         this.logger.debug(String.format("token: %s", token));
 
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp timestamp = Timestamp.valueOf(now);
+
         TypedQuery<UserInfo> query = this.entityManager.createQuery(
-                "SELECT ui FROM UserInfo ui INNER JOIN UserToken ut ON ui.id = ut.id WHERE ut.token = :token AND ui.deleted = cast('false' as boolean)",
+                "SELECT ui FROM UserInfo ui INNER JOIN UserToken ut ON ui.id = ut.id WHERE ut.token = :token "
+                        + "AND ui.deleted = cast('false' as boolean) "
+                        + "AND ut.expirationDate IS NOT NULL AND :expirationDate < ut.expirationDate ",
                 UserInfo.class);
         query.setParameter("token", token);
+        query.setParameter("expirationDate", timestamp);
         List<UserInfo> results = query.getResultList();
         if (results.size() == 0) {
             this.loginInfo.setUserInfo(null);
@@ -172,6 +181,10 @@ public class LoginService extends AbstractService {
 
         UserInfo userInfo = results.get(0);
         this.logger.debug(String.format("userInfo: %s", userInfo));
+
+        // トークン更新
+        this.createToken(userInfo, false);
+
         this.loginInfo.setUserInfo(userInfo);
         return userInfo;
     }
@@ -185,8 +198,9 @@ public class LoginService extends AbstractService {
      */
     @Transactional
     private synchronized UserToken createToken(UserInfo userInfo, boolean tokenUpdate) {
-        List<UserToken> results = null;
+        List<UserToken> findUserTokenResults = null;
         UserToken userToken = null;
+        LocalDateTime now = LocalDateTime.now();
 
         try {
             userToken = this.entityManager.find(UserToken.class, userInfo.getId());
@@ -199,10 +213,15 @@ public class LoginService extends AbstractService {
 
             // 一次的に他の端末から参照する場合の対応（トークンを更新しない）
             if (!tokenUpdate && !StringUtils.isEmpty(userToken.getToken())) {
+                // 日付のみ更新
+                userToken.setExpirationDate(Timestamp.valueOf(now.plusDays(DEFAULT_EXPIRATION_DATE)));
+                this.entityManager.merge(userToken);
+                this.entityManager.flush();
+
                 return userToken;
             }
 
-            TypedQuery<UserToken> query = this.entityManager
+            TypedQuery<UserToken> findUserTokenQuery = this.entityManager
                     .createQuery("SELECT t FROM UserToken t WHERE t.token = :token", UserToken.class);
 
             String token = null;
@@ -211,12 +230,17 @@ public class LoginService extends AbstractService {
                 SecureRandom random = new SecureRandom();
                 byte[] randomBytes = random.generateSeed(64);
                 token = Base64.getEncoder().encodeToString(randomBytes);
-                query.setParameter("token", token);
-                results = query.getResultList();
-            } while (0 < results.size());
+                findUserTokenQuery.setParameter("token", token);
+                findUserTokenResults = findUserTokenQuery.getResultList();
+            } while (0 < findUserTokenResults.size());
 
             userToken.setToken(token);
+            userToken.setExpirationDate(Timestamp.valueOf(now.plusDays(DEFAULT_EXPIRATION_DATE)));
             this.entityManager.merge(userToken);
+
+            // 期限切れのトークンが存在する場合は削除
+            this.removeExipredToken(userToken.getId(), now);
+
             this.entityManager.flush();
             return userToken;
         } catch (Throwable e) {
@@ -271,6 +295,24 @@ public class LoginService extends AbstractService {
         this.loginMailSender.sendPasswordResetMail(randomPassword, mailAddress, getAdminMailAddress());
 
         this.entityManager.flush();
+
+    }
+
+    /**
+     * 期限切れトークンを削除
+     * @param id
+     * @param now
+     */
+    public void removeExipredToken(int id, LocalDateTime now) {
+        Timestamp expirationDate = Timestamp.valueOf(now);
+        TypedQuery<UserToken> findExpiredTokenQuery = this.entityManager
+                .createQuery("SELECT t FROM UserToken t WHERE t.id = :id AND t.expirationDate <= :now", UserToken.class);
+        findExpiredTokenQuery.setParameter("id", id);
+        findExpiredTokenQuery.setParameter("now", expirationDate);
+        List<UserToken> findExpiredTokenResults = findExpiredTokenQuery.getResultList();
+        for (UserToken expiredToken : findExpiredTokenResults) {
+            this.entityManager.remove(expiredToken);
+        }
 
     }
 }
