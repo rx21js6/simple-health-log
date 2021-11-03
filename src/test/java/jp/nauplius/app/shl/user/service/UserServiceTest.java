@@ -1,6 +1,6 @@
 package jp.nauplius.app.shl.user.service;
 
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.UserInfo;
+import jp.nauplius.app.shl.common.model.UserToken;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
@@ -62,6 +63,11 @@ public class UserServiceTest extends AbstractServiceTest {
         form.setLoginId("test1");
 
         this.userService.delete(form);
+
+        UserInfo resultUserInfo = this.userService.getEntityManager().find(UserInfo.class, form.getId());
+        assertTrue(resultUserInfo.getDeleted());
+
+        assertNull(this.userService.getEntityManager().find(UserToken.class, form.getId()));
     }
 
     @Test
