@@ -100,8 +100,11 @@
                                         value="#{record.physicalCondition.oxygenSaturationMorning}" /></td>
                                 <td><h:outputText
                                         value="#{record.physicalCondition.oxygenSaturationEvening}" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.conditionNote}" /></td>
+                                <td><ui:repeat var="conditionNote"
+                                        value="#{record.splitConditionNote()}">
+                                        <h:outputText value="#{conditionNote}"></h:outputText>
+                                        <br />
+                                    </ui:repeat></td>
                             </tr>
                         </ui:repeat>
                     </tbody>

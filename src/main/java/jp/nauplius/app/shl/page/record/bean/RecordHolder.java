@@ -6,7 +6,7 @@ import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import lombok.Data;
 
 @Data
-public class RecordHolder {
+public class RecordHolder implements ConditionNoteSplitter {
     private String dateText;
     private PhysicalCondition physicalCondition;
     private boolean today;
