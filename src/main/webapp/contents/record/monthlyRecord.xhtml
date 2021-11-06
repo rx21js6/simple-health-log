@@ -123,8 +123,12 @@
                         value="#{record.physicalCondition.oxygenSaturationMorning}" />
                     <b:dataTableColumn
                         value="#{record.physicalCondition.oxygenSaturationEvening}" />
-                    <b:dataTableColumn
-                        value="#{record.physicalCondition.conditionNote}" />
+                    <b:dataTableColumn>
+                        <ui:repeat var="conditionNote"
+                            value="#{record.splitConditionNote()}">
+                            <h:outputText value="#{conditionNote}"></h:outputText><br />
+                        </ui:repeat>
+                    </b:dataTableColumn>
                     <b:dataTableColumn>
                         <b:commandButton
                             value="#{msg['contents.record.monthlyRecord.label.input']}"
