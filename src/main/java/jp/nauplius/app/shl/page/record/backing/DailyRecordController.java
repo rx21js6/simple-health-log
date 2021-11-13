@@ -2,8 +2,6 @@
 package jp.nauplius.app.shl.page.record.backing;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -89,7 +87,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     @Setter
     private LocalDate today;
 
-    private Method dispatchMethod;
+    private String methodName;
 
     @PostConstruct
     public void postConstruct() {
@@ -355,13 +353,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
 
     @Override
     public String fireAction(ModalController modalAction, String commandTypeName, String buttonName) {
-        String res = null;
-        try {
-            res = (String) this.dispatchMethod.invoke(this, true);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            throw new SimpleHealthLogException(e);
-        }
-        return res;
+        return this.dispatchMethod(this.methodName);
     }
 
     private boolean isFormEdited() {
@@ -374,7 +366,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
         this.commonConfirmModalBean.setVisible(true);
         this.commonConfirmModalBean.setOkButtonValue(this.messageBundle.getString("common.label.run"));
         this.commonConfirmModalBean.setCancelButtonValue(this.messageBundle.getString("common.label.cancel"));
-        this.dispatchMethod = getActionMethod(actionMethodName);
+        this.methodName = actionMethodName;
     }
 
 }

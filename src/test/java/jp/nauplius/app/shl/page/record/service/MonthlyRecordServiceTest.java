@@ -62,7 +62,7 @@ public class MonthlyRecordServiceTest extends AbstractServiceTest {
         this.loginInfo.setUserInfo(userInfo);
 
         this.insertTestDataXml(this.monthlyRecordService.getEntityManager(),
-                "/dbunit/MonthlyRecordServiceTest_data01.xml");
+                "dbunit/MonthlyRecordServiceTest_data01.xml");
 
         this.monthlyRecordModel.setToday(null);
 
@@ -82,7 +82,7 @@ public class MonthlyRecordServiceTest extends AbstractServiceTest {
         this.loginInfo.setUserInfo(userInfo);
 
         this.insertTestDataXml(this.monthlyRecordService.getEntityManager(),
-                "/dbunit/MonthlyRecordServiceTest_data01.xml");
+                "dbunit/MonthlyRecordServiceTest_data01.xml");
 
         LocalDate today = LocalDate.of(2024, 2, 29);
 

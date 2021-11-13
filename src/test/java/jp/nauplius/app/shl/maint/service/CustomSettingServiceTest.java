@@ -77,7 +77,7 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
     @Test
     public void testLoad() {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
-                "/dbunit/CustomSettingServiceTest_data01.xml");
+                "dbunit/CustomSettingServiceTest_data01.xml");
 
         UserInfo userInfo = new UserInfo();
         userInfo.setId(2);
@@ -96,7 +96,7 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
     @Test
     public void testChangePassword() {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
-                "/dbunit/CustomSettingServiceTest_data01.xml");
+                "dbunit/CustomSettingServiceTest_data01.xml");
 
         UserInfo userInfo = new UserInfo();
         userInfo.setId(2);
@@ -122,7 +122,7 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
     @Test
     public void testSendTestMail() throws MessagingException {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
-                "/dbunit/CustomSettingServiceTest_data01.xml");
+                "dbunit/CustomSettingServiceTest_data01.xml");
 
         UserInfo userInfo = new UserInfo();
         userInfo.setId(2);
@@ -147,7 +147,7 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
     @Test
     public void testChangeMailAddress() throws MessagingException {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
-                "/dbunit/CustomSettingServiceTest_data01.xml");
+                "dbunit/CustomSettingServiceTest_data01.xml");
 
         UserInfo userInfo = new UserInfo();
         userInfo.setId(2);

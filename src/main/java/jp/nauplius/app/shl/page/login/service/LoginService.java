@@ -56,6 +56,8 @@ public class LoginService extends AbstractService {
     @Inject
     private LoginInfo loginInfo;
 
+    private SecureRandom random = new SecureRandom();
+
     private static final int DEFAULT_EXPIRATION_DATE = 3;
 
     /**
@@ -166,11 +168,12 @@ public class LoginService extends AbstractService {
         LocalDateTime now = LocalDateTime.now();
         Timestamp timestamp = Timestamp.valueOf(now);
 
-        TypedQuery<UserInfo> query = this.entityManager.createQuery(
-                "SELECT ui FROM UserInfo ui INNER JOIN UserToken ut ON ui.id = ut.id WHERE ut.token = :token "
-                        + "AND ui.deleted = cast('false' as boolean) "
-                        + "AND ut.expirationDate IS NOT NULL AND :expirationDate < ut.expirationDate ",
-                UserInfo.class);
+        TypedQuery<UserInfo> query = this.entityManager
+                .createQuery(
+                        "SELECT ui FROM UserInfo ui INNER JOIN UserToken ut ON ui.id = ut.id WHERE ut.token = :token "
+                                + "AND ui.deleted = cast('false' as boolean) "
+                                + "AND ut.expirationDate IS NOT NULL AND :expirationDate < ut.expirationDate ",
+                        UserInfo.class);
         query.setParameter("token", token);
         query.setParameter("expirationDate", timestamp);
         List<UserInfo> results = query.getResultList();
@@ -227,8 +230,7 @@ public class LoginService extends AbstractService {
             String token = null;
 
             do {
-                SecureRandom random = new SecureRandom();
-                byte[] randomBytes = random.generateSeed(64);
+                byte[] randomBytes = this.random.generateSeed(64);
                 token = Base64.getEncoder().encodeToString(randomBytes);
                 findUserTokenQuery.setParameter("token", token);
                 findUserTokenResults = findUserTokenQuery.getResultList();
@@ -300,13 +302,14 @@ public class LoginService extends AbstractService {
 
     /**
      * 期限切れトークンを削除
+     *
      * @param id
      * @param now
      */
     public void removeExipredToken(int id, LocalDateTime now) {
         Timestamp expirationDate = Timestamp.valueOf(now);
-        TypedQuery<UserToken> findExpiredTokenQuery = this.entityManager
-                .createQuery("SELECT t FROM UserToken t WHERE t.id = :id AND t.expirationDate <= :now", UserToken.class);
+        TypedQuery<UserToken> findExpiredTokenQuery = this.entityManager.createQuery(
+                "SELECT t FROM UserToken t WHERE t.id = :id AND t.expirationDate <= :now", UserToken.class);
         findExpiredTokenQuery.setParameter("id", id);
         findExpiredTokenQuery.setParameter("now", expirationDate);
         List<UserToken> findExpiredTokenResults = findExpiredTokenQuery.getResultList();

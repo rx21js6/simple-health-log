@@ -70,7 +70,7 @@ public class LoginFilterTest extends AbstractServiceTest {
         normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
-        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "/dbunit/LoginFilterTest_data01.xml");
+        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
         request.setRequestURI("/simple-health-log/contents/record/monthlyRecord.xhtml");
@@ -100,7 +100,7 @@ public class LoginFilterTest extends AbstractServiceTest {
         normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
-        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "/dbunit/LoginFilterTest_data01.xml");
+        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
         request.setRequestURI("/simple-health-log");
@@ -124,7 +124,7 @@ public class LoginFilterTest extends AbstractServiceTest {
      */
     @Test
     public void testDoFilterNotLoggedIn() throws IOException, ServletException {
-        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "/dbunit/LoginFilterTest_data01.xml");
+        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
         request.setRequestURI("/simple-health-log");
@@ -155,7 +155,7 @@ public class LoginFilterTest extends AbstractServiceTest {
         normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
-        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "/dbunit/LoginFilterTest_data01.xml");
+        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
         request.setRequestURI("/simple-health-log/contents/maint/user/userList.xhtml");
@@ -185,7 +185,7 @@ public class LoginFilterTest extends AbstractServiceTest {
         normalUserInfo.setRoleId(UserRoleId.ADMIN.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
-        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "/dbunit/LoginFilterTest_data01.xml");
+        this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
         request.setRequestURI("/simple-health-log/contents/maint/user/userList.xhtml");

@@ -92,7 +92,7 @@ public class CipherUtil implements Serializable {
         try {
             byte[] textBytes = text.getBytes();
             SecretKeySpec keySpec = new SecretKeySpec(keyBytes, KEY_ALGORITHM);
-            IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+            // IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 
             Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, keySpec);

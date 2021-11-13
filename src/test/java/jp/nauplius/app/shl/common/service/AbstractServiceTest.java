@@ -48,7 +48,7 @@ public class AbstractServiceTest {
             // DBUnitのコネクション生成
             connection = new DatabaseConnection(jdbcConnection);
 
-            InputStream inputStream = getClass().getResourceAsStream(xmlFilePath);
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(xmlFilePath);
             IDataSet dataSet = new XmlDataSet(inputStream);
 
             // クリーンインサート処理を実行

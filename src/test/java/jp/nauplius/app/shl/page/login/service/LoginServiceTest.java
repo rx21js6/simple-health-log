@@ -61,7 +61,7 @@ public class LoginServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testLoginSuccess() {
-        this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
+        this.insertTestDataXml(this.loginService.getEntityManager(), "dbunit/LoginServiceTest_data01.xml");
 
         LoginForm loginForm = new LoginForm();
         loginForm.setLoginId("admin");
@@ -76,7 +76,7 @@ public class LoginServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testLoginSuccessWithLoggingPersistent() {
-        this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
+        this.insertTestDataXml(this.loginService.getEntityManager(), "dbunit/LoginServiceTest_data01.xml");
 
         LoginForm loginForm = new LoginForm();
         loginForm.setLoginId("admin");
@@ -91,7 +91,7 @@ public class LoginServiceTest extends AbstractServiceTest {
      */
     @Test(expected = SimpleHealthLogException.class)
     public void testLoginFailed() {
-        this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
+        this.insertTestDataXml(this.loginService.getEntityManager(), "dbunit/LoginServiceTest_data01.xml");
 
         LoginForm loginForm = new LoginForm();
         loginForm.setLoginId("admin");
@@ -113,7 +113,7 @@ public class LoginServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testGetUsers() {
-        this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
+        this.insertTestDataXml(this.loginService.getEntityManager(), "dbunit/LoginServiceTest_data01.xml");
         GetUsersResponse response = this.loginService.getUsers();
         assertEquals(1, response.getUserInfos().size());
     }
@@ -123,7 +123,7 @@ public class LoginServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testLoginFromToken() {
-        this.insertTestDataXml(this.loginService.getEntityManager(), "/dbunit/LoginServiceTest_data01.xml");
+        this.insertTestDataXml(this.loginService.getEntityManager(), "dbunit/LoginServiceTest_data01.xml");
         UserInfo userInfo = this.loginService.loginFromToken(
                 "0cn4Zn3GIJCIE6D8oPtvnFbL6i5d6xGyk3uvO++ea5ui2LDm0ZUZykFwuSLJgOiWBL36GVEM+GKsnJjG1pyb6A==");
         assertEquals("admin", userInfo.getLoginId());

@@ -1,8 +1,6 @@
 package jp.nauplius.app.shl.user.backing;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +60,7 @@ public class MaintUserController implements Serializable, ModalControllerListene
     @Setter
     private MaintUserInfo selectedMaintUserInfo;
 
-    private Method dispatchMethod;
+    private String methodName;
 
     @PostConstruct
     public void init() {
@@ -130,7 +128,7 @@ public class MaintUserController implements Serializable, ModalControllerListene
             this.commonConfirmModalBean.setCommandTypeName("delete");
             this.commonConfirmModalBean.setOkButtonValue(this.messageBundle.getString("common.label.run"));
             this.commonConfirmModalBean.setCancelButtonValue(this.messageBundle.getString("common.label.cancel"));
-            this.dispatchMethod = getActionMethod("delete");
+            this.methodName = "delete";
         } catch (SimpleHealthLogException e) {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, e.getMessage(), null));
@@ -144,7 +142,7 @@ public class MaintUserController implements Serializable, ModalControllerListene
      *
      * @return
      */
-    public String delete() {
+    public String delete(boolean force) {
         this.commonConfirmModalBean.setVisible(false);
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -179,12 +177,6 @@ public class MaintUserController implements Serializable, ModalControllerListene
 
     @Override
     public String fireAction(ModalController modalAction, String commandTypeName, String buttonName) {
-        String res;
-        try {
-            res = (String) this.dispatchMethod.invoke(this);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            throw new SimpleHealthLogException(e);
-        }
-        return res;
+        return this.dispatchMethod(this.methodName);
     }
 }

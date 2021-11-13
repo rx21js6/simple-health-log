@@ -17,6 +17,7 @@ plugins {
     id 'eclipse'
     // id 'eclipse-wtp'
     id "org.gretty" version "3.0.4"
+    id 'jacoco'
 }
 
 sourceCompatibility = 1.8
@@ -373,3 +374,12 @@ war {
 gretty {
     // jettyXmlFile = 'src/main/webapp/WEB-INF/jetty-web.xml'
 }
+
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
