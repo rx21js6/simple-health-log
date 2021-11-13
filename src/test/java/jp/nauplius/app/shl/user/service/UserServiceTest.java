@@ -56,7 +56,7 @@ public class UserServiceTest extends AbstractServiceTest {
         adminUserInfo.setId(1);
         this.loginInfo.setUserInfo(adminUserInfo);
 
-        this.insertTestDataXml(this.userService.getEntityManager(), "/dbunit/UserServiceTest_data01.xml");
+        this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
 
         MaintUserInfo form = new MaintUserInfo();
         form.setId(2);
@@ -76,7 +76,7 @@ public class UserServiceTest extends AbstractServiceTest {
         adminUserInfo.setId(1);
         this.loginInfo.setUserInfo(adminUserInfo);
 
-        this.insertTestDataXml(this.userService.getEntityManager(), "/dbunit/UserServiceTest_data01.xml");
+        this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
 
         MaintUserInfo form = new MaintUserInfo();
         form.setId(1);

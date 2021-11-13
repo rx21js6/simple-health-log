@@ -1,10 +1,8 @@
 package jp.nauplius.app.shl.page.record.service;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.sql.Time;
@@ -75,7 +73,7 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         adminUserInfo.setId(2);
         this.loginInfo.setUserInfo(adminUserInfo);
 
-        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "/dbunit/DailyRecordServiceTest_data01.xml");
+        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "dbunit/DailyRecordServiceTest_data01.xml");
         // 登録済み日付
         this.dailyRecordService.loadRecord(LocalDate.of(2021, 8, 2));
 
@@ -97,7 +95,7 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         adminUserInfo.setId(2);
         this.loginInfo.setUserInfo(adminUserInfo);
 
-        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "/dbunit/DailyRecordServiceTest_data01.xml");
+        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "dbunit/DailyRecordServiceTest_data01.xml");
         // 未登録レコード
         this.dailyRecordService.loadRecord(LocalDate.of(2021, 7, 31));
 
@@ -120,7 +118,7 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
 
         LocalDate localDate = LocalDate.of(221, 8, 2);
 
-        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "/dbunit/DailyRecordServiceTest_data01.xml");
+        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "dbunit/DailyRecordServiceTest_data01.xml");
         this.dailyRecordService.loadRecord(localDate);
 
         PhysicalCondition conditionForRegistration = this.dailyRecordInputModel.getPhysicalCondition();
@@ -159,7 +157,7 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         userInfo.setId(2);
         this.loginInfo.setUserInfo(userInfo);
 
-        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "/dbunit/DailyRecordServiceTest_data01.xml");
+        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "dbunit/DailyRecordServiceTest_data01.xml");
         this.dailyRecordService.loadRecord(LocalDate.of(2021, 8, 1));
 
         PhysicalCondition conditionForUpdate = this.dailyRecordInputModel.getPhysicalCondition();
@@ -194,7 +192,7 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         userInfo.setId(2);
         this.loginInfo.setUserInfo(userInfo);
 
-        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "/dbunit/DailyRecordServiceTest_data01.xml");
+        this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "dbunit/DailyRecordServiceTest_data01.xml");
 
         this.dailyRecordService.loadDailyRecords(LocalDate.of(2021, 8, 1));
         assertNotNull(this.dailyRecordListModel.getDailyRecords());
