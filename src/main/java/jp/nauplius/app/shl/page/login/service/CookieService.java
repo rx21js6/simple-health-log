@@ -49,9 +49,10 @@ public class CookieService implements Serializable {
         if (loginInfoCookie == null) {
             loginInfoCookie = new Cookie(ShlConstants.COOKIE_KEY_TOKEN, token);
         }
+        loginInfoCookie.setValue(token);
         loginInfoCookie.setSecure(true);
         loginInfoCookie.setMaxAge(60 * 60 * 24 * 10);
-        loginInfoCookie.setPath("/");
+        loginInfoCookie.setPath("/simple-health-log");
         response.addCookie(loginInfoCookie);
     }
 
@@ -106,7 +107,7 @@ public class CookieService implements Serializable {
         }
         loginInfoCookie.setValue(null);
         loginInfoCookie.setMaxAge(0);
-        loginInfoCookie.setPath("/");
+        loginInfoCookie.setPath("/simple-health-log");
         response.addCookie(loginInfoCookie);
 
     }
