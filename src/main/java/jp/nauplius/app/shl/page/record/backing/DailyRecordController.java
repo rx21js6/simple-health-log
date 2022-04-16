@@ -105,6 +105,9 @@ public class DailyRecordController implements Serializable, ModalControllerListe
             String token = this.cookieService.getToken(this.facesContext);
             if (StringUtils.isNotEmpty(token)) {
                 tmpUserInfo = this.loginService.loginFromToken(token);
+
+                // クッキーの期限を更新
+                this.cookieService.registerToken(this.facesContext, token);
             }
         }
 
