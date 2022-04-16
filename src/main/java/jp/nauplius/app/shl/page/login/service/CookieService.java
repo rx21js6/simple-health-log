@@ -48,9 +48,9 @@ public class CookieService implements Serializable {
 
         if (loginInfoCookie == null) {
             loginInfoCookie = new Cookie(ShlConstants.COOKIE_KEY_TOKEN, token);
-            loginInfoCookie.setSecure(true);
-            loginInfoCookie.setMaxAge(60 * 60 * 24 * 10);
         }
+        loginInfoCookie.setSecure(true);
+        loginInfoCookie.setMaxAge(60 * 60 * 24 * 10);
         loginInfoCookie.setPath("/");
         response.addCookie(loginInfoCookie);
     }
