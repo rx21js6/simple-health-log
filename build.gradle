@@ -83,7 +83,7 @@ dependencies {
     // implementation group: 'org.jboss.weld', name: 'weld-spi', version: '3.1.SP2'
 
     // https://mvnrepository.com/artifact/org.apache.deltaspike/deltaspike
-    implementation group: 'org.apache.deltaspike', name: 'deltaspike', version: '1.8.2', ext: 'pom'
+    // implementation group: 'org.apache.deltaspike', name: 'deltaspike', version: '1.8.2', ext: 'pom'
 
     // DB + JPA
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
@@ -97,10 +97,10 @@ dependencies {
     implementation group: 'javax.transaction', name: 'javax.transaction-api', version: '1.3'
 
     // https://mvnrepository.com/artifact/org.apache.deltaspike.modules/deltaspike-jpa-module-api
-    implementation group: 'org.apache.deltaspike.modules', name: 'deltaspike-jpa-module-api', version: '1.9.4'
+    implementation group: 'org.apache.deltaspike.modules', name: 'deltaspike-jpa-module-api', version: '1.9.6'
 
     // https://mvnrepository.com/artifact/org.apache.deltaspike.modules/deltaspike-jpa-module-impl
-    implementation group: 'org.apache.deltaspike.modules', name: 'deltaspike-jpa-module-impl', version: '1.9.4'
+    implementation group: 'org.apache.deltaspike.modules', name: 'deltaspike-jpa-module-impl', version: '1.9.6'
 
     // SLF4J + Logback
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
