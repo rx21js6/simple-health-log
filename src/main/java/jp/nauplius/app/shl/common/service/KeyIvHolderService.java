@@ -34,7 +34,6 @@ public class KeyIvHolderService extends AbstractService {
             return true;
         }
 
-        // this.entityManager.flush();
         KeyIv keyIv = this.entityManager.find(KeyIv.class, 1);
         if (Objects.nonNull(keyIv)) {
             this.keyIvHolder.setKeyBytes(this.cipherUtil.base64StringToBytes(keyIv.getEncryptionKey()));
@@ -70,5 +69,10 @@ public class KeyIvHolderService extends AbstractService {
             throw new DatabaseException(e);
         }
 
+    }
+
+    public void clearKeyIvBytes() {
+        this.keyIvHolder.setKeyBytes(null);
+        this.keyIvHolder.setIvBytes(null);
     }
 }
