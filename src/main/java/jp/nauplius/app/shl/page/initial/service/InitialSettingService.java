@@ -27,7 +27,7 @@ public class InitialSettingService implements Serializable {
     private EntityManager em;
 
     @Inject
-    private KeyIvHolderService KeyIvHolderService;
+    private KeyIvHolderService keyIvHolderService;
 
     @Inject
     private CipherUtil cipherUtil;
@@ -46,12 +46,12 @@ public class InitialSettingService implements Serializable {
      */
     @Transactional
     public void register(String contextPath, InitialSettingForm initialSettingForm) {
-        if (this.KeyIvHolderService.isRegistered()) {
+        if (this.keyIvHolderService.isRegistered()) {
 
             throw new DatabaseException(new RollbackException(
                     this.messageBundle.getString("initial.initialSetting.msg.alreadyRegistered")));
         }
-        this.KeyIvHolderService.registerKeyIv();
+        this.keyIvHolderService.registerKeyIv();
 
         if (this.em.find(UserInfo.class, 1) != null) {
             throw new DatabaseException(new RollbackException(
@@ -71,15 +71,21 @@ public class InitialSettingService implements Serializable {
 
         // パスワード暗号化
         String encryptedPassword = this.cipherUtil.encrypt(initialSettingForm.getPassword(),
-                this.KeyIvHolderService.getKeyBytes(), this.KeyIvHolderService.getIvBytes());
+                this.keyIvHolderService.getKeyBytes(), this.keyIvHolderService.getIvBytes());
         loginUser.setEncryptedPassword(encryptedPassword);
         this.em.persist(loginUser);
         this.em.merge(loginUser);
         this.em.flush();
 
         // メール送信
-        this.initialSettingMailSender.sendInitialSettingMail(contextPath, initialSettingForm);
+        if (this.initialSettingMailSender.isActive()) {
+            this.initialSettingMailSender.sendInitialSettingMail(contextPath, initialSettingForm);
+        }
 
         this.loginInfo.setUserInfo(loginUser);
+    }
+
+    public void clearKeyIvBytes() {
+        this.keyIvHolderService.clearKeyIvBytes();
     }
 }

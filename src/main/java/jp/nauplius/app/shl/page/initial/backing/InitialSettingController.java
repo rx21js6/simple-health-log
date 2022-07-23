@@ -69,6 +69,8 @@ public class InitialSettingController implements Serializable {
                     this.initialSettingForm);
         } catch (SimpleHealthLogException e) {
 
+            this.initialSettingService.clearKeyIvBytes();
+
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
             return null;
         }
