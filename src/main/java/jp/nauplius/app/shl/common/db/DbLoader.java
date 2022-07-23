@@ -19,6 +19,7 @@ import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.model.KeyIv;
+import jp.nauplius.app.shl.common.producer.InitializationQualifier;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 
 @Named
@@ -27,6 +28,7 @@ public class DbLoader {
     private Logger logger;
 
     @Inject
+    @InitializationQualifier
     private EntityManager em;
 
     @Inject

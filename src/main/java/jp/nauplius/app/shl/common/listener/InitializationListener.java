@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.db.DbLoader;
 import jp.nauplius.app.shl.common.model.KeyIv;
+import jp.nauplius.app.shl.common.producer.InitializationQualifier;
 
 @Named
 @WebListener
@@ -20,6 +21,7 @@ public class InitializationListener implements ServletContextListener {
     private Logger logger;
 
     @Inject
+    @InitializationQualifier
     private EntityManager em;
 
     @Inject
