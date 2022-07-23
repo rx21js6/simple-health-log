@@ -15,6 +15,7 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
@@ -29,6 +30,9 @@ import jp.nauplius.app.shl.page.record.bean.DailyRecord;
 @Named
 @SessionScoped
 public class DailyRecordService extends AbstractService {
+    @Inject
+    private Logger logger;
+
     @Inject
     private LoginInfo loginInfo;
 
@@ -50,7 +54,6 @@ public class DailyRecordService extends AbstractService {
      * @param recordingDate
      * @return
      */
-    @Transactional
     public void loadRecord(LocalDate recordingDate) {
         this.dailyRecordInputModel.setPhysicalCondition(this.loadSelectedDateRecord(recordingDate));
         LocalDate previousDate = recordingDate.minusDays(1);
@@ -63,7 +66,10 @@ public class DailyRecordService extends AbstractService {
      */
     @Transactional
     public void register() {
+        this.logger.debug(String.format("register entityManager: %s", this.entityManager));
+
         PhysicalCondition physicalCondition = this.dailyRecordInputModel.getPhysicalCondition();
+        physicalCondition.getId().setId(loginInfo.getUserInfo().getId());
         PhysicalCondition conditionForUpdate = this.entityManager.find(PhysicalCondition.class,
                 physicalCondition.getId());
         LocalDateTime now = LocalDateTime.now();
@@ -126,7 +132,6 @@ public class DailyRecordService extends AbstractService {
      * @return
      */
     private PhysicalCondition loadSelectedDateRecord(LocalDate recordingDate) {
-        this.entityManager.flush();
 
         String dateTextToday = recordingDate.format(ShlConstants.RECORDING_DATE_FORMATTER);
 
