@@ -1,6 +1,8 @@
 # simple-health-log
 
-2022-04-17
+2022-07-24
+
+* Fixed (many..) bugs.
 
 ## Summary
 
@@ -68,9 +70,9 @@ jp.nauplius.app.shl.setting.test.db.password=**********
 #
 # simple-health-log mail settings
 #
-jp.nauplius.app.shl.setting.mail.active=true # when unused, set 'false'.
+jp.nauplius.app.shl.setting.mail.active=false # to active, set 'true'.
 jp.nauplius.app.shl.setting.mail.smtp.host=localhost # or external server addr (eg smtp.gmail.com)
-jp.nauplius.app.shl.setting.mail.smtp.port=25 (or 587, 465...not tested yet...)
+jp.nauplius.app.shl.setting.mail.smtp.port=25 # or 587, 465 (...not tested yet...)
 # When authentication requered(eg. port=587), change below line to "true". And set userId, password.
 jp.nauplius.app.shl.setting.mail.smtp.auth=false
 jp.nauplius.app.shl.setting.mail.smtp.userId=**CHANGE THIS**
