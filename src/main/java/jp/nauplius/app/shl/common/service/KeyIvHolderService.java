@@ -7,8 +7,6 @@ import java.util.Objects;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
-
 import jp.nauplius.app.shl.common.exception.DatabaseException;
 import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
@@ -30,14 +28,12 @@ public class KeyIvHolderService extends AbstractService {
         return this.keyIvHolder.getIvBytes();
     }
 
-    @Transactional
     public boolean isRegistered() {
         if (Objects.nonNull(this.keyIvHolder.getKeyBytes())) {
             // 取得済み
             return true;
         }
 
-        this.entityManager.flush();
         KeyIv keyIv = this.entityManager.find(KeyIv.class, 1);
         if (Objects.nonNull(keyIv)) {
             this.keyIvHolder.setKeyBytes(this.cipherUtil.base64StringToBytes(keyIv.getEncryptionKey()));
@@ -73,5 +69,10 @@ public class KeyIvHolderService extends AbstractService {
             throw new DatabaseException(e);
         }
 
+    }
+
+    public void clearKeyIvBytes() {
+        this.keyIvHolder.setKeyBytes(null);
+        this.keyIvHolder.setIvBytes(null);
     }
 }

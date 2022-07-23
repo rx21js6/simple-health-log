@@ -348,7 +348,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
 
     @Override
     public void initModal() {
-        this.logger.debug("initModa");
+        this.logger.debug("initModal");
         this.commonConfirmModalBean.setVisible(false);
         this.commonConfirmModalBean.setMessage(StringUtils.EMPTY);
         this.commonConfirmModalController.setModalControllerListener(this);
