@@ -1,8 +1,8 @@
 # simple-health-log
 
-2022-07-24
+2022-08-06
 
-* Fixed (many..) bugs.
+* Displays Key/Iv (Admin only).
 
 ## Summary
 

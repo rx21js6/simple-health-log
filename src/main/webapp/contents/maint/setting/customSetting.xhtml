@@ -15,13 +15,13 @@
         <meta charset="UTF-8" />
     </h:head>
     <h:body>
-        <h:form id="modalForm">
+        <b:form id="modalForm">
             <ui:fragment rendered="#{commonConfirmModalBean.visible}">
                 <ui:insert>
                     <ui:include src="/contents/common/commonConfirmModal.jsf" />
                 </ui:insert>
             </ui:fragment>
-        </h:form>
+        </b:form>
         <b:container>
             <b:row>
                 <h2>
@@ -34,7 +34,7 @@
                     <b:messages globalOnly="true"></b:messages>
                 </b:column>
             </b:row>
-            <h:form id="cancelForm">
+            <b:form id="cancelForm">
                 <b:row>
                     <b:row>
                         <b:commandButton icon="pencil"
@@ -43,12 +43,31 @@
                         </b:commandButton>
                     </b:row>
                 </b:row>
-            </h:form>
+            </b:form>
         </b:container>
 
+        <ui:fragment rendered="#{loginInfo.userInfo.roleId == 0}">
+            <b:container>
+                <b:form id="keyIvForm">
+                    <b:row>
+                        <h3>
+                            <h:outputText value="Key/Iv" />
+                        </h3>
+                    </b:row>
+                    <b:row>
+                        <b:panelGrid columns="1" cellpadding="5">
+                            <b:inputText label="Key" value="#{customSettingKeyIvModel.key}"
+                                span="6" disabled="true"></b:inputText>
+                            <b:inputText label="Iv" value="#{customSettingKeyIvModel.iv}"
+                                span="6" disabled="true"></b:inputText>
+                        </b:panelGrid>
+                    </b:row>
+                </b:form>
+            </b:container>
+        </ui:fragment>
 
         <b:container>
-            <h:form id="passwordChangingForm">
+            <b:form id="passwordChangingForm">
                 <b:row>
                     <h3>
                         <h:outputText
@@ -73,11 +92,11 @@
                         </b:commandButton>
                     </b:panelGrid>
                 </b:row>
-            </h:form>
+            </b:form>
         </b:container>
 
         <b:container>
-            <h:form id="mailAddressChangingForm">
+            <b:form id="mailAddressChangingForm">
                 <b:row>
                     <h3>
                         <h:outputText
@@ -115,7 +134,7 @@
                         </b:commandButton>
                     </b:panelGrid>
                 </b:row>
-            </h:form>
+            </b:form>
         </b:container>
         <b:container>
             <b:row></b:row>
