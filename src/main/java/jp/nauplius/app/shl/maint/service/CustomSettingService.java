@@ -14,10 +14,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
+import jp.nauplius.app.shl.maint.backing.CustomSettingKeyIvModel;
 import jp.nauplius.app.shl.maint.backing.CustomSettingMailAddressModel;
 import jp.nauplius.app.shl.maint.backing.CustomSettingPasswordModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
@@ -48,6 +50,9 @@ public class CustomSettingService extends AbstractService {
     @Inject
     private CustomSettingMailSender customSettingMailSender;
 
+    @Inject
+    private CustomSettingKeyIvModel customSettingKeyIvModel;
+
     /**
      * 情報ロード
      */
@@ -60,6 +65,10 @@ public class CustomSettingService extends AbstractService {
                     .format(this.messageBundle.getString("contents.maint.user.userEditing.msg.userNotFound"), id);
             throw new SimpleHealthLogException(message);
         }
+
+        KeyIv keyIv = this.entityManager.find(KeyIv.class, 1);
+        this.customSettingKeyIvModel.setKey(keyIv.getEncryptionKey());
+        this.customSettingKeyIvModel.setIv(keyIv.getEncryptionIv());
 
         this.customSettingMailAddressModel.setCurrentMailAddress(userInfo.getMailAddress());
         this.customSettingMailAddressModel.setMailAddress(StringUtils.EMPTY);
