@@ -2,11 +2,7 @@
 
 2022-08-06
 
-<<<<<<< HEAD
 * Displays Key/Iv (Admin only).
-=======
-* Display Key/Iv (Admin only).
->>>>>>> branch 'develop' of https://github.com/rx21js6/simple-health-log.git
 
 ## Summary
 
