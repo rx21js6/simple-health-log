@@ -1,5 +1,8 @@
 package jp.nauplius.app.shl.common.listener;
 
+import java.io.IOException;
+import java.util.Objects;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -11,8 +14,10 @@ import org.eclipse.persistence.exceptions.DatabaseException;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.db.DbLoader;
+import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.producer.InitializationQualifier;
+import jp.nauplius.app.shl.common.service.ConfigFileService;
 
 @Named
 @WebListener
@@ -27,12 +32,21 @@ public class InitializationListener implements ServletContextListener {
     @Inject
     private DbLoader dbLoader;
 
+    @Inject
+    private ConfigFileService configFileService;
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         this.logger.info("InitializationListener#contextInitialized() em: " + this.em);
 
         this.checkDbInitialized();
         this.dbLoader.updateDb();
+
+        try {
+            this.configFileService.createFile();
+        } catch (IOException e) {
+            throw new SimpleHealthLogException(e);
+        }
     }
 
     @Override
@@ -45,16 +59,16 @@ public class InitializationListener implements ServletContextListener {
 
         try {
             keyIv = this.em.find(KeyIv.class, 1);
-            if (keyIv != null) {
-                System.out.println("KeyIv found.");
+            if (Objects.nonNull(keyIv)) {
+                this.logger.info("KeyIv found.");
                 return;
             }
         } catch (DatabaseException e) {
-            System.err.println("Table Not found? createing...");
+            this.logger.warn("Table Not found? createing...");
             this.dbLoader.createTables();
         }
 
-        System.out.println("KeyIv not found.");
+        this.logger.warn("KeyIv not found.");
         // this.dbLoader.loadKeyIvData();
     }
 

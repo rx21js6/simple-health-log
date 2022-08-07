@@ -12,6 +12,7 @@ import javax.inject.Named;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.maint.service.CustomSettingService;
+import jp.nauplius.app.shl.user.service.UserService;
 
 @Named
 @ViewScoped
@@ -21,6 +22,9 @@ public class CustomSettingController implements Serializable {
 
     @Inject
     private CustomSettingService customSettingService;
+
+    @Inject
+    private UserService userService;
 
     @Inject
     private CustomSettingPasswordModel customSettingPasswordModel;
@@ -113,6 +117,26 @@ public class CustomSettingController implements Serializable {
 
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.mailAddressChanged"), null));
+
+        } catch (SimpleHealthLogException e) {
+
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, e.getMessage(), null));
+        }
+
+        return null;
+    }
+
+    /**
+     * セキュリティ強化実行
+     *
+     * @return null
+     */
+    public String performSecurityEnhancement() {
+        try {
+            this.userService.performSecurityEnhancement();
+
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.performSecurityEnhancementCompleted"), null));
 
         } catch (SimpleHealthLogException e) {
 

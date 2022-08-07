@@ -17,11 +17,15 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.slf4j.Logger;
 
+import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.model.PhysicalConditionPK;
+import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.service.AbstractService;
+import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
+import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.record.backing.DailyRecordInputModel;
 import jp.nauplius.app.shl.page.record.backing.DailyRecordListModel;
@@ -41,6 +45,12 @@ public class DailyRecordService extends AbstractService {
 
     @Inject
     private DailyRecordListModel dailyRecordListModel;
+
+    @Inject
+    private CipherUtil cipherUtil;
+
+    @Inject
+    private KeyIvHolder keyIvHolder;
 
     @PostConstruct
     public void init() {
@@ -110,7 +120,7 @@ public class DailyRecordService extends AbstractService {
      */
     public List<DailyRecord> loadDailyRecords(LocalDate date) {
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT NEW jp.nauplius.app.shl.page.record.bean.DailyRecord(u, p) ");
+        queryBuilder.append("SELECT NEW jp.nauplius.app.shl.page.record.bean.DailyRecord(u, p, u.name) ");
         queryBuilder.append("FROM UserInfo u ");
         queryBuilder.append("LEFT JOIN PhysicalCondition p ON ");
         queryBuilder.append("u.id = p.id.id ");
@@ -120,6 +130,16 @@ public class DailyRecordService extends AbstractService {
         TypedQuery<DailyRecord> query = this.entityManager.createQuery(queryBuilder.toString(), DailyRecord.class);
         query.setParameter("date", date.format(ShlConstants.RECORDING_DATE_FORMATTER));
         List<DailyRecord> results = query.getResultList();
+
+        for (DailyRecord record : results) {
+            UserInfo userInfo = record.getUserInfo();
+            String name = userInfo.getName();
+            if (userInfo.getSecurityLevel() == SecurityLevel.LEVEL1.getInt()) {
+                name = this.cipherUtil.decrypt(userInfo, userInfo.getEncryptedName(), this.keyIvHolder.getKeyBytes(),
+                        this.keyIvHolder.getIvBytes(), this.keyIvHolder.getSalt());
+            }
+            record.setName(name);
+        }
 
         this.dailyRecordListModel.setDailyRecords(results);
         return results;

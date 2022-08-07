@@ -18,6 +18,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.model.UserInfo;
@@ -144,6 +145,14 @@ public class DailyRecordController implements Serializable, ModalControllerListe
             }
         }
         return null;
+    }
+
+    /**
+     * ログイン中のユーザ名を表示
+     * @return
+     */
+    public String showLoggingUserName() {
+        return this.loginService.showLoggingUserName();
     }
 
     /**
@@ -343,6 +352,12 @@ public class DailyRecordController implements Serializable, ModalControllerListe
                     this.messageBundle.getString("contents.record.recordInput.msg.prevTemperature"), temperature);
 
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, message, null));
+        }
+
+        // セキュリティ警告
+        if (this.loginInfo.getUserInfo().getSecurityLevel() < SecurityLevel.LEVEL1.getInt()) {
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.securityLevelWarning"), null));
         }
     }
 

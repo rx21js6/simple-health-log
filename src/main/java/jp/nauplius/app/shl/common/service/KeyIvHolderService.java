@@ -1,5 +1,6 @@
 package jp.nauplius.app.shl.common.service;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -8,6 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import jp.nauplius.app.shl.common.exception.DatabaseException;
+import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
 import jp.nauplius.app.shl.common.util.CipherUtil;
@@ -20,12 +22,19 @@ public class KeyIvHolderService extends AbstractService {
     @Inject
     private CipherUtil cipherUtil;
 
+    @Inject
+    private ConfigFileService configFileService;
+
     public byte[] getKeyBytes() {
         return this.keyIvHolder.getKeyBytes();
     }
 
     public byte[] getIvBytes() {
         return this.keyIvHolder.getIvBytes();
+    }
+
+    public String getSalt() {
+        return this.keyIvHolder.getSalt();
     }
 
     public boolean isRegistered() {
@@ -38,6 +47,11 @@ public class KeyIvHolderService extends AbstractService {
         if (Objects.nonNull(keyIv)) {
             this.keyIvHolder.setKeyBytes(this.cipherUtil.base64StringToBytes(keyIv.getEncryptionKey()));
             this.keyIvHolder.setIvBytes(this.cipherUtil.base64StringToBytes(keyIv.getEncryptionIv()));
+            try {
+                this.keyIvHolder.setSalt(this.configFileService.loadSalt());
+            } catch (IOException e) {
+                throw new SimpleHealthLogException(e);
+            }
             return true;
         }
         return false;
@@ -52,6 +66,7 @@ public class KeyIvHolderService extends AbstractService {
 
             this.keyIvHolder.setKeyBytes(keyBytes);
             this.keyIvHolder.setIvBytes(ivBytes);
+            this.keyIvHolder.setSalt(this.configFileService.loadSalt());
 
             KeyIv keyIv = new KeyIv();
             keyIv.setId(1);
@@ -67,6 +82,8 @@ public class KeyIvHolderService extends AbstractService {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             throw new DatabaseException(e);
+        } catch (IOException e) {
+            throw new SimpleHealthLogException(e);
         }
 
     }

@@ -17,12 +17,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.ui.backing.CommonConfirmModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalControllerListener;
 import jp.nauplius.app.shl.common.ui.bean.CommonConfirmModalBean;
 import jp.nauplius.app.shl.user.bean.MaintUserInfo;
+import jp.nauplius.app.shl.user.bean.UserInfoListItem;
 import jp.nauplius.app.shl.user.service.UserService;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,7 +50,7 @@ public class MaintUserController implements Serializable, ModalControllerListene
 
     @Getter
     @Setter
-    private List<UserInfo> userInfos;
+    private List<UserInfoListItem> userInfos;
 
     @Getter
     @Setter
@@ -77,7 +77,7 @@ public class MaintUserController implements Serializable, ModalControllerListene
     }
 
     public String newData() {
-        this.selectedMaintUserInfo = this.userService.createNewDate();
+        this.selectedMaintUserInfo = this.userService.createNewData();
         return "/contents/maint/user/userEditing.xhtml?faces-redirect=true";
     }
 

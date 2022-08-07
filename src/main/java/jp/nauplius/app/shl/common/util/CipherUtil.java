@@ -13,7 +13,11 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
+
+import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.model.UserInfo;
 
 /**
  * 暗号ユーティリティ
@@ -82,13 +86,56 @@ public class CipherUtil implements Serializable {
     }
 
     /**
-     * パスワード暗号化してBase64文字列で返す。
+     * 文字列を暗号化してBase64文字列で返す。
+     * @param userInfo
+     * @param plainText
+     * @param keyBytes
+     * @param ivBytes
+     * @param salt
+     * @return
+     */
+    public String encrypt(UserInfo userInfo, String plainText, byte[] keyBytes, byte[] ivBytes, String salt) {
+        String resultText = null;
+        if (userInfo.getSecurityLevel() == SecurityLevel.LEVEL0.getInt()) {
+            resultText = this.encrypt(plainText, keyBytes, ivBytes);
+        } else {
+            int id = userInfo.getId();
+            int sec = userInfo.getCreatedDate().toLocalDateTime().getSecond();
+            resultText = this.encrypt(id, sec, plainText, keyBytes, ivBytes, salt);
+        }
+        return resultText;
+    }
+
+    /**
+     * 文字列を暗号化してBase64文字列で返す。（新形式）
+     * @param id
+     * @param sec
+     * @param plainText
+     * @param keyBytes
+     * @param ivBytes
+     * @param salt
+     * @return
+     */
+    private String encrypt(int id, int sec, String plainText, byte[] keyBytes, byte[] ivBytes, String salt) {
+        sec += 2;
+        int loopCount = sec % 5 + 1;
+        String tmpText = salt + plainText;
+        for (int i = 0; i < loopCount; i++) {
+            tmpText = String.valueOf(id) + tmpText;
+            tmpText = this.encrypt(tmpText, keyBytes, ivBytes);
+        }
+
+        return tmpText;
+    }
+
+    /**
+     * 文字列を暗号化してBase64文字列で返す。
      * @param text 生パスワード文字列
      * @param keyBytes
      * @param ivBytes
      * @return
      */
-    public String encrypt(String text, byte[] keyBytes, byte[] ivBytes) {
+    private String encrypt(String text, byte[] keyBytes, byte[] ivBytes) {
         try {
             byte[] textBytes = text.getBytes();
             SecretKeySpec keySpec = new SecretKeySpec(keyBytes, KEY_ALGORITHM);
@@ -108,13 +155,58 @@ public class CipherUtil implements Serializable {
     }
 
     /**
-     * 暗号化パスワード復号
+     * 文字列を復号化
+     * @param userInfo
+     * @param base64EncryptedText
+     * @param keyBytes
+     * @param ivBytes
+     * @param salt TODO
+     * @return
+     */
+    public String decrypt(UserInfo userInfo, String base64EncryptedText, byte[] keyBytes, byte[] ivBytes, String salt) {
+        String resultText = null;
+        if (userInfo.getSecurityLevel() == SecurityLevel.LEVEL0.getInt()) {
+            // 旧型式
+            resultText = this.decrypt(base64EncryptedText, keyBytes, ivBytes);
+        } else {
+            // 新形式
+            int id = userInfo.getId();
+            int sec = userInfo.getCreatedDate().toLocalDateTime().getSecond();
+            resultText = this.decrypt(id, sec, base64EncryptedText, keyBytes, ivBytes, salt);
+        }
+        return resultText;
+    }
+
+    /**
+     * 文字列を復号化（新形式）
+     * @param id
+     * @param sec
+     * @param base64EncryptedText
+     * @param keyBytes
+     * @param ivBytes
+     * @param salt
+     * @return
+     */
+    private String decrypt(int id, int sec, String base64EncryptedText, byte[] keyBytes, byte[] ivBytes, String salt) {
+        sec += 2;
+        int loopCount = sec % 5 + 1;
+        String tmpText = base64EncryptedText;
+        for (int i = 0; i < loopCount; i++) {
+            tmpText = this.decrypt(tmpText, keyBytes, ivBytes);
+            tmpText = tmpText.replaceFirst(String.valueOf(id), StringUtils.EMPTY);
+        }
+        tmpText = tmpText.replaceFirst(salt, StringUtils.EMPTY);
+        return tmpText;
+    }
+
+    /**
+     * 文字列を復号化
      * @param base64EncryptedText
      * @param keyBytes
      * @param ivBytes
      * @return
      */
-    public String decrypt(String base64EncryptedText, byte[] keyBytes, byte[] ivBytes) {
+    private String decrypt(String base64EncryptedText, byte[] keyBytes, byte[] ivBytes) {
         try {
             byte[] encryptedBytes = base64StringToBytes(base64EncryptedText);
 
