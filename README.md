@@ -27,7 +27,7 @@ This app is recording only (below)..
 
 ### Set www owner's home directory(2022-08-11～）
 
-* (Unix/Linux)When www owner's(=service execution user) is '/nonexistent', change the owner's home directory, for example by using the 'chsh' command.
+* (Unix/Linux)When www owner's(=service execution user) is '/nonexistent', create the owner's home directory(eg. "mkdir /home/www; chown www:www /home/www;" and change /etc/password for example by using the 'chsh' command.
 * Only when starting for the first time, '~/simple-health-log/config.yaml' is automatically created.
     * **Important** Save backup file in case of crash. If config.yaml lost, Currently (and probably in the future) there is no recovery method.
     * When crashed, restore config.yaml at www owner's '~/simple-health-log/' directory.
