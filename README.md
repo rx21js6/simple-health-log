@@ -1,8 +1,10 @@
 # simple-health-log
 
-2022-08-06
+2022-08-11
 
-* Displays Key/Iv (Admin only).
+* Security is enhanced(slightly).
+     * Email address, name is encrypted.
+     * Creates 'config.yaml' at www owner's(=service execution user) "~/simple-health-log/" directory. If home directory is '/nonexistent' or doesn't have "write" permission, can't launch. (Unix/Linux, except Windows OS)
 
 ## Summary
 
@@ -23,10 +25,17 @@ This app is recording only (below)..
 
 ## Preparations
 
+### Set www owner's home directory(2022-08-11～）
+
+* (Unix/Linux)When www owner's(=service execution user) is '/nonexistent', change the owner's home directory, for example by using the 'chsh' command.
+* Only when starting for the first time, '~/simple-health-log/config.yaml' is automatically created.
+    * **Important** Save backup file in case of crash. If config.yaml lost, Currently (and probably in the future) there is no recovery method.
+    * When crashed, restore config.yaml at www owner's '~/simple-health-log/' directory.
+
 ### PostgreSQL
 
 * Create user "healthlog". And create database.
-* Change '**〜' to appropriate password (set same value as gradle.properties).
+* Change '**～' to appropriate password (set same value as gradle.properties).
 * As needed, change 'postgresql.conf' and 'pg_hba.conf'.
 
 ```sql
