@@ -131,6 +131,10 @@ dependencies {
     // Flyway
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.0.1'
+
+    // Yaml
+    // https://mvnrepository.com/artifact/org.yaml/snakeyaml
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.30'
 }
 
 task replaceTokenTest {

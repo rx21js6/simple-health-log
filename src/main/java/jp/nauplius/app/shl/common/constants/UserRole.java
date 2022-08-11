@@ -1,7 +1,7 @@
 package jp.nauplius.app.shl.common.constants;
 
 public enum UserRole {
-    ADMIN(0), NORMAL(1);
+    ADMIN(0), NORMAL(1), RESTRICTED(2);
 
     private final int id;
 
@@ -13,4 +13,13 @@ public enum UserRole {
         return this.id;
     }
 
+    public static UserRole valueOf(int id) {
+        UserRole[] userRoles = UserRole.values();
+        for (UserRole userRole : userRoles) {
+            if (userRole.getInt() == id) {
+                return userRole;
+            }
+        }
+        return null;
+    }
 }

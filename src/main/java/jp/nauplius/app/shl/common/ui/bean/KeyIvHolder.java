@@ -14,4 +14,6 @@ public class KeyIvHolder implements Serializable {
     private byte[] keyBytes;
 
     private byte[] ivBytes;
+
+    private String salt;
 }

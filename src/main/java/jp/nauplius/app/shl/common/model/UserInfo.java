@@ -1,61 +1,78 @@
 package jp.nauplius.app.shl.common.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the user_info database table.
  *
  */
 @Entity
-@Table(name="user_info")
-@NamedQuery(name="UserInfo.findAll", query="SELECT u FROM UserInfo u")
+@Table(name = "user_info")
+@NamedQuery(name = "UserInfo.findAll", query = "SELECT u FROM UserInfo u")
 public class UserInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(name="USER_INFO_ID_GENERATOR", sequenceName="USER_INFO_ID_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USER_INFO_ID_GENERATOR")
+    @SequenceGenerator(name = "USER_INFO_ID_GENERATOR", sequenceName = "USER_INFO_ID_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_INFO_ID_GENERATOR")
     private Integer id;
 
-    @Column(name="created_by")
+    @Column(name = "created_by")
     private Integer createdBy;
 
-    @Column(name="created_date")
+    @Column(name = "created_date")
     private Timestamp createdDate;
 
     private Boolean deleted;
 
-    @Column(name="deleted_date")
+    @Column(name = "deleted_date")
     private Timestamp deletedDate;
 
-    @Column(name="encrypted_password")
+    @Column(name = "encrypted_password")
     private String encryptedPassword;
 
-    @Column(name="login_id")
+    @Column(name = "login_id")
     private String loginId;
 
-    @Column(name="mail_address")
+    @Column(name = "mail_address")
     private String mailAddress;
 
-    @Column(name="modified_by")
+    @Column(name = "modified_by")
     private Integer modifiedBy;
 
-    @Column(name="modified_date")
+    @Column(name = "modified_date")
     private Timestamp modifiedDate;
 
     private String name;
 
-    @Column(name="role_id")
+    @Column(name = "role_id")
     private Integer roleId;
 
     private Integer status;
 
+    @Column(name = "security_level")
+    private Integer securityLevel;
+
+    @Column(name = "encrypted_name")
+    private String encryptedName;
+
+    @Column(name = "encrypted_mail_address")
+    private String encryptedMailAddress;
+
     //bi-directional many-to-one association to PhysicalCondition
-    @OneToMany(mappedBy="userInfo")
+    @OneToMany(mappedBy = "userInfo")
     private List<PhysicalCondition> physicalConditions;
 
     public UserInfo() {
@@ -163,6 +180,30 @@ public class UserInfo implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getSecurityLevel() {
+        return securityLevel;
+    }
+
+    public void setSecurityLevel(Integer securityLevel) {
+        this.securityLevel = securityLevel;
+    }
+
+    public String getEncryptedName() {
+        return encryptedName;
+    }
+
+    public void setEncryptedName(String encryptedName) {
+        this.encryptedName = encryptedName;
+    }
+
+    public String getEncryptedMailAddress() {
+        return encryptedMailAddress;
+    }
+
+    public void setEncryptedMailAddress(String encryptedMailAddress) {
+        this.encryptedMailAddress = encryptedMailAddress;
     }
 
     public List<PhysicalCondition> getPhysicalConditions() {

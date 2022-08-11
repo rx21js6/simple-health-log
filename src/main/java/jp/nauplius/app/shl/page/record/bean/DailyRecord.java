@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class DailyRecord implements ConditionNoteSplitter {
     private UserInfo userInfo;
     private PhysicalCondition physicalCondition;
+    private String name;
 }
