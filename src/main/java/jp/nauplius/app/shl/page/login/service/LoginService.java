@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.slf4j.Logger;
 
+import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.model.UserToken;
@@ -72,6 +73,7 @@ public class LoginService extends AbstractService {
 
         byte[] keyBytes = this.keyIvHolder.getKeyBytes();
         byte[] ivBytes = this.keyIvHolder.getIvBytes();
+        String salt = this.keyIvHolder.getSalt();
 
         TypedQuery<UserInfo> query = this.entityManager.createQuery(
                 "SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId AND ui.deleted = cast('false' as boolean)",
@@ -86,31 +88,47 @@ public class LoginService extends AbstractService {
         String encryptedPassword = userInfo.getEncryptedPassword();
 
         String password = null;
-        boolean oldFormat = false;
-        try {
-            password = this.cipherUtil.decrypt(encryptedPassword, keyBytes, ivBytes);
-        } catch (SimpleHealthLogException e) {
-            // 旧型式でデコード
-            this.logger.warn("Cipher format is old. decrypt to new format.");
-            password = this.cipherUtil.decryptOld(encryptedPassword, keyBytes, ivBytes);
-            oldFormat = true;
-        }
 
-        if (!password.equals(loginForm.getPassword())) {
-            throw new SimpleHealthLogException(this.messageBundle.getString("login.login.msg.idPasswordInvalid"));
-        }
+        if (userInfo.getSecurityLevel() == SecurityLevel.LEVEL0.getInt()) {
+            // 旧型式
+            boolean oldFormat = false;
+            try {
+                password = this.cipherUtil.decrypt(userInfo, encryptedPassword, keyBytes, ivBytes, salt);
+            } catch (SimpleHealthLogException e) {
+                // 旧型式でデコード
+                this.logger.warn("Cipher format is old. decrypt to new format.");
+                password = this.cipherUtil.decryptOld(encryptedPassword, keyBytes, ivBytes);
+                oldFormat = true;
+            }
 
-        if (oldFormat) {
-            // 旧型式の場合は一旦新形式にエンコードしなおして保存
-            this.logger.warn("Cipher format is old. Changing to new format.");
-            UserInfo userInfoForUpdate = this.entityManager.find(UserInfo.class, userInfo.getId());
-            String encrypedPasswordNew = this.cipherUtil.encrypt(password, keyBytes, ivBytes);
-            userInfoForUpdate.setEncryptedPassword(encrypedPasswordNew);
-            userInfoForUpdate.setModifiedBy(userInfo.getId());
-            userInfoForUpdate.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
-            this.entityManager.merge(userInfoForUpdate);
-            this.entityManager.flush();
+            if (!password.equals(loginForm.getPassword())) {
+                throw new SimpleHealthLogException(this.messageBundle.getString("login.login.msg.idPasswordInvalid"));
+            }
 
+            if (oldFormat) {
+                // 旧型式の場合は一旦新形式にエンコードしなおして保存
+                this.logger.warn("Cipher format is old. Changing to new format.");
+                UserInfo userInfoForUpdate = this.entityManager.find(UserInfo.class, userInfo.getId());
+                String encrypedPasswordNew = this.cipherUtil.encrypt(userInfo, password, keyBytes, ivBytes, salt);
+                userInfoForUpdate.setEncryptedPassword(encrypedPasswordNew);
+                userInfoForUpdate.setModifiedBy(userInfo.getId());
+                userInfoForUpdate.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
+                this.entityManager.merge(userInfoForUpdate);
+                this.entityManager.flush();
+            }
+        } else {
+            // 新形式ででコード
+            try {
+                password = this.cipherUtil.decrypt(userInfo, encryptedPassword, keyBytes, ivBytes, salt);
+            } catch (SimpleHealthLogException e) {
+                // デコード失敗
+                throw new SimpleHealthLogException(this.messageBundle.getString("login.login.msg.idPasswordInvalid"));
+            }
+
+            // 比較
+            if (!StringUtils.equals(password, loginForm.getPassword())) {
+                throw new SimpleHealthLogException(this.messageBundle.getString("login.login.msg.idPasswordInvalid"));
+            }
         }
 
         // トークン登録
@@ -277,18 +295,23 @@ public class LoginService extends AbstractService {
                     this.messageBundle.getString("resetPassword.resetPassword.msg.invalidLoginInfo"));
         }
 
+        byte[] keyBytes = this.keyIvHolder.getKeyBytes();
+        byte[] ivBytes = this.keyIvHolder.getIvBytes();
+        String salt = this.keyIvHolder.getSalt();
+
         UserInfo userInfo = results.get(0);
-        if (!userInfo.getName().equals(name) || !userInfo.getMailAddress().equals(mailAddress)) {
-            throw new SimpleHealthLogException("ログイン情報が不正です。");
+        String plainMailAddress = this.cipherUtil.decrypt(userInfo, userInfo.getEncryptedMailAddress(), keyBytes,
+                ivBytes, salt);
+
+        if (!userInfo.getName().equals(name) || !StringUtils.equals(mailAddress, plainMailAddress)) {
+            throw new SimpleHealthLogException(
+                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.nameOrMailAddressUnmatch"));
         }
 
         // すべて一致したらパスワードをリセット
         String randomPassword = PasswordUtil.createRandomText(PasswordStrength.SIMPLE);
+        userInfo.setEncryptedPassword(this.cipherUtil.encrypt(userInfo, randomPassword, keyBytes, ivBytes, salt));
 
-        byte[] keyBytes = this.keyIvHolder.getKeyBytes();
-        byte[] ivBytes = this.keyIvHolder.getIvBytes();
-
-        userInfo.setEncryptedPassword(this.cipherUtil.encrypt(randomPassword, keyBytes, ivBytes));
         userInfo.setModifiedBy(userInfo.getId());
         userInfo.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
         this.entityManager.merge(userInfo);
@@ -317,5 +340,29 @@ public class LoginService extends AbstractService {
             this.entityManager.remove(expiredToken);
         }
 
+    }
+
+    /**
+     * ログイン中のユーザ名を表示
+     * @return
+     */
+    public String showLoggingUserName() {
+        String userName = StringUtils.EMPTY;
+
+        UserInfo userInfo = this.loginInfo.getUserInfo();
+        if (Objects.isNull(userInfo)) {
+            return userName;
+        }
+
+        if (userInfo.getSecurityLevel() == SecurityLevel.LEVEL0.getInt()) {
+            userName = userInfo.getName();
+        } else {
+            byte[] keyBytes = this.keyIvHolder.getKeyBytes();
+            byte[] ivBytes = this.keyIvHolder.getIvBytes();
+            String salt = this.keyIvHolder.getSalt();
+            userName = this.cipherUtil.decrypt(userInfo, userInfo.getEncryptedName(), keyBytes, ivBytes, salt);
+        }
+
+        return userName;
     }
 }

@@ -1,5 +1,8 @@
 package jp.nauplius.app.shl.common.converter;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -7,9 +10,10 @@ import javax.faces.convert.FacesConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import jp.nauplius.app.shl.common.constants.UserRole;
+
 @FacesConverter("userRoleIdConverter")
 public class UserRoleIdConverter implements Converter {
-
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         return null;
@@ -17,20 +21,24 @@ public class UserRoleIdConverter implements Converter {
 
     @Override
     public String getAsString(FacesContext conext, UIComponent component, Object value) {
+
+        ResourceBundle messageBundle = ResourceBundle.getBundle("i18n.messages", Locale.getDefault());
+
         String result = StringUtils.EMPTY;
         if (value instanceof Integer) {
-            switch ((Integer) value) {
-            case 0:
-                result = "管理者";
+            UserRole userRole = UserRole.valueOf((int) value);
+            switch (userRole) {
+            case ADMIN:
+                result = messageBundle.getString("contents.maint.user.label.admin");
                 break;
-            case 1:
-                result = "一般";
+            case NORMAL:
+                result = messageBundle.getString("contents.maint.user.label.normal");
                 break;
-            case 2:
-                result = "制限";
+            case RESTRICTED:
+                result = messageBundle.getString("contents.maint.user.label.restricted");
                 break;
             default:
-                result = "";
+                result = StringUtils.EMPTY;
                 break;
             }
 

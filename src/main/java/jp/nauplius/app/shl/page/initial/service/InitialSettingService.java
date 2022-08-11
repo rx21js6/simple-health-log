@@ -9,6 +9,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.transaction.RollbackException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import jp.nauplius.app.shl.common.exception.DatabaseException;
@@ -62,18 +63,33 @@ public class InitialSettingService implements Serializable {
         UserInfo loginUser = new UserInfo();
         // loginUser.setId(1); // serial型は不要
         loginUser.setLoginId(initialSettingForm.getLoginId());
-        loginUser.setName(initialSettingForm.getName());
-        loginUser.setMailAddress(initialSettingForm.getMailAddress().toLowerCase());
+        // loginUser.setName(initialSettingForm.getName());
+        // loginUser.setMailAddress(initialSettingForm.getMailAddress().toLowerCase());
+        loginUser.setName(StringUtils.EMPTY);
+        loginUser.setMailAddress(StringUtils.EMPTY);
         loginUser.setRoleId(0);
         loginUser.setDeleted(false);
         loginUser.setCreatedDate(timestamp);
         loginUser.setModifiedDate(timestamp);
-
-        // パスワード暗号化
-        String encryptedPassword = this.cipherUtil.encrypt(initialSettingForm.getPassword(),
-                this.keyIvHolderService.getKeyBytes(), this.keyIvHolderService.getIvBytes());
-        loginUser.setEncryptedPassword(encryptedPassword);
         this.em.persist(loginUser);
+        this.em.merge(loginUser);
+        this.em.flush();
+
+        // 暗号化項目
+        String encryptedName = this.cipherUtil.encrypt(loginUser, initialSettingForm.getName(),
+                this.keyIvHolderService.getKeyBytes(), this.keyIvHolderService.getIvBytes(),
+                this.keyIvHolderService.getSalt());
+        loginUser.setEncryptedName(encryptedName);
+
+        String encryptedMailAddress = this.cipherUtil.encrypt(loginUser, initialSettingForm.getMailAddress(),
+                this.keyIvHolderService.getKeyBytes(), this.keyIvHolderService.getIvBytes(),
+                this.keyIvHolderService.getSalt());
+        loginUser.setEncryptedMailAddress(encryptedMailAddress);
+
+        String encryptedPassword = this.cipherUtil.encrypt(loginUser, initialSettingForm.getPassword(),
+                this.keyIvHolderService.getKeyBytes(), this.keyIvHolderService.getIvBytes(),
+                this.keyIvHolderService.getSalt());
+        loginUser.setEncryptedPassword(encryptedPassword);
         this.em.merge(loginUser);
         this.em.flush();
 

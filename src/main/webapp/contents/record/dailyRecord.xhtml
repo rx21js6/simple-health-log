@@ -85,7 +85,7 @@
                         <ui:repeat var="record"
                             value="#{dailyRecordListModel.dailyRecords}">
                             <tr>
-                                <td><h:outputText value="#{record.userInfo.name}" /></td>
+                                <td><h:outputText value="#{record.name}" /></td>
                                 <td><h:outputText
                                         value="#{record.physicalCondition.awakeTime}"
                                         converter="timeConverter" /></td>

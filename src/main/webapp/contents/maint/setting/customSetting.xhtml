@@ -37,7 +37,7 @@
             <b:form id="cancelForm">
                 <b:row>
                     <b:row>
-                        <b:commandButton icon="pencil"
+                        <b:commandButton icon="heart-empty"
                             value="#{msg['record.dailyRecord.physicalCondition']}"
                             action="#{customSettingController.cancel()}">
                         </b:commandButton>
@@ -45,6 +45,29 @@
                 </b:row>
             </b:form>
         </b:container>
+
+        <ui:fragment rendered="#{loginInfo.userInfo.securityLevel lt 1}">
+            <b:container>
+                <b:form id="enhancementSecurityform">
+                    <b:row>
+                        <h3>
+                            <h:outputText
+                                value="#{msg['contents.maint.settings.cutomSetting.label.securityEnhancement']}" />
+                        </h3>
+                    </b:row>
+                    <b:row>
+                        <h:outputText
+                            value="#{msg['contents.maint.settings.cutomSetting.msg.performSecurityEnhancement']}" />
+                    </b:row>
+                    <b:row>
+                        <b:commandButton value="#{msg['common.label.run']}"
+                            look="primary" size="lg"
+                            action="#{customSettingController.performSecurityEnhancement()}">
+                        </b:commandButton>
+                    </b:row>
+                </b:form>
+            </b:container>
+        </ui:fragment>
 
         <ui:fragment rendered="#{loginInfo.userInfo.roleId == 0}">
             <b:container>

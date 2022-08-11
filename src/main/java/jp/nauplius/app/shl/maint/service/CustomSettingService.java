@@ -98,10 +98,12 @@ public class CustomSettingService extends AbstractService {
 
         byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
         byte[] ivBytes = this.keyIvHolderService.getIvBytes();
+        String salt = this.keyIvHolderService.getSalt();
 
         // 更新
-        String encryptedPassword = this.cipherUtil.encrypt(this.customSettingPasswordModel.getPassword(), keyBytes,
-                ivBytes);
+        String encryptedPassword = null;
+        encryptedPassword = this.cipherUtil.encrypt(userInfo, this.customSettingPasswordModel.getPassword(), keyBytes,
+                ivBytes, salt);
         userInfo.setEncryptedPassword(encryptedPassword);
         userInfo.setModifiedBy(this.loginInfo.getUserInfo().getId());
         userInfo.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));

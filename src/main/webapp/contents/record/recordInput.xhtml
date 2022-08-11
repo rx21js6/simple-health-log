@@ -41,7 +41,7 @@
                     value="#{msg['contents.record.recordInput.msg.notLoggedIn']}"
                     rendered="#{loginInfo.userInfo == null}" />
                 <h:outputText
-                    value="#{loginInfo.userInfo.name} #{msg['contents.record.recordInput.label.welcome']}"
+                    value="#{dailyRecordController.showLoggingUserName()} #{msg['contents.record.recordInput.label.welcome']}"
                     rendered="#{loginInfo.userInfo != null}" />
             </b:column>
         </b:row>
