@@ -8,6 +8,8 @@ import java.util.Objects;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
+
 import jp.nauplius.app.shl.common.exception.DatabaseException;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.KeyIv;
@@ -57,6 +59,7 @@ public class KeyIvHolderService extends AbstractService {
         return false;
     }
 
+    @Transactional
     public void registerKeyIv() {
         try {
             byte[] keyBytes = this.cipherUtil.createKey();
