@@ -1,10 +1,8 @@
 # simple-health-log
 
-2022-08-11
+2022-08-20
 
-* Security is enhanced(slightly).
-     * Email address, name is encrypted.
-     * Creates 'config.yml' at www owner's(=service execution user) "~/simple-health-log/" directory. If home directory is '/nonexistent' or doesn't have "write" permission, can't launch. (Unix/Linux, except Windows OS)
+* Fixed initializing bug.
 
 ## Summary
 
