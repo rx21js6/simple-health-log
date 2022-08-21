@@ -2,7 +2,15 @@
 
 2022-08-22
 
-* Fixed Setting Bug.
+* Added Dockerfile. [README-Docker.md](docker/README-Docker.md)
+
+---
+
+## Docker(2022-08-22～)
+
+* See [README-Docker.md](docker/README-Docker.md)
+
+---
 
 ## Summary
 
