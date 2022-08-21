@@ -13,6 +13,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
+import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.model.UserInfo;
@@ -70,7 +71,18 @@ public class CustomSettingService extends AbstractService {
         this.customSettingKeyIvModel.setKey(keyIv.getEncryptionKey());
         this.customSettingKeyIvModel.setIv(keyIv.getEncryptionIv());
 
-        this.customSettingMailAddressModel.setCurrentMailAddress(userInfo.getMailAddress());
+        if (userInfo.getSecurityLevel() == SecurityLevel.LEVEL1.getInt()) {
+            byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
+            byte[] ivBytes = this.keyIvHolderService.getIvBytes();
+            String salt = this.keyIvHolderService.getSalt();
+            String currentMailAddress = this.cipherUtil.decrypt(userInfo, userInfo.getEncryptedMailAddress(), keyBytes,
+                    ivBytes, salt);
+            this.customSettingMailAddressModel.setCurrentMailAddress(currentMailAddress);
+        } else {
+            this.customSettingMailAddressModel.setCurrentMailAddress(userInfo.getMailAddress());
+        }
+
+
         this.customSettingMailAddressModel.setMailAddress(StringUtils.EMPTY);
 
         this.customSettingPasswordModel.setPassword(StringUtils.EMPTY);
@@ -147,7 +159,17 @@ public class CustomSettingService extends AbstractService {
 
         // 更新
         String mailAddress = this.customSettingMailAddressModel.getMailAddress();
-        userInfo.setMailAddress(mailAddress);
+
+        if (userInfo.getSecurityLevel() == SecurityLevel.LEVEL1.getInt()) {
+            byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
+            byte[] ivBytes = this.keyIvHolderService.getIvBytes();
+            String salt = this.keyIvHolderService.getSalt();
+            String encryptedMailAddress = this.cipherUtil.encrypt(userInfo, mailAddress, keyBytes, ivBytes, salt);
+            userInfo.setEncryptedMailAddress(encryptedMailAddress);
+        } else {
+            userInfo.setMailAddress(mailAddress);
+        }
+
         userInfo.setModifiedBy(this.loginInfo.getUserInfo().getId());
         userInfo.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
         this.entityManager.merge(userInfo);
