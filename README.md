@@ -1,8 +1,8 @@
 # simple-health-log
 
-2022-08-20
+2022-08-22
 
-* Fixed initializing bug.
+* Fixed Setting Bug.
 
 ## Summary
 
