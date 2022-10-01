@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:body>
+        <b:container>
+            <b:form id="notEntieredNoticeForm">
+                <b:row>
+                    <h3>
+                        <h:outputText
+                            value="#{msg['contents.maint.settings.cutomSetting.label.notEnteredNotice']}" />
+                    </h3>
+                </b:row>
+                <b:row>
+                    <h:outputText
+                        value="#{msg['contents.maint.settings.cutomSetting.msg.notEnteredNotice']}" />
+                </b:row>
+                <b:row>
+                    <ui:repeat var="selection"
+                        value="#{notEnteredNoticeFormModel.notEnteredNoticeSelections}">
+                        <b:selectBooleanCheckbox value="#{selection.checked}"
+                            caption="#{msg[selection.messageId]}" />
+                    </ui:repeat>
+                </b:row>
+
+                <b:row>
+                    <b:commandButton value="#{msg['common.label.change']}"
+                        look="primary" size="lg"
+                        action="#{notEnteredNoticeController.update()}">
+                    </b:commandButton>
+                </b:row>
+            </b:form>
+        </b:container>
+    </h:body>
+</f:view>
+</html>
