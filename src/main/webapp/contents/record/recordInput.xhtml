@@ -49,8 +49,8 @@
         <b:form inline="true">
             <b:row rendered="#{loginInfo.userInfo != null}">
                 <b:column>
-                    <b:commandButton action="#{loginController.logout()}">
-                        <h:outputText value="#{msg['common.label.screen.logout']}" />
+                    <b:commandButton action="#{loginController.logout()}"
+                        icon="log-out" value="#{msg['common.label.screen.logout']}">
                     </b:commandButton>
                 </b:column>
             </b:row>
@@ -75,8 +75,8 @@
                     </b:column>
                     <b:column>
                         <b:commandButton value="#{msg['common.button.login']}"
-                            action="#{dailyRecordController.login()}" look="primary"
-                            size="lg" />
+                            action="#{dailyRecordController.login()}" icon="log-in"
+                            look="primary" size="lg" />
                     </b:column>
                 </b:row>
             </b:form>
@@ -84,7 +84,7 @@
                 <b:row>
                     <b:column>
                         <b:commandButton value="#{msg['login.forgottenPassword']}"
-                            action="#{passwordResetController.showPage()}" />
+                            action="#{passwordResetController.showPage()}" icon-awesome="question-circle-o" />
                     </b:column>
                 </b:row>
             </b:form>
