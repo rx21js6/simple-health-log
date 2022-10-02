@@ -23,6 +23,9 @@ import jp.nauplius.app.shl.maint.backing.NotEnteredNoticeFormModel;
 import jp.nauplius.app.shl.maint.bean.NotEnteredNoticeSelection;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
+/**
+ * 前日未入力時通知設定サービス
+ */
 @Named
 @SessionScoped
 public class NotEnteredNoticeService extends AbstractService {
@@ -34,7 +37,9 @@ public class NotEnteredNoticeService extends AbstractService {
 
     @Inject
     private NotEnteredNoticeFormModel notEnteredNoticeFormModel;
-
+    /**
+     * 初期設定
+     */
     public void init() {
         this.logger.info("init() start");
 
@@ -43,7 +48,6 @@ public class NotEnteredNoticeService extends AbstractService {
 
         TypedQuery<NotEnteredNotice> query = this.entityManager
                 .createQuery("SELECT n FROM NotEnteredNotice n ORDER BY n.id", NotEnteredNotice.class);
-
         List<NotEnteredNotice> notEnteredNotices = query.getResultList();
 
         for (NotEnteredNotice notEnteredNotice : notEnteredNotices) {
@@ -59,6 +63,24 @@ public class NotEnteredNoticeService extends AbstractService {
         this.logger.info("init() complete");
     }
 
+    /**
+     * 「有効」状態の未入力通知設定情報情報を取得
+     * @return 有効な判定情報
+     */
+    public List<NotEnteredNotice> findActivatedNotEnteredNotices() {
+        this.logger.info("findNotEnteredNotices() start");
+
+        TypedQuery<NotEnteredNotice> query = this.entityManager
+                .createQuery("SELECT n FROM NotEnteredNotice n WHERE n.checked = true ORDER BY n.id", NotEnteredNotice.class);
+        List<NotEnteredNotice> notEnteredNotices = query.getResultList();
+
+        this.logger.info("findNotEnteredNotices() complete");
+        return notEnteredNotices;
+    }
+
+    /**
+     * 更新
+     */
     @Transactional
     public void update() {
         this.logger.info("update() start");
@@ -66,7 +88,8 @@ public class NotEnteredNoticeService extends AbstractService {
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
         for (NotEnteredNoticeSelection selection : this.notEnteredNoticeFormModel.getNotEnteredNoticeSelections()) {
 
-            this.logger.debug(String.format("selection: typeKey: %s / checked: %b", selection.getTypeKey(), selection.isChecked()));
+            this.logger.debug(String.format("selection: typeKey: %s / checked: %b", selection.getTypeKey(),
+                    selection.isChecked()));
 
             TypedQuery<NotEnteredNotice> query = this.entityManager
                     .createQuery("SELECT n FROM NotEnteredNotice n where n.typeKey = :typeKey", NotEnteredNotice.class);
