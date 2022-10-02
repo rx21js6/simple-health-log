@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -18,14 +20,17 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import jp.nauplius.app.shl.common.constants.NotEnteredNoticeTypeKey;
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.model.NotEnteredNotice;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.ui.backing.CommonConfirmModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalControllerListener;
 import jp.nauplius.app.shl.common.ui.bean.CommonConfirmModalBean;
+import jp.nauplius.app.shl.maint.service.NotEnteredNoticeService;
 import jp.nauplius.app.shl.page.login.bean.LoginFormModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.login.bean.LoginResponse;
@@ -63,6 +68,9 @@ public class DailyRecordController implements Serializable, ModalControllerListe
 
     @Inject
     private CookieService cookieService;
+
+    @Inject
+    private NotEnteredNoticeService notEnteredNoticeService;
 
     @Inject
     private LoginInfo loginInfo;
@@ -161,7 +169,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     public void loadRecord() {
         this.logger.info("DailyRecordController#loadRecord");
         this.dailyRecordService.loadRecord(this.today);
-        this.setMessage();
+        this.setMessages();
     }
 
     /**
@@ -212,7 +220,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
         this.dailyRecordInputModel.reset();
         this.today = this.today.minusDays(1);
         this.dailyRecordService.loadRecord(this.today);
-        this.setMessage();
+        this.setMessages();
         return null;
     }
 
@@ -225,7 +233,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     public String load() {
         this.dailyRecordInputModel.reset();
         this.dailyRecordService.loadRecord(this.today);
-        this.setMessage();
+        this.setMessages();
         return null;
     }
 
@@ -245,7 +253,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
         this.dailyRecordInputModel.reset();
         this.today = LocalDate.now();
         this.dailyRecordService.loadRecord(this.today);
-        this.setMessage();
+        this.setMessages();
         return null;
     }
 
@@ -265,7 +273,7 @@ public class DailyRecordController implements Serializable, ModalControllerListe
         this.dailyRecordInputModel.reset();
         this.today = this.today.plusDays(1);
         this.dailyRecordService.loadRecord(this.today);
-        this.setMessage();
+        this.setMessages();
         return null;
     }
 
@@ -331,33 +339,90 @@ public class DailyRecordController implements Serializable, ModalControllerListe
     /**
      * メッセージを設定
      */
-    private void setMessage() {
+    private void setMessages() {
         this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
         PhysicalCondition previousPysicalCondition = this.dailyRecordInputModel.getPreviousPhysicalCondition();
-        if (Objects.isNull(previousPysicalCondition.getBedTime())) {
-            // 前日の就寝時刻未記入
-            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.record.recordInput.msg.prevBedTimeNotEntered"), null));
-        }
 
-        BigDecimal temperature = previousPysicalCondition.getBodyTemperatureEvening();
-        if (Objects.isNull(temperature)) {
-            // 前日の体温未記入
-            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.record.recordInput.msg.prevTemparetureNotEntered"), null));
-        } else {
-            // 前日夜の体温
-            String message = MessageFormat.format(
-                    this.messageBundle.getString("contents.record.recordInput.msg.prevTemperature"), temperature);
-
-            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, message, null));
+        if (Objects.nonNull(previousPysicalCondition)) {
+            BigDecimal temperature = previousPysicalCondition.getBodyTemperatureEvening();
+            if (Objects.nonNull(temperature)) {
+                // 前日夜の体温
+                String message = MessageFormat.format(
+                        this.messageBundle.getString("contents.record.recordInput.msg.prevTemperature"), temperature);
+                this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, message, null));
+            }
         }
 
         // セキュリティ警告
         if (this.loginInfo.getUserInfo().getSecurityLevel() < SecurityLevel.LEVEL1.getInt()) {
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.securityLevelWarning"), null));
+                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.securityLevelWarning"),
+                    null));
+        }
+
+        // 当日表示時の場合に前日の入力状態をチェック
+        if (LocalDate.now().equals(this.today)) {
+            this.checkPreviousDaysRecordEntered();
+        }
+    }
+
+    /**
+     * 前日の情報が未記入の場合にメッセージを表示する。
+     */
+    private void checkPreviousDaysRecordEntered() {
+        PhysicalCondition previousPysicalCondition = this.dailyRecordInputModel.getPreviousPhysicalCondition();
+
+        List<NotEnteredNotice> notEnteredNotices = this.notEnteredNoticeService.findActivatedNotEnteredNotices();
+
+        List<String> messages = new ArrayList<>();
+
+        // 未入力項目の判定
+        for (NotEnteredNotice notEnteredNotice : notEnteredNotices) {
+            boolean empty = false;
+
+            if (notEnteredNotice.isChecked()) {
+                if (Objects.isNull(previousPysicalCondition)) {
+                    messages.add(this.messageBundle.getString(notEnteredNotice.getMessageId()));
+                    empty = true;
+                } else {
+                    switch (NotEnteredNoticeTypeKey.valueOf(notEnteredNotice.getTypeKey())) {
+                        case AWAKE_TIME:
+                            empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
+                            break;
+                        case BED_TIME:
+                            empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
+                            break;
+                        case TEMP_MORNING:
+                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
+                            break;
+                        case TEMP_EVENING:
+                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
+                            break;
+                        case OX_SAT_MORNING:
+                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning()) ? true : false;
+                            break;
+                        case OX_SAT_EVENING:
+                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening()) ? true : false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            }
+
+            if (empty) {
+                messages.add(this.messageBundle.getString(notEnteredNotice.getMessageId()));
+            }
+        }
+
+        if (0 < messages.size()) {
+            // メッセージを設定
+            String notEnteredParam = String.join(" / ", messages);
+            String message = MessageFormat.format(
+                    this.messageBundle.getString("contents.record.recordInput.msg.prevNotEntered"), notEnteredParam);
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, message, null));
         }
     }
 
