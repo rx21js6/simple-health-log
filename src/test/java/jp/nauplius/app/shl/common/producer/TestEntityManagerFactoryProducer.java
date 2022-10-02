@@ -2,7 +2,6 @@ package jp.nauplius.app.shl.common.producer;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -18,18 +17,17 @@ import jp.nauplius.app.shl.common.constants.ShlConstants;
 
 @Named
 @Alternative
-@ApplicationScoped
 public class TestEntityManagerFactoryProducer implements Serializable {
-	@Inject
-	private Logger logger;
-	
+    @Inject
+    private Logger logger;
+
     @PersistenceUnit
     private EntityManagerFactory factory;
 
     @Produces
     public EntityManagerFactory getEntityManagerFactory() {
         this.logger.debug(String.format("getEntityManager: %s", ShlConstants.PERSISTENCE_UNIT_NAME_TEST));
-        
+
         if (factory == null) {
             factory = Persistence.createEntityManagerFactory(ShlConstants.PERSISTENCE_UNIT_NAME_TEST);
         }
@@ -42,4 +40,16 @@ public class TestEntityManagerFactoryProducer implements Serializable {
         return em;
     }
 
+    @Produces
+    @InitializationQualifier
+    public EntityManager getInitialQualifier() {
+        if (factory == null) {
+            factory = Persistence.createEntityManagerFactory(ShlConstants.PERSISTENCE_UNIT_NAME_TEST);
+        }
+
+        EntityManager entityManager = this.factory.createEntityManager();
+        this.logger.debug(String.format("getInitialQualifier: entityManager: %s", entityManager));
+
+        return entityManager;
+    }
 }

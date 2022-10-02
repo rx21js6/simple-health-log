@@ -11,6 +11,7 @@
                 value="#{msg['contents.maint.settings.cutomSetting.label.title']}" /></title>
         <f:metadata>
             <f:viewAction action="#{customSettingController.init()}" />
+            <f:viewAction action="#{notEnteredNoticeController.init()}" />
         </f:metadata>
         <meta charset="UTF-8" />
     </h:head>
@@ -60,8 +61,8 @@
                             value="#{msg['contents.maint.settings.cutomSetting.msg.performSecurityEnhancement']}" />
                     </b:row>
                     <b:row>
-                        <b:commandButton value="#{msg['common.label.run']}"
-                            look="primary" size="lg"
+                        <b:commandButton value="#{msg['common.label.run']}" look="primary"
+                            size="lg"
                             action="#{customSettingController.performSecurityEnhancement()}">
                         </b:commandButton>
                     </b:row>
@@ -159,6 +160,11 @@
                 </b:row>
             </b:form>
         </b:container>
+        <ui:fragment rendered="#{loginInfo.userInfo.roleId == 0}">
+            <ui:insert>
+                <ui:include src="/contents/common/notEnteredNotice.jsf" />
+            </ui:insert>
+        </ui:fragment>
         <b:container>
             <b:row></b:row>
         </b:container>

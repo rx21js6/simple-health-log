@@ -1,6 +1,7 @@
 # Docker
 
-2022-08-22
+* Created at 2022-08-22
+* Updated at 2022-10-02
 
 ## Using
 
@@ -32,6 +33,8 @@ Default language is 'en' (maybe...😅). To set default language as 'ja', uncomm
 
 * Change '\*\*\*\*\*\*\*\*\*\*' to appropriate password.
 * To use remote DB server, Run this SQL at the remote manually.
+    * **Important** Highly recommended to use remote DB.
+(When setting is reasonably, DB migration can be executed automatically by Flyway.)
 
 ### gradle.properties
 
@@ -121,4 +124,5 @@ http://hostname:8080/simple-health-log
 ## Upgrading
 
 * T.B.D.
+
 

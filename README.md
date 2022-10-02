@@ -1,8 +1,10 @@
 # simple-health-log
 
-2022-08-22
+(Pardon my broken English.😅)
 
-* Added Dockerfile. [README-Docker.md](docker/README-Docker.md)
+Updated at 2022-10-02
+
+* Shows notification message when previous day's record not entered. (Notification content can be changed on the setting screen.)
 
 ---
 
@@ -102,3 +104,6 @@ Run `gradle war` and deploy war.
 ## License
 
 MIT
+
+©2022 nauplius.jp
+

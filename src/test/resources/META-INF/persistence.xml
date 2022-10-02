@@ -6,6 +6,7 @@
         <!-- Converters -->
         <class>jp.nauplius.app.shl.common.model.converters.LocalDateAttributeConverter</class>
         <class>jp.nauplius.app.shl.common.model.KeyIv</class>
+        <class>jp.nauplius.app.shl.common.model.NotEnteredNotice</class>
         <class>jp.nauplius.app.shl.common.model.PhysicalCondition</class>
         <class>jp.nauplius.app.shl.common.model.PhysicalConditionPK</class>
         <class>jp.nauplius.app.shl.common.model.UserInfo</class>
