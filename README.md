@@ -5,7 +5,7 @@
 Updated at 2022-10-02
 
 * Shows notification message when previous day's record not entered. (Notification content can be changed on the setting screen.)
-* Addes some icons.😄
+* Added some icons.😄
 
 ---
 
