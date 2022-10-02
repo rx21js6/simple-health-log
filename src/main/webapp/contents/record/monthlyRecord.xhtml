@@ -22,6 +22,7 @@
 .monthly_record_today {
     color: #0000AA;
     font-weight: bold;
+    background-color: PaleGreen;
 }
 </style>
 </h:head>
@@ -102,34 +103,35 @@
                             </tr>
                         </thead>
                     </f:facet>
-                    <b:dataTableColumn>
+                    <b:dataTableColumn
+                        styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <h:outputText value="#{record.dateText}"
-                            converter="stringDateConverter"
-                            styleClass="#{record.isToday() ? 'monthly_record_today' : ''}" />
+                            converter="stringDateConverter" />
                     </b:dataTableColumn>
-                    <b:dataTableColumn>
+                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <h:outputText value="#{record.physicalCondition.awakeTime}"
                             converter="timeConverter" />
                     </b:dataTableColumn>
-                    <b:dataTableColumn>
+                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <h:outputText value="#{record.physicalCondition.bedTime}"
                             converter="timeConverter" />
                     </b:dataTableColumn>
-                    <b:dataTableColumn
+                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
                         value="#{record.physicalCondition.bodyTemperatureMorning}" />
-                    <b:dataTableColumn
+                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
                         value="#{record.physicalCondition.bodyTemperatureEvening}" />
-                    <b:dataTableColumn
+                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
                         value="#{record.physicalCondition.oxygenSaturationMorning}" />
-                    <b:dataTableColumn
+                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
                         value="#{record.physicalCondition.oxygenSaturationEvening}" />
-                    <b:dataTableColumn>
+                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <ui:repeat var="conditionNote"
                             value="#{record.splitConditionNote()}">
-                            <h:outputText value="#{conditionNote}"></h:outputText><br />
+                            <h:outputText value="#{conditionNote}"></h:outputText>
+                            <br />
                         </ui:repeat>
                     </b:dataTableColumn>
-                    <b:dataTableColumn>
+                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <b:commandButton
                             value="#{msg['contents.record.monthlyRecord.label.input']}"
                             icon="edit" look="#{record.isToday() ? 'primary' : ''}"
