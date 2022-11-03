@@ -1,8 +1,11 @@
 package jp.nauplius.app.shl.user.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -21,6 +24,7 @@ import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.service.AbstractServiceTest;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.user.bean.MaintUserInfo;
+import jp.nauplius.app.shl.user.bean.UserInfoListItem;
 
 @RunWith(CdiRunner.class)
 @ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
@@ -86,4 +90,48 @@ public class UserServiceTest extends AbstractServiceTest {
         // });
     }
 
+    @Test
+    public void testRegister() {
+
+    }
+
+    @Test
+    public void testUpdate() {
+
+    }
+
+    @Test
+    public void testLoadMaintUserInfos() {
+        UserInfo adminUserInfo = new UserInfo();
+        adminUserInfo.setId(1);
+        this.loginInfo.setUserInfo(adminUserInfo);
+
+        this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
+
+        List<UserInfoListItem> userInfos = this.userService.loadMaintUserInfos();
+        assertEquals(2, userInfos.size());
+
+    }
+
+    @Test
+    public void testCreateNewData() {
+
+    }
+
+    @Test
+    public void testGetMaintUsernfo() {
+
+    }
+
+    @Test
+    public void testPerformSecurityEnhancement() {
+        UserInfo adminUserInfo = new UserInfo();
+        adminUserInfo.setId(1);
+        adminUserInfo.setLoginId("admin");
+        this.loginInfo.setUserInfo(adminUserInfo);
+
+        this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
+
+        this.userService.performSecurityEnhancement();
+    }
 }
