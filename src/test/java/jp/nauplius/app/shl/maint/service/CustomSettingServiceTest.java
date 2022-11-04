@@ -100,7 +100,7 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         UserInfo userInfo = new UserInfo();
         userInfo.setId(2);
         userInfo.setMailAddress(null);
-        userInfo.setEncryptedPassword("lOMRTqtxn8qcIp/9j+k9l3Ruu8E0W/aRH/sAKui0Vps=");
+        userInfo.setEncryptedPassword("dCpslkAK/OHhhhnWw7JvcFE0lL+hj4sMNql5IHtm8vg=");
         this.loginInfo.setUserInfo(userInfo);
 
         String password = "ABCDabcd_1234";

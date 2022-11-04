@@ -24,13 +24,15 @@ import org.junit.runner.RunWith;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
+import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.service.AbstractServiceTest;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class })
+@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class })
 public class LoginFilterTest extends AbstractServiceTest {
     @Inject
     private LoginFilter loginFilter;
@@ -140,7 +142,6 @@ public class LoginFilterTest extends AbstractServiceTest {
         assertTrue(location.endsWith("recordInput.xhtml"));
 
     }
-
 
     /**
      * ログイン済み、一般、不許可ページ

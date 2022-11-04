@@ -49,9 +49,6 @@
       <value><![CDATA[2021-05-31 21:56:12.487]]></value>
       <null/>
       <value><![CDATA[2021-05-31 21:56:12.487]]></value>
-      <value>0</value>
-      <value></value>
-      <value></value>
     </row>
     <row>
       <value>2</value>
@@ -67,9 +64,6 @@
       <value><![CDATA[2021-05-31 21:56:12.487]]></value>
       <null/>
       <value><![CDATA[2021-05-31 21:56:12.487]]></value>
-      <value>0</value>
-      <value></value>
-      <value></value>
     </row>
   </table>
   <table name="user_token">
@@ -82,6 +76,76 @@
     <row>
       <value>2</value>
       <value>0cn4Zn3GIJCIE6D8oPtvnFbL6i5d6xGyk3uvO++ea5ui2LDm0ZUZykFwuSLJgOiWBL36GVEM+GKsnJjG1pyb6A==</value>
+    </row>
+  </table>
+  <table name="not_entered_notice">
+    <column>id</column>
+    <column>type_key</column>
+    <column>message_id</column>
+    <column>checked</column>
+    <column>created_by</column>
+    <column>created_date</column>
+    <column>modified_by</column>
+    <column>modified_date</column>
+    <row>
+      <value>1</value>
+      <value>AWAKE_TIME</value>
+      <value>contents.record.dailyRecord.label.awakeTime</value>
+      <value>true</value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+    </row>
+    <row>
+      <value>2</value>
+      <value>BED_TIME</value>
+      <value>contents.record.dailyRecord.label.bedTime</value>
+      <value>true</value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+    </row>
+    <row>
+      <value>3</value>
+      <value>TEMP_MORNING</value>
+      <value>contents.record.dailyRecord.label.tempMorning</value>
+      <value>true</value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+    </row>
+    <row>
+      <value>4</value>
+      <value>TEMP_EVENING</value>
+      <value>contents.record.dailyRecord.label.tempEvening</value>
+      <value>true</value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+    </row>
+    <row>
+      <value>5</value>
+      <value>OX_SAT_MORNING</value>
+      <value>contents.record.dailyRecord.label.oxSatMorning</value>
+      <value>true</value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+    </row>
+    <row>
+      <value>6</value>
+      <value>OX_SAT_EVENING</value>
+      <value>contents.record.dailyRecord.label.oxSatEvening</value>
+      <value>true</value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
+      <value>1</value>
+      <value><![CDATA[2022-11-03 15:38:43.35619]]></value>
     </row>
   </table>
 </dataset>

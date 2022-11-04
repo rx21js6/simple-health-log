@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
@@ -51,6 +52,10 @@ public class AbstractServiceTest {
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream(xmlFilePath);
             IDataSet dataSet = new XmlDataSet(inputStream);
 
+            // 空フィールドを許可
+            DatabaseConfig config = connection.getConfig();
+            config.setProperty(DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS, Boolean.TRUE);
+
             // クリーンインサート処理を実行
             DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
             initKeyIv(entityManager);
@@ -70,6 +75,7 @@ public class AbstractServiceTest {
         if (Objects.nonNull(keyIv)) {
             this.keyIvHolder.setKeyBytes(this.cipherUtil.base64StringToBytes(keyIv.getEncryptionKey()));
             this.keyIvHolder.setIvBytes(this.cipherUtil.base64StringToBytes(keyIv.getEncryptionIv()));
+            this.keyIvHolder.setSalt("abc123xyz");
         }
     }
 }
