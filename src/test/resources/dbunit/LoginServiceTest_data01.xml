@@ -32,10 +32,13 @@
     <column>created_date</column>
     <column>modified_by</column>
     <column>modified_date</column>
+    <column>security_level</column>
+    <column>encrypted_name</column>
+    <column>encrypted_mail_address</column>
     <row>
       <value>1</value>
       <value>admin</value>
-      <value>lOMRTqtxn8qcIp/9j+k9l3Ruu8E0W/aRH/sAKui0Vps=</value>
+      <value>dCpslkAK/OHhhhnWw7JvcFE0lL+hj4sMNql5IHtm8vg=</value>
       <value>管理者</value>
       <value>0</value>
       <value>admin_test@maybe.noexistant.nauplius.jp</value>
@@ -46,6 +49,9 @@
       <value><![CDATA[2021-05-31 21:56:12.487]]></value>
       <null/>
       <value><![CDATA[2021-05-31 21:56:12.487]]></value>
+      <value>0</value>
+      <value></value>
+      <value></value>
     </row>
   </table>
   <table name="user_token">
