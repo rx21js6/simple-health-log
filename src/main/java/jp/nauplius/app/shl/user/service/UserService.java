@@ -19,6 +19,7 @@ import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.interceptor.PermissionInterceptor;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.model.UserToken;
 import jp.nauplius.app.shl.common.service.AbstractService;
@@ -52,6 +53,7 @@ public class UserService extends AbstractService {
      *
      * @param userRegistration
      */
+    @PermissionInterceptor
     @Transactional
     public void register(MaintUserInfo maintUserInfo) {
 
@@ -118,6 +120,7 @@ public class UserService extends AbstractService {
      *
      * @param maintUserInfo 利用者情報
      */
+    @PermissionInterceptor
     @Transactional
     public void update(MaintUserInfo maintUserInfo) {
 
@@ -175,6 +178,7 @@ public class UserService extends AbstractService {
      *
      * @param maintUserInfo
      */
+    @PermissionInterceptor
     @Transactional
     public void delete(MaintUserInfo maintUserInfo) {
         // ユーザ存在チェック
@@ -219,6 +223,7 @@ public class UserService extends AbstractService {
      *
      * @return
      */
+    @PermissionInterceptor
     public List<UserInfoListItem> loadMaintUserInfos() {
         List<UserInfoListItem> results = new ArrayList<>();
 
@@ -254,8 +259,9 @@ public class UserService extends AbstractService {
     /**
      * 新規登録用情報生成
      *
-     * @return
+     * @return {@link MaintUserInfo}
      */
+    @PermissionInterceptor
     public MaintUserInfo createNewData() {
         MaintUserInfo maintUserInfo = new MaintUserInfo();
         maintUserInfo.setId(0);
@@ -271,6 +277,7 @@ public class UserService extends AbstractService {
      * @param id
      * @return {@link MaintUserInfo}
      */
+    @PermissionInterceptor
     public MaintUserInfo getMaintUsernfo(int id) {
         UserInfo userInfo = this.entityManager.find(UserInfo.class, id);
         if (userInfo == null) {
