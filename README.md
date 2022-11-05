@@ -2,14 +2,13 @@
 
 (Pardon my broken English.😅)
 
+Updated at 2022-11-05
+
+* Fixed some permission bugs.
+
 Updated at 2022-10-07
 
 * Improved setting screen slightly.
-
-Updated at 2022-10-02
-
-* Shows notification message when previous day's record not entered. (Notification content can be changed on the setting screen.)
-* Added some icons.😄
 
 ---
 
