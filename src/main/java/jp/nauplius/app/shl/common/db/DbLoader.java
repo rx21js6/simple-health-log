@@ -54,7 +54,7 @@ public class DbLoader {
                 transaction.rollback();
             }
             e.printStackTrace();
-            System.err.println("craete table failed.");
+            this.logger.error("craete table failed.");
             throw new RuntimeException(e);
         }
     }

@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -51,12 +50,6 @@ public class DailyRecordService extends AbstractService {
 
     @Inject
     private KeyIvHolder keyIvHolder;
-
-    @PostConstruct
-    public void init() {
-        // System.out.println("DailyRecordService#init() entityManager: " +
-        // this.entityManager);
-    }
 
     /**
      * 指定日と前日のレコードを取得
