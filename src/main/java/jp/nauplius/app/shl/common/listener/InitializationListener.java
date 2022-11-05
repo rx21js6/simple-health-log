@@ -51,7 +51,7 @@ public class InitializationListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        System.out.println("InitializationListener#contextDestroyed()");
+        this.logger.info("InitializationListener#contextDestroyed()");
     }
 
     private void checkDbInitialized() {

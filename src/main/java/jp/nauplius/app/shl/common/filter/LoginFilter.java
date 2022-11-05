@@ -58,12 +58,12 @@ public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        this.logger.info("doFilter");
+        this.logger.debug("doFilter");
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         String requestUri = httpServletRequest.getRequestURI();
-        this.logger.info("doFilter" + requestUri);
+        this.logger.debug("doFilter" + requestUri);
         String contextPath = httpServletRequest.getContextPath();
         String servletPath = httpServletRequest.getServletPath();
 

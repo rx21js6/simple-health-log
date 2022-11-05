@@ -32,7 +32,6 @@ public class CipherUtil implements Serializable {
     public static final String RANDOM_ALGORITHM;
     static {
         String OS_NAME = System.getProperty("os.name").toLowerCase();
-        // System.out.println(OS_NAME);
         if (OS_NAME.startsWith("windows")) {
             RANDOM_ALGORITHM = "Windows-PRNG";
         } else {
@@ -236,7 +235,7 @@ public class CipherUtil implements Serializable {
      * @param ivBytes
      * @return
      */
-    public  String decryptOld(String base64EncryptedText, byte[] keyBytes, byte[] ivBytes) {
+    public String decryptOld(String base64EncryptedText, byte[] keyBytes, byte[] ivBytes) {
         try {
             byte[] encryptedBytes = base64StringToBytes(base64EncryptedText);
 
