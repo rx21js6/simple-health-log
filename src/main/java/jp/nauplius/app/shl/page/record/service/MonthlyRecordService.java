@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.TypedQuery;
 
+import org.slf4j.Logger;
+
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.service.AbstractService;
@@ -20,6 +22,9 @@ import jp.nauplius.app.shl.page.record.bean.RecordHolder;
 @Named
 @SessionScoped
 public class MonthlyRecordService extends AbstractService {
+    @Inject
+    private Logger logger;
+
     @Inject
     private LoginInfo loginInfo;
 
@@ -47,7 +52,7 @@ public class MonthlyRecordService extends AbstractService {
             tmpRec.setToday(isToday);
             tmpRec.setDateText(date.format(ShlConstants.RECORDING_DATE_FORMATTER));
             monthlyRecordHolders.add(tmpRec);
-            System.out.println(tmpRec);
+            this.logger.debug(String.format("dateText: %s", tmpRec.getDateText()));
             date = date.plusDays(1);
         }
         LocalDate lastDate = date.plusDays(-1);

@@ -12,8 +12,8 @@
             <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="jp.nauplius.app.shl" level="debug" />
-    <root level="debug">
+    <logger name="jp.nauplius.app.shl" level="info" />
+    <root level="info">
         <appender-ref ref="FILE" />
         <appender-ref ref="STDOUT" />
     </root>

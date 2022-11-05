@@ -3,6 +3,8 @@ package jp.nauplius.app.shl.common.filter;
 import java.io.IOException;
 import java.util.Locale;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -15,17 +17,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jp.nauplius.app.shl.common.service.LocaleService;
 
 @WebFilter(urlPatterns = { "/*" })
+@Named
 public class LocaleFilter implements Filter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginFilter.class);
+    @Inject
+    private Logger logger;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        System.out.println("LocaleFilter#init");
+        this.logger.info("LocaleFilter#init");
     }
 
     @Override

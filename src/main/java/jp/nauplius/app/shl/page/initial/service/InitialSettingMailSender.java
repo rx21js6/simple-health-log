@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.Properties;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.Message;
 import javax.mail.Session;
@@ -12,12 +13,16 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.service.AbstractMailSender;
 import jp.nauplius.app.shl.page.initial.backing.InitialSettingForm;
 
 @Named
 public class InitialSettingMailSender extends AbstractMailSender {
+    @Inject
+    private Logger logger;
 
     /**
      * 初期設定メール送信

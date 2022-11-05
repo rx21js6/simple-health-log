@@ -5,6 +5,7 @@
 Updated at 2022-11-05
 
 * Fixed some permission bugs.
+* Log level changed 'debug' to 'info'.
 
 Updated at 2022-10-07
 
