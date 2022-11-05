@@ -17,6 +17,7 @@ import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.interceptor.PermissionInterceptor;
 import jp.nauplius.app.shl.common.model.NotEnteredNotice;
 import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.maint.backing.NotEnteredNoticeFormModel;
@@ -81,6 +82,7 @@ public class NotEnteredNoticeService extends AbstractService {
     /**
      * 更新
      */
+    @PermissionInterceptor
     @Transactional
     public void update() {
         this.logger.info("update() start");
