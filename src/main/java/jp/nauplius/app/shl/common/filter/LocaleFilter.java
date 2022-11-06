@@ -2,6 +2,7 @@ package jp.nauplius.app.shl.common.filter;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.service.LocaleService;
@@ -38,7 +40,11 @@ public class LocaleFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession httpSession = httpServletRequest.getSession(true);
         if (httpSession.getAttribute(LocaleService.SESSION_KEY) == null) {
-            Locale locale = new Locale(LocaleService.DEFAULT_LANG);
+            Locale locale = request.getLocale();
+            if (Objects.isNull(locale) || StringUtils.isEmpty(locale.getLanguage())) {
+                 locale = new Locale(LocaleService.DEFAULT_LANG);
+            }
+            httpServletResponse.setLocale(locale);
             httpSession.setAttribute(LocaleService.SESSION_KEY, locale);
         }
 

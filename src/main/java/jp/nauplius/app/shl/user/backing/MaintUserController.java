@@ -1,6 +1,5 @@
 package jp.nauplius.app.shl.user.backing;
 
-import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +31,7 @@ import lombok.Setter;
  */
 @Named
 @SessionScoped
-public class MaintUserController implements Serializable, ModalControllerListener {
+public class MaintUserController implements ModalControllerListener {
     @Inject
     private Logger logger;
 

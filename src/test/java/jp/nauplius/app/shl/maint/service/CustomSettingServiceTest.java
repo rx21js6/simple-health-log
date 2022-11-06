@@ -1,8 +1,8 @@
 package jp.nauplius.app.shl.maint.service;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 
@@ -11,6 +11,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetupTest;
+
 import org.hamcrest.CoreMatchers;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.CdiRunner;
@@ -18,9 +21,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.ServerSetupTest;
 
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
@@ -104,7 +104,7 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         this.loginInfo.setUserInfo(userInfo);
 
         String password = "ABCDabcd_1234";
-        String currentEncryptedPassword = this.loginInfo.getUserInfo().getEncryptedPassword();
+        // String currentEncryptedPassword = this.loginInfo.getUserInfo().getEncryptedPassword();
 
         this.customSettingPasswordModel.setPassword(password);
         this.customSettingService.changePassword();
