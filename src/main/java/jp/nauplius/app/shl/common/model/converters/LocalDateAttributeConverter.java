@@ -10,8 +10,6 @@ import javax.persistence.Converter;
 
 @Converter(autoApply = true)
 public class LocalDateAttributeConverter implements AttributeConverter<LocalDate, Date>, Serializable {
-    static final private String DATE_FORMAT = "yyyy-MM-dd";
-
     @Override
     public Date convertToDatabaseColumn(LocalDate localDate) {
         return localDate == null ? null : Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());

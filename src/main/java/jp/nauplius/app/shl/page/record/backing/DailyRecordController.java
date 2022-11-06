@@ -1,7 +1,6 @@
 
 package jp.nauplius.app.shl.page.record.backing;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -47,7 +46,7 @@ import lombok.Setter;
  */
 @ViewScoped
 @Named
-public class DailyRecordController implements Serializable, ModalControllerListener {
+public class DailyRecordController implements ModalControllerListener {
     @Inject
     private Logger logger;
 
