@@ -24,21 +24,21 @@ public class InitialSettingForm implements Serializable {
 
     @Getter
     @Setter
-    @NotEmpty(message = "入力してください。")
+    @NotEmpty(message = "{initialSetting.loginid.notEmpty}")
     @Size(min = 5, max = 10)
-    @Pattern(regexp = "~[a-z]+[a-z0-9_]+$", message = "英数小文字で入力してください。")
+    @Pattern(regexp = "~[a-z]+[a-z0-9_]+$", message = "{initialSetting.loginId.pattern}")
     private String loginId;
 
     @Getter
     @Setter
-    @NotEmpty(message = "入力してください。")
+    @NotEmpty(message = "{initialSetting.name.notEmpty}")
     @Size(max = 10)
     private String name;
 
     @Getter
     @Setter
     // @NotEmpty
-    @Email(regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", message = "Email: 形式が不正です。")
+    @Email(regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", message = "{initialSetting.mailAddress.email}")
     // @Pattern(regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
     // message = "This is not a valid email")
     private String mailAddress;
