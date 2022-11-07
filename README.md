@@ -2,14 +2,14 @@
 
 (Pardon my broken English.😅)
 
+Updated at 2022-11-07
+
+* Fixed bugs: Some messages are always displayed in Japanese even if the locale is set to 'en'.
+
 Updated at 2022-11-05
 
 * Fixed some permission bugs.
 * Log level changed 'debug' to 'info'.
-
-Updated at 2022-10-07
-
-* Improved setting screen slightly.
 
 ---
 
