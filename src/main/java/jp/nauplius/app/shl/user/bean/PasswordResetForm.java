@@ -10,12 +10,12 @@ import lombok.Data;
 @Data
 @Named
 public class PasswordResetForm implements Serializable {
-    @NotEmpty(message = "ログインIDを入力してください。")
+    @NotEmpty(message = "{passwordReset.loginId.notEmpty}")
     private String loginId;
 
-    @NotEmpty(message = "氏名を入力してください。")
+    @NotEmpty(message = "{passwordReset.name.notEmpty}")
     private String name;
 
-    @NotEmpty(message = "メールアドレスを入力してください。")
+    @NotEmpty(message = "{passwordReset.mailAddress.notEmpty}")
     private String mailAddress;
 }

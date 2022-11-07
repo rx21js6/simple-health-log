@@ -65,9 +65,11 @@
                             <b:inputText value="#{loginFormModel.loginForm.loginId}"
                                 label="#{msg['common.label.loginId']}" labelStyle="width:150px;"
                                 maxlength="10" />
+                            <b:message for="@previous" />
                             <b:inputSecret value="#{loginFormModel.loginForm.password}"
                                 label="#{msg['common.label.password']}"
                                 labelStyle="width:150px;" maxlength="32" />
+                            <b:message for="@previous" />
                             <b:selectBooleanCheckbox
                                 value="#{loginFormModel.loginForm.loggingPersistent}"
                                 label="#{msg['login.keepLoggedIn']}" labelStyle="width:150px;" />
@@ -84,7 +86,8 @@
                 <b:row>
                     <b:column>
                         <b:commandButton value="#{msg['login.forgottenPassword']}"
-                            action="#{passwordResetController.showPage()}" icon-awesome="question-circle-o" />
+                            action="#{passwordResetController.showPage()}"
+                            icon-awesome="question-circle-o" />
                     </b:column>
                 </b:row>
             </b:form>
