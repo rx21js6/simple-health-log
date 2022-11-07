@@ -89,8 +89,8 @@ public class InitialSettingMailSender extends AbstractMailSender {
             urlBuilder.append("/");
             String message2 = format2.format(new String[] { urlBuilder.toString() });
 
-            System.out.println(message1);
-            System.out.println(message2);
+            this.logger.debug(String.format("message1: %s", message1));
+            this.logger.debug(String.format("message2: %s", message2));
 
             mailMessageBuilder.append(message1);
             mailMessageBuilder.append("\n");
