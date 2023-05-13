@@ -1,8 +1,8 @@
 package jp.nauplius.app.shl.maint.service;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
@@ -10,9 +10,6 @@ import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
-
-import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.ServerSetupTest;
 
 import org.hamcrest.CoreMatchers;
 import org.jglue.cdiunit.ActivatedAlternatives;
@@ -22,6 +19,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetupTest;
+
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
@@ -29,6 +29,7 @@ import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.service.AbstractServiceTest;
 import jp.nauplius.app.shl.maint.backing.CustomSettingMailAddressModel;
 import jp.nauplius.app.shl.maint.backing.CustomSettingPasswordModel;
+import jp.nauplius.app.shl.maint.bean.TimeZoneInputModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @RunWith(CdiRunner.class)
@@ -46,6 +47,9 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
 
     @Inject
     private CustomSettingMailAddressModel customSettingMailAddressModel;
+
+    @Inject
+    private TimeZoneInputModel timeZoneInputModel;
 
     private GreenMail greenMail;
 
@@ -169,5 +173,29 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         assertThat(this.customSettingMailAddressModel.getCurrentMailAddress(), is(mailAddress));
 
     }
+
+    /**
+     * タイムゾーン変更
+     */
+    @Test
+    public void testChangeTimeZone() {
+        this.insertTestDataXml(this.customSettingService.getEntityManager(),
+                "dbunit/CustomSettingServiceTest_data01.xml");
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(2);
+        userInfo.setZoneId("UTC");
+        this.loginInfo.setUserInfo(userInfo);
+
+        final String ZONE_ID = "Asia/Tokyo";
+
+        this.timeZoneInputModel.setSelectedZoneId(ZONE_ID);
+        this.customSettingService.changeTimeZone();
+
+        // LoginInfoが更新されていること
+        assertEquals(ZONE_ID, this.loginInfo.getUserInfo().getZoneId());
+    }
+
+
 
 }
