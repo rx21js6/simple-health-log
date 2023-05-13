@@ -1,10 +1,12 @@
 package jp.nauplius.app.shl.page.record.service;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,7 +70,7 @@ public class MonthlyRecordServiceTest extends AbstractServiceTest {
 
         this.monthlyRecordService.loadMonthlyRecords();
 
-        LocalDate today = LocalDate.now();
+        LocalDate today = ZonedDateTime.now(ZoneId.systemDefault()).toLocalDate();
         assertThat(this.monthlyRecordModel.getToday(), is(today));
         assertNotNull(this.monthlyRecordModel.getMonthlyRecords());
         assertThat(this.monthlyRecordModel.getMonthlyRecords().size(), is(today.lengthOfMonth()));

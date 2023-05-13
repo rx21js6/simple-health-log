@@ -1,15 +1,13 @@
 package jp.nauplius.app.shl.user.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
@@ -110,12 +108,15 @@ public class UserServiceTest extends AbstractServiceTest {
         form.setPassword("123xyz");
         form.setPasswordRetype("123xyz");
         form.setNewData(true);
+        form.setZoneId(StringUtils.EMPTY);
 
         this.userService.register(form);
     }
 
     @Test
     public void testUpdate() {
+        final String NAME = "名称変更";
+        final String ZONE_ID = "Asia/Tokyo";
         UserInfo userInfo = new UserInfo();
         userInfo.setId(1);
         userInfo.setRoleId(UserRoleId.ADMIN.getInt());
@@ -124,12 +125,14 @@ public class UserServiceTest extends AbstractServiceTest {
         this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
 
         MaintUserInfo maintUserInfo = this.userService.getMaintUsernfo(2);
-        maintUserInfo.setName("名称変更");
+        maintUserInfo.setName(NAME);
+        maintUserInfo.setZoneId(ZONE_ID);
 
         this.userService.update(maintUserInfo);
 
         MaintUserInfo resultUserInfo = this.userService.getMaintUsernfo(2);
-        assertEquals("名称変更", resultUserInfo.getName());
+        assertEquals(NAME, resultUserInfo.getName());
+        assertEquals(ZONE_ID, resultUserInfo.getZoneId());
     }
 
     @Test

@@ -81,14 +81,24 @@
                         <b:selectOneMenu
                             disabled="#{maintUserController.selectedMaintUserInfo.id == loginInfo.userInfo.id}"
                             value="#{maintUserController.selectedMaintUserInfo.roleId}"
-                            label="#{msg['common.label.change']}" span="6" maxlength="100"
-                            converter="javax.faces.Integer">
+                            label="#{msg['common.label.roleType']}"
+                            span="6" maxlength="100" converter="javax.faces.Integer">
                             <f:selectItem
                                 itemLabel="#{msg['contents.maint.user.label.admin']}"
                                 itemValue="0" />
                             <f:selectItem
                                 itemLabel="#{msg['contents.maint.user.label.normal']}"
                                 itemValue="1" />
+                        </b:selectOneMenu>
+
+                        <!-- TimeZone -->
+                        <b:selectOneMenu value="#{maintUserController.selectedMaintUserInfo.zoneId}"
+                            label="#{msg['common.label.timeZoneSelection']}" span="6"
+                            maxlength="100">
+                            <f:selectItems
+                                value="#{maintUserController.timeZoneInfos}"
+                                var="timeZoneInfo" itemValue="#{timeZoneInfo.zoneId}"
+                                itemLabel="#{timeZoneInfo.zoneIdLabelText}" />
                         </b:selectOneMenu>
 
                         <b:commandButton action="#{maintUserController.register()}">

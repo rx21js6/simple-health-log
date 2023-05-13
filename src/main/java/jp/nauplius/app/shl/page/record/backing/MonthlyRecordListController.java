@@ -9,6 +9,7 @@ import javax.inject.Named;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.record.service.MonthlyRecordService;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,9 @@ import lombok.Setter;
 @Named
 @SessionScoped
 public class MonthlyRecordListController implements Serializable {
+    @Inject
+    private LoginInfo loginInfo;
+
     @Inject
     private MonthlyRecordService monthlyRecordService;
 
@@ -54,7 +58,7 @@ public class MonthlyRecordListController implements Serializable {
      * @return null
      */
     public String loadCurrentMonth() {
-        this.today = LocalDate.now();
+        this.today = this.loginInfo.getUsersLocalToday();
         this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
         this.monthlyRecordModel.setToday(this.today);
         this.monthlyRecordService.loadMonthlyRecords();
