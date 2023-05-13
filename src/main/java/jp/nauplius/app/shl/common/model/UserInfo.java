@@ -71,6 +71,9 @@ public class UserInfo implements Serializable {
     @Column(name = "encrypted_mail_address")
     private String encryptedMailAddress;
 
+    @Column(name = "zone_id")
+    private String zoneId;
+
     //bi-directional many-to-one association to PhysicalCondition
     @OneToMany(mappedBy = "userInfo")
     private List<PhysicalCondition> physicalConditions;
@@ -204,6 +207,14 @@ public class UserInfo implements Serializable {
 
     public void setEncryptedMailAddress(String encryptedMailAddress) {
         this.encryptedMailAddress = encryptedMailAddress;
+    }
+
+    public String getZoneId() {
+        return this.zoneId;
+    }
+
+    public void setZoneId(String zoneId) {
+        this.zoneId = zoneId;
     }
 
     public List<PhysicalCondition> getPhysicalConditions() {

@@ -19,10 +19,12 @@ import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
+import jp.nauplius.app.shl.common.service.TimeZoneHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.maint.backing.CustomSettingKeyIvModel;
 import jp.nauplius.app.shl.maint.backing.CustomSettingMailAddressModel;
 import jp.nauplius.app.shl.maint.backing.CustomSettingPasswordModel;
+import jp.nauplius.app.shl.maint.bean.TimeZoneInputModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import lombok.Getter;
 
@@ -42,6 +44,9 @@ public class CustomSettingService extends AbstractService {
     private KeyIvHolderService keyIvHolderService;
 
     @Inject
+    private TimeZoneHolderService timeZoneHolderService;
+
+    @Inject
     @Getter
     private CustomSettingPasswordModel customSettingPasswordModel;
 
@@ -53,6 +58,9 @@ public class CustomSettingService extends AbstractService {
 
     @Inject
     private CustomSettingKeyIvModel customSettingKeyIvModel;
+
+    @Inject
+    private TimeZoneInputModel timeZoneInputModel;
 
     /**
      * 情報ロード
@@ -82,12 +90,15 @@ public class CustomSettingService extends AbstractService {
             this.customSettingMailAddressModel.setCurrentMailAddress(userInfo.getMailAddress());
         }
 
-
         this.customSettingMailAddressModel.setMailAddress(StringUtils.EMPTY);
 
         this.customSettingPasswordModel.setPassword(StringUtils.EMPTY);
         this.customSettingPasswordModel.setPasswordReenter(StringUtils.EMPTY);
 
+        // タイムゾーン設定
+        this.loadTimeZone();
+
+        // メール送信できない場合警告を表示
         if (!this.customSettingMailSender.isActive()) {
             String message = MessageFormat.format(this.messageBundle.getString("common.msg.mailSendingDisabled"), id);
             throw new SimpleHealthLogException(message);
@@ -185,5 +196,33 @@ public class CustomSettingService extends AbstractService {
 
         this.customSettingMailAddressModel.setCurrentMailAddress(mailAddress);
         this.customSettingMailAddressModel.setMailAddress(StringUtils.EMPTY);
+    }
+
+    @Transactional
+    public void changeTimeZone() {
+        // ユーザ存在チェック
+        int id = this.loginInfo.getUserInfo().getId();
+        UserInfo userInfo = this.entityManager.find(UserInfo.class, id);
+        if (Objects.isNull(userInfo)) {
+            String message = MessageFormat
+                    .format(this.messageBundle.getString("contents.maint.user.userEditing.msg.userNotFound"), id);
+            throw new SimpleHealthLogException(message);
+        }
+
+        // 更新
+        userInfo.setZoneId(this.timeZoneInputModel.getSelectedZoneId());
+        userInfo.setModifiedBy(this.loginInfo.getUserInfo().getId());
+        userInfo.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
+        this.entityManager.merge(userInfo);
+        this.entityManager.flush();
+        this.entityManager.clear();
+
+        this.loginInfo.getUserInfo().setZoneId(this.timeZoneInputModel.getSelectedZoneId());
+
+    }
+
+    private void loadTimeZone() {
+        this.timeZoneInputModel.setTimeZoneInfos(this.timeZoneHolderService.getTimeZoneInfos());
+        this.timeZoneInputModel.setSelectedZoneId(this.loginInfo.getUserInfo().getZoneId());
     }
 }

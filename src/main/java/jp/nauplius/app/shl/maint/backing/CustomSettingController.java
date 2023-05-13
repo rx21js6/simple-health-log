@@ -145,4 +145,24 @@ public class CustomSettingController implements Serializable {
 
         return null;
     }
+
+    /**
+     * タイムゾーン変更
+     *
+     * @return null
+     */
+    public String changeTimeZone() {
+        try {
+            this.customSettingService.changeTimeZone();
+
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.timeZoneChanged"), null));
+
+        } catch (SimpleHealthLogException e) {
+
+            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, e.getMessage(), null));
+        }
+
+        return null;
+    }
 }

@@ -2,14 +2,10 @@
 
 (Pardon my broken English.😅)
 
-Updated at 2022-11-07
+Updated at 2023-05-13
 
-* Fixed bugs: Some messages are always displayed in Japanese even if the locale is set to 'en'.
-
-Updated at 2022-11-05
-
-* Fixed some permission bugs.
-* Log level changed 'debug' to 'info'.
+* Users can now specify their time zone.
+* Fixed some bugs.
 
 ---
 
