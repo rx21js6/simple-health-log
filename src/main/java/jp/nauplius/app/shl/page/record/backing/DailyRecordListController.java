@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
+import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.record.service.DailyRecordService;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,9 @@ import lombok.Setter;
 @Named
 @SessionScoped
 public class DailyRecordListController implements Serializable {
+    @Inject
+    private LoginInfo loginInfo;
+
     @Getter
     @Setter
     private LocalDate today;
@@ -39,7 +43,7 @@ public class DailyRecordListController implements Serializable {
      * @return null
      */
     public String loadToday() {
-        this.today = LocalDate.now();
+        this.today = this.loginInfo.getUsersLocalToday();
         this.dailyRecordService.loadDailyRecords(this.today);
         return null;
     }

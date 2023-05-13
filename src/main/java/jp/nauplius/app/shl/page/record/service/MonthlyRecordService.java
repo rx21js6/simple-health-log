@@ -38,13 +38,13 @@ public class MonthlyRecordService extends AbstractService {
 
         LocalDate localDate = this.monthlyRecordModel.getToday();
         if (Objects.isNull(localDate)) {
-            localDate = LocalDate.now();
+            localDate = this.loginInfo.getUsersLocalToday();
             this.monthlyRecordModel.setToday(localDate);
         }
 
         LocalDate date = LocalDate.of(localDate.getYear(), localDate.getMonth(), 1);
         LocalDate firstDate = date;
-        LocalDate today = LocalDate.now();
+        LocalDate today = this.loginInfo.getUsersLocalToday();
 
         while (localDate.getMonth().equals(date.getMonth())) {
             RecordHolder tmpRec = new RecordHolder();

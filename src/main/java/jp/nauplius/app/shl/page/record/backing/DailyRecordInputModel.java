@@ -75,13 +75,13 @@ public class DailyRecordInputModel implements Serializable {
     }
 
     /**
-     * 選択している日付をLocalDateに変換して返す。 未指定の場合はシステム日付を返す
+     * 選択している日付をLocalDateに変換して返す。 未指定の場合はnullを返す
      *
      * @return
      */
     public LocalDate parseSelectedDate() {
         if (StringUtils.isEmpty(this.selectedDate)) {
-            this.selectedDate = LocalDate.now().format(ShlConstants.RECORDING_DATE_FORMATTER);
+            return null;
         }
 
         return LocalDate.parse(this.selectedDate, ShlConstants.RECORDING_DATE_FORMATTER);

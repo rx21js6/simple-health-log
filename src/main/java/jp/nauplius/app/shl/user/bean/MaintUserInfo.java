@@ -36,4 +36,6 @@ public class MaintUserInfo implements Serializable {
     private boolean passwordChanged;
     private int roleId;
     private boolean newData;
+
+    private String zoneId;
 }

@@ -16,10 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.service.TimeZoneHolderService;
 import jp.nauplius.app.shl.common.ui.backing.CommonConfirmModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalControllerListener;
 import jp.nauplius.app.shl.common.ui.bean.CommonConfirmModalBean;
+import jp.nauplius.app.shl.common.ui.bean.TimeZoneInfo;
 import jp.nauplius.app.shl.user.bean.MaintUserInfo;
 import jp.nauplius.app.shl.user.bean.UserInfoListItem;
 import jp.nauplius.app.shl.user.service.UserService;
@@ -42,6 +44,9 @@ public class MaintUserController implements ModalControllerListener {
     private UserService userService;
 
     @Inject
+    private TimeZoneHolderService timeZoneHolderService;
+
+    @Inject
     private CommonConfirmModalController commonConfirmModalController;
 
     @Inject
@@ -54,6 +59,9 @@ public class MaintUserController implements ModalControllerListener {
     @Getter
     @Setter
     private int selectedId;
+
+    @Getter
+    private List<TimeZoneInfo> timeZoneInfos;
 
     @Getter
     @Setter
@@ -77,11 +85,13 @@ public class MaintUserController implements ModalControllerListener {
 
     public String newData() {
         this.selectedMaintUserInfo = this.userService.createNewData();
+        this.timeZoneInfos = this.timeZoneHolderService.getTimeZoneInfos();
         return "/contents/maint/user/userEditing.xhtml?faces-redirect=true";
     }
 
     public String editData() {
         this.selectedMaintUserInfo = this.userService.getMaintUsernfo(this.selectedId);
+        this.timeZoneInfos = this.timeZoneHolderService.getTimeZoneInfos();
         return "/contents/maint/user/userEditing.xhtml?faces-redirect=true";
     }
 

@@ -24,6 +24,7 @@
             </ui:fragment>
         </b:form>
 
+        <!-- title -->
         <b:container>
             <b:row>
                 <h2>
@@ -38,6 +39,7 @@
             </b:row>
         </b:container>
 
+        <!-- cancelForm -->
         <b:container>
             <b:form id="cancelForm">
                 <b:row>
@@ -51,6 +53,7 @@
             </b:form>
         </b:container>
 
+        <!-- enhancementSecurityform -->
         <ui:fragment rendered="#{loginInfo.userInfo.securityLevel lt 1}">
             <b:container>
                 <b:panel
@@ -78,6 +81,7 @@
             </b:container>
         </ui:fragment>
 
+        <!-- keyIvForm -->
         <ui:fragment rendered="#{loginInfo.userInfo.roleId == 0}">
             <b:container>
                 <b:panel title="Key/Iv" collapsible="false">
@@ -95,6 +99,7 @@
             </b:container>
         </ui:fragment>
 
+        <!-- passwordChangingForm -->
         <b:container>
             <b:panel
                 title="#{msg['contents.maint.settings.cutomSetting.label.passwordChanging']}"
@@ -122,6 +127,7 @@
             </b:panel>
         </b:container>
 
+        <!-- mailAddressChangingForm -->
         <b:container>
             <b:panel
                 title="#{msg['contents.maint.settings.cutomSetting.label.mailAddressChanging']}"
@@ -159,6 +165,38 @@
                 </b:form>
             </b:panel>
         </b:container>
+
+        <!-- timeZoneChangingForm -->
+        <b:container>
+            <b:panel
+                title="#{msg['contents.maint.settings.cutomSetting.label.timeZoneChanging']}"
+                collapsible="false">
+                <b:form id="timeZoneChangingForm">
+                    <b:row>
+                        <h:outputText value="#{timeZoneInputMpdel.timeZoneInfos.size()}" />
+                    </b:row>
+                    <b:row>
+                        <b:panelGrid columns="1" cellpadding="5">
+                            <b:selectOneMenu value="#{timeZoneInputModel.selectedZoneId}"
+                                label="#{msg['common.label.timeZoneSelection']}" span="6"
+                                maxlength="100">
+                                <f:selectItems value="#{timeZoneInputModel.timeZoneInfos}"
+                                    var="timeZoneInfo" itemValue="#{timeZoneInfo.zoneId}"
+                                    itemLabel="#{timeZoneInfo.zoneIdLabelText}" />
+                            </b:selectOneMenu>
+                            <b:message for="@previous" />
+
+                            <b:commandButton value="#{msg['common.label.change']}"
+                                look="primary" size="lg"
+                                action="#{customSettingController.changeTimeZone()}">
+                            </b:commandButton>
+                        </b:panelGrid>
+                    </b:row>
+                </b:form>
+            </b:panel>
+        </b:container>
+
+
         <ui:fragment rendered="#{loginInfo.userInfo.roleId == 0}">
             <ui:insert>
                 <ui:include src="/contents/common/notEnteredNotice.jsf" />

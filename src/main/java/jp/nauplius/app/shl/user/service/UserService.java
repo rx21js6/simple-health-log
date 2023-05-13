@@ -81,6 +81,7 @@ public class UserService extends AbstractService {
         userInfo.setName(StringUtils.EMPTY);
         userInfo.setMailAddress(StringUtils.EMPTY);
         userInfo.setRoleId(maintUserInfo.getRoleId());
+        userInfo.setZoneId(maintUserInfo.getZoneId());
         userInfo.setStatus(UserStatus.REGISTERED.getInt()); // いきなり本登録、本来は仮登録
         userInfo.setDeleted(false);
         userInfo.setCreatedBy(this.loginInfo.getUserInfo().getId());
@@ -146,6 +147,7 @@ public class UserService extends AbstractService {
         userInfo.setName(StringUtils.EMPTY);
         userInfo.setMailAddress(StringUtils.EMPTY);
         userInfo.setRoleId(maintUserInfo.getRoleId());
+        userInfo.setZoneId(maintUserInfo.getZoneId());
         userInfo.setSecurityLevel(SecurityLevel.LEVEL1.getInt()); // 固定
 
         LocalDateTime timestamp = LocalDateTime.now();
