@@ -126,6 +126,7 @@ public class LoginServiceTest extends AbstractServiceTest {
         this.insertTestDataXml(this.loginService.getEntityManager(), "dbunit/LoginServiceTest_data01.xml");
         UserInfo userInfo = this.loginService.loginFromToken(
                 "0cn4Zn3GIJCIE6D8oPtvnFbL6i5d6xGyk3uvO++ea5ui2LDm0ZUZykFwuSLJgOiWBL36GVEM+GKsnJjG1pyb6A==");
+        assertNotNull(userInfo);
         assertEquals("admin", userInfo.getLoginId());
     }
 
