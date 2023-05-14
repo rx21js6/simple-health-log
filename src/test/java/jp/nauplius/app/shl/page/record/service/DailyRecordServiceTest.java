@@ -35,8 +35,8 @@ import jp.nauplius.app.shl.page.record.bean.DailyRecordListModel;
  *
  */
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class DailyRecordServiceTest extends AbstractServiceTest {
     @Inject
     private DailyRecordService dailyRecordService;

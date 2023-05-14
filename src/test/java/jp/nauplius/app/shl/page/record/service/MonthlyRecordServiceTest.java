@@ -29,8 +29,8 @@ import jp.nauplius.app.shl.page.record.bean.MonthlyRecordModel;
 import jp.nauplius.app.shl.page.record.bean.RecordHolder;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class MonthlyRecordServiceTest extends AbstractServiceTest {
     @Inject
     private MonthlyRecordService monthlyRecordService;

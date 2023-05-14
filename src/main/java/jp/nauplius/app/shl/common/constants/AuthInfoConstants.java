@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class AuthInfoConstants {
     /**
-     *  一般ユーザが遷移可能なページ
+     * 一般ユーザが遷移可能なページ
      */
     public static final List<String> USER_ACCESSIBLE_PAGES;
 
@@ -27,8 +27,7 @@ public class AuthInfoConstants {
                 // 月次表示
                 "/contents/record/monthlyRecord.xhtml",
                 // カスタム設定
-                "/contents/maint/setting/customSetting.xhtml",
-        };
+                "/contents/maint/setting/customSetting.xhtml",};
         USER_ACCESSIBLE_PAGES = Collections.unmodifiableList(Arrays.asList(tmpAccessiblePages));
     }
 }

@@ -129,8 +129,8 @@ public class MaintUserController implements ModalControllerListener {
 
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder.append(message);
-            List<String> messages = Arrays.asList(
-                    new String[] { messageBuilder.toString(), this.messageBundle.getString("common.msg.sure") });
+            List<String> messages = Arrays
+                    .asList(new String[]{messageBuilder.toString(), this.messageBundle.getString("common.msg.sure")});
             this.commonConfirmModalBean
                     .setTitle(this.messageBundle.getString("contents.maint.user.userList.label.userDeletion"));
             this.commonConfirmModalBean.setMessages(messages);

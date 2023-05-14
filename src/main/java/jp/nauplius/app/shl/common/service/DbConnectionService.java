@@ -19,7 +19,7 @@ public class DbConnectionService implements Serializable {
         GetUsersResponse response = new GetUsersResponse();
 
         // クエリの生成
-        TypedQuery<UserInfo> q = em.createQuery("SELECT ui FROM UserInfo ui",UserInfo.class);
+        TypedQuery<UserInfo> q = em.createQuery("SELECT ui FROM UserInfo ui", UserInfo.class);
 
         // 抽出
         response.setUserInfos(q.getResultList());

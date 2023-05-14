@@ -136,8 +136,11 @@ public class CustomSettingController implements Serializable {
         try {
             this.userService.performSecurityEnhancement();
 
-            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.performSecurityEnhancementCompleted"), null));
+            this.facesContext.addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            this.messageBundle.getString(
+                                    "contents.maint.settings.cutomSetting.msg.performSecurityEnhancementCompleted"),
+                            null));
 
         } catch (SimpleHealthLogException e) {
 

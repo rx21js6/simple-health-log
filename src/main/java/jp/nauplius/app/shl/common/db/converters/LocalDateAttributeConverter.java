@@ -17,9 +17,7 @@ public class LocalDateAttributeConverter implements AttributeConverter<LocalDate
 
     @Override
     public LocalDate convertToEntityAttribute(Date date) {
-        return date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
 }

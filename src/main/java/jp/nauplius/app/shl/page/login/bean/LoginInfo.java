@@ -26,6 +26,7 @@ public class LoginInfo implements Serializable {
 
     /**
      * ログインユーザの「当日」を返す。
+     * 
      * @return {@link LocalDate}
      */
     public LocalDate getUsersLocalToday() {

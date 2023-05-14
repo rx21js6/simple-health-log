@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.service.LocaleService;
 
-@WebFilter(urlPatterns = { "/*" })
+@WebFilter(urlPatterns = {"/*"})
 @Named
 public class LocaleFilter implements Filter {
     @Inject
@@ -44,7 +44,7 @@ public class LocaleFilter implements Filter {
         if (httpSession.getAttribute(LocaleService.SESSION_KEY) == null) {
             Locale locale = request.getLocale();
             if (Objects.isNull(locale) || StringUtils.isEmpty(locale.getLanguage())) {
-                 locale = new Locale(LocaleService.DEFAULT_LANG);
+                locale = new Locale(LocaleService.DEFAULT_LANG);
             }
             httpServletResponse.setLocale(locale);
             httpSession.setAttribute(LocaleService.SESSION_KEY, locale);

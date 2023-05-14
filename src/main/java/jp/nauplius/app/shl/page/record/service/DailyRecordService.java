@@ -108,7 +108,8 @@ public class DailyRecordService extends AbstractService {
     /**
      * 有効な利用者の指定日データ取得
      *
-     * @param date 指定日
+     * @param date
+     *            指定日
      * @return
      */
     public List<DailyRecord> loadDailyRecords(LocalDate date) {

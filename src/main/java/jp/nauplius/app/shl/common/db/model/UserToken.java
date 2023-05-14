@@ -4,51 +4,50 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-
 /**
  * The persistent class for the user_token database table.
  * 
  */
 @Entity
-@Table(name="user_token")
-@NamedQuery(name="UserToken.findAll", query="SELECT u FROM UserToken u")
+@Table(name = "user_token")
+@NamedQuery(name = "UserToken.findAll", query = "SELECT u FROM UserToken u")
 public class UserToken implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-	@Column(name="expiration_date")
-	private Timestamp expirationDate;
+    @Column(name = "expiration_date")
+    private Timestamp expirationDate;
 
-	private String token;
+    private String token;
 
-	public UserToken() {
-	}
+    public UserToken() {
+    }
 
-	public Integer getId() {
-		return this.id;
-	}
+    public Integer getId() {
+        return this.id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Timestamp getExpirationDate() {
-		return this.expirationDate;
-	}
+    public Timestamp getExpirationDate() {
+        return this.expirationDate;
+    }
 
-	public void setExpirationDate(Timestamp expirationDate) {
-		this.expirationDate = expirationDate;
-	}
+    public void setExpirationDate(Timestamp expirationDate) {
+        this.expirationDate = expirationDate;
+    }
 
-	public String getToken() {
-		return this.token;
-	}
+    public String getToken() {
+        return this.token;
+    }
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+    public void setToken(String token) {
+        this.token = token;
+    }
 
 }

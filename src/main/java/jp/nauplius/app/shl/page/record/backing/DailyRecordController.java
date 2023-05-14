@@ -164,6 +164,7 @@ public class DailyRecordController implements ModalControllerListener {
 
     /**
      * ログイン中のユーザ名を表示
+     * 
      * @return
      */
     public String showLoggingUserName() {
@@ -394,26 +395,30 @@ public class DailyRecordController implements ModalControllerListener {
                     empty = true;
                 } else {
                     switch (NotEnteredNoticeTypeKey.valueOf(notEnteredNotice.getTypeKey())) {
-                    case AWAKE_TIME:
-                        empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
-                        break;
-                    case BED_TIME:
-                        empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
-                        break;
-                    case TEMP_MORNING:
-                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
-                        break;
-                    case TEMP_EVENING:
-                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
-                        break;
-                    case OX_SAT_MORNING:
-                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning()) ? true : false;
-                        break;
-                    case OX_SAT_EVENING:
-                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening()) ? true : false;
-                        break;
-                    default:
-                        break;
+                        case AWAKE_TIME :
+                            empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
+                            break;
+                        case BED_TIME :
+                            empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
+                            break;
+                        case TEMP_MORNING :
+                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
+                            break;
+                        case TEMP_EVENING :
+                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
+                            break;
+                        case OX_SAT_MORNING :
+                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning())
+                                    ? true
+                                    : false;
+                            break;
+                        case OX_SAT_EVENING :
+                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening())
+                                    ? true
+                                    : false;
+                            break;
+                        default :
+                            break;
                     }
                 }
 

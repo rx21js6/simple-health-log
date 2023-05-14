@@ -149,8 +149,10 @@ public class LoginService extends AbstractService {
      */
     public void logout() {
         this.logger.info("#logout()");
-        this.logger.info(String.format("logout: %s", (Objects.isNull(this.loginInfo.getUserInfo()) ? "UNKNOWN ID"
-                : this.loginInfo.getUserInfo().getLoginId())));
+        this.logger.info(String.format("logout: %s",
+                (Objects.isNull(this.loginInfo.getUserInfo())
+                        ? "UNKNOWN ID"
+                        : this.loginInfo.getUserInfo().getLoginId())));
         // セッション削除
         this.loginInfo.setUserInfo(null);
     }
@@ -218,8 +220,10 @@ public class LoginService extends AbstractService {
     /**
      * トークン生成、更新
      *
-     * @param userInfo    ユーザ情報
-     * @param tokenUpdate トークンを更新する場合はtrue
+     * @param userInfo
+     *            ユーザ情報
+     * @param tokenUpdate
+     *            トークンを更新する場合はtrue
      * @return
      */
     @Transactional
@@ -278,7 +282,8 @@ public class LoginService extends AbstractService {
     /**
      * パスワード初期化
      *
-     * @param passwordResetForm 初期化情報
+     * @param passwordResetForm
+     *            初期化情報
      */
     @Transactional
     public void resetPassword(PasswordResetForm passwordResetForm) {
@@ -350,6 +355,7 @@ public class LoginService extends AbstractService {
 
     /**
      * ログイン中のユーザ名を表示
+     * 
      * @return
      */
     public String showLoggingUserName() {

@@ -47,7 +47,6 @@ public class EntityManagerProducer implements Serializable {
         return entityManager;
     }
 
-
     protected void closeEntityManager(@Disposes EntityManager entityManager) {
         this.logger.debug(String.format("EntityManager closeing: %s", entityManager));
         if (entityManager.isOpen()) {

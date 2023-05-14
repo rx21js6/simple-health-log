@@ -31,8 +31,8 @@ import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class LoginFilterTest extends AbstractServiceTest {
     @Inject
     private LoginFilter loginFilter;
@@ -205,6 +205,7 @@ public class LoginFilterTest extends AbstractServiceTest {
 
     /**
      * ダミーのFilterChain生成
+     * 
      * @return
      */
     private FilterChain createDummyFilterChain() {

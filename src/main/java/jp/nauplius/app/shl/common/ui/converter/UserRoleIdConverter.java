@@ -37,18 +37,18 @@ public class UserRoleIdConverter implements Converter {
         if (value instanceof Integer) {
             UserRole userRole = UserRole.valueOf((int) value);
             switch (userRole) {
-            case ADMIN:
-                result = messageBundle.getString("contents.maint.user.role.label.admin");
-                break;
-            case USER:
-                result = messageBundle.getString("contents.maint.user.role.label.user");
-                break;
-            case RESTRICTED:
-                result = messageBundle.getString("contents.maint.user.role.label.restricted");
-                break;
-            default:
-                result = StringUtils.EMPTY;
-                break;
+                case ADMIN :
+                    result = messageBundle.getString("contents.maint.user.role.label.admin");
+                    break;
+                case USER :
+                    result = messageBundle.getString("contents.maint.user.role.label.user");
+                    break;
+                case RESTRICTED :
+                    result = messageBundle.getString("contents.maint.user.role.label.restricted");
+                    break;
+                default :
+                    result = StringUtils.EMPTY;
+                    break;
             }
 
         }

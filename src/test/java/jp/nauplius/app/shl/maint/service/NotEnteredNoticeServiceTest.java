@@ -29,8 +29,8 @@ import jp.nauplius.app.shl.maint.bean.NotEnteredNoticeSelection;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class NotEnteredNoticeServiceTest extends AbstractServiceTest {
     @Inject
     private LoginInfo loginInfo;

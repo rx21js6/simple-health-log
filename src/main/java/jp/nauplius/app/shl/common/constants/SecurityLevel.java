@@ -2,6 +2,7 @@ package jp.nauplius.app.shl.common.constants;
 
 /**
  * セキュリティレベル
+ * 
  * @author developer
  *
  */

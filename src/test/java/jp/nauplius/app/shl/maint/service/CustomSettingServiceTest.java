@@ -33,8 +33,8 @@ import jp.nauplius.app.shl.maint.bean.TimeZoneInputModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class CustomSettingServiceTest extends AbstractServiceTest {
     @Inject
     private LoginInfo loginInfo;
@@ -108,13 +108,15 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         this.loginInfo.setUserInfo(userInfo);
 
         String password = "ABCDabcd_1234";
-        // String currentEncryptedPassword = this.loginInfo.getUserInfo().getEncryptedPassword();
+        // String currentEncryptedPassword =
+        // this.loginInfo.getUserInfo().getEncryptedPassword();
 
         this.customSettingPasswordModel.setPassword(password);
         this.customSettingService.changePassword();
 
         // LoginInfoが更新されていること
-        // assertNotEquals(currentEncryptedPassword, this.loginInfo.getUserInfo().getEncryptedPassword());
+        // assertNotEquals(currentEncryptedPassword,
+        // this.loginInfo.getUserInfo().getEncryptedPassword());
     }
 
     /**
@@ -195,7 +197,5 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         // LoginInfoが更新されていること
         assertEquals(ZONE_ID, this.loginInfo.getUserInfo().getZoneId());
     }
-
-
 
 }

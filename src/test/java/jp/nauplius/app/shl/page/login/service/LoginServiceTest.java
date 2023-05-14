@@ -29,8 +29,8 @@ import jp.nauplius.app.shl.ws.bean.GetUsersResponse;
  *
  */
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class LoginServiceTest extends AbstractServiceTest {
     @Inject
     private LoginService loginService;

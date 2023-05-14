@@ -119,7 +119,8 @@ public class UserService extends AbstractService {
     /**
      * 更新
      *
-     * @param maintUserInfo 利用者情報
+     * @param maintUserInfo
+     *            利用者情報
      */
     @PermissionInterceptor
     @Transactional
@@ -276,6 +277,7 @@ public class UserService extends AbstractService {
 
     /**
      * ユーザ管理画面用の情報を取得
+     * 
      * @param id
      * @return {@link MaintUserInfo}
      */
@@ -353,8 +355,7 @@ public class UserService extends AbstractService {
         // 強化処理
         userInfo.setSecurityLevel(SecurityLevel.LEVEL1.getInt());
 
-        String encryptedPassword = this.cipherUtil.encrypt(userInfo, plainPassword, keyBytes, ivBytes,
-                salt);
+        String encryptedPassword = this.cipherUtil.encrypt(userInfo, plainPassword, keyBytes, ivBytes, salt);
         userInfo.setEncryptedPassword(encryptedPassword);
 
         String encryptedName = this.cipherUtil.encrypt(userInfo, userInfo.getName(), keyBytes, ivBytes, salt);

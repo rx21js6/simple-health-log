@@ -15,7 +15,7 @@ import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class})
 public class DbLoaderTest {
     @Inject
     private DbLoader dbLoader;

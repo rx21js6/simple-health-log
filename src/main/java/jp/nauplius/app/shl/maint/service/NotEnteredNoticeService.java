@@ -66,13 +66,14 @@ public class NotEnteredNoticeService extends AbstractService {
 
     /**
      * 「有効」状態の未入力通知設定情報情報を取得
+     * 
      * @return 有効な判定情報
      */
     public List<NotEnteredNotice> findActivatedNotEnteredNotices() {
         this.logger.info("#findNotEnteredNotices() begin");
 
-        TypedQuery<NotEnteredNotice> query = this.entityManager
-                .createQuery("SELECT n FROM NotEnteredNotice n WHERE n.checked = true ORDER BY n.id", NotEnteredNotice.class);
+        TypedQuery<NotEnteredNotice> query = this.entityManager.createQuery(
+                "SELECT n FROM NotEnteredNotice n WHERE n.checked = true ORDER BY n.id", NotEnteredNotice.class);
         List<NotEnteredNotice> notEnteredNotices = query.getResultList();
 
         this.logger.info("#findNotEnteredNotices() complete");
