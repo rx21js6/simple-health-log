@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 /**
  * The persistent class for the user_token database table.
- * 
+ *
  */
 @Entity
 @Table(name = "user_token")

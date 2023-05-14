@@ -59,7 +59,7 @@ public class CookieService implements Serializable {
 
     /**
      * 認証用トークン取得
-     * 
+     *
      * @param context
      * @return
      */

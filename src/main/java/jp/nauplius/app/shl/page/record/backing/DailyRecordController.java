@@ -164,7 +164,7 @@ public class DailyRecordController implements ModalControllerListener {
 
     /**
      * ログイン中のユーザ名を表示
-     * 
+     *
      * @return
      */
     public String showLoggingUserName() {

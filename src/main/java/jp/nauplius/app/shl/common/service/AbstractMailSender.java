@@ -96,7 +96,7 @@ public abstract class AbstractMailSender implements Serializable {
 
     /**
      * Sender文字列取得
-     * 
+     *
      * @return Sender文字列
      * @throws UnknownHostException
      */

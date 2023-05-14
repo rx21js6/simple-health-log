@@ -277,7 +277,7 @@ public class UserService extends AbstractService {
 
     /**
      * ユーザ管理画面用の情報を取得
-     * 
+     *
      * @param id
      * @return {@link MaintUserInfo}
      */

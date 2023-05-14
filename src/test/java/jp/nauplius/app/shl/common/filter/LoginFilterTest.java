@@ -205,7 +205,7 @@ public class LoginFilterTest extends AbstractServiceTest {
 
     /**
      * ダミーのFilterChain生成
-     * 
+     *
      * @return
      */
     private FilterChain createDummyFilterChain() {

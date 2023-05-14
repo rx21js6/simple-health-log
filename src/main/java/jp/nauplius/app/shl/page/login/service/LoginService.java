@@ -355,7 +355,7 @@ public class LoginService extends AbstractService {
 
     /**
      * ログイン中のユーザ名を表示
-     * 
+     *
      * @return
      */
     public String showLoggingUserName() {

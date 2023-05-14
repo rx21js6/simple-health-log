@@ -66,7 +66,7 @@ public class NotEnteredNoticeService extends AbstractService {
 
     /**
      * 「有効」状態の未入力通知設定情報情報を取得
-     * 
+     *
      * @return 有効な判定情報
      */
     public List<NotEnteredNotice> findActivatedNotEnteredNotices() {

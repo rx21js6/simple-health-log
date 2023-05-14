@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 /**
  * The primary key class for the physical_condition database table.
- * 
+ *
  */
 @Embeddable
 public class PhysicalConditionPK implements Serializable {
