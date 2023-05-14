@@ -26,11 +26,15 @@ public class TestEntityManagerFactoryProducer implements Serializable {
 
     @Produces
     public EntityManagerFactory getEntityManagerFactory() {
+        this.logger.debug("#getEntityManagerFactory() begin");
         this.logger.debug(String.format("getEntityManager: %s", ShlConstants.PERSISTENCE_UNIT_NAME_TEST));
 
         if (factory == null) {
             factory = Persistence.createEntityManagerFactory(ShlConstants.PERSISTENCE_UNIT_NAME_TEST);
         }
+
+        this.logger.debug(String.format("factory: %s", factory));
+        this.logger.debug("#getEntityManagerFactory() complete");
         return factory;
     }
 
@@ -43,13 +47,16 @@ public class TestEntityManagerFactoryProducer implements Serializable {
     @Produces
     @InitializationQualifier
     public EntityManager getInitialQualifier() {
+        this.logger.debug("#getInitialQualifier() begin");
+
         if (factory == null) {
             factory = Persistence.createEntityManagerFactory(ShlConstants.PERSISTENCE_UNIT_NAME_TEST);
         }
 
         EntityManager entityManager = this.factory.createEntityManager();
-        this.logger.debug(String.format("getInitialQualifier: entityManager: %s", entityManager));
 
+        this.logger.debug(String.format("entityManager: %s", entityManager));
+        this.logger.debug("#getInitialQualifier() complete");
         return entityManager;
     }
 }

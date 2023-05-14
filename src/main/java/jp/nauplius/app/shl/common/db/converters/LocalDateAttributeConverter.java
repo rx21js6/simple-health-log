@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.common.model.converters;
+package jp.nauplius.app.shl.common.db.converters;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,9 +17,7 @@ public class LocalDateAttributeConverter implements AttributeConverter<LocalDate
 
     @Override
     public LocalDate convertToEntityAttribute(Date date) {
-        return date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
 }

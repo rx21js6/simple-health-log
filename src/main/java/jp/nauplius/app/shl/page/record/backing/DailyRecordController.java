@@ -22,10 +22,10 @@ import org.slf4j.Logger;
 import jp.nauplius.app.shl.common.constants.NotEnteredNoticeTypeKey;
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.constants.ShlConstants;
+import jp.nauplius.app.shl.common.db.model.NotEnteredNotice;
+import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.NotEnteredNotice;
-import jp.nauplius.app.shl.common.model.PhysicalCondition;
-import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.ui.backing.CommonConfirmModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalControllerListener;
@@ -36,6 +36,8 @@ import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.login.bean.LoginResponse;
 import jp.nauplius.app.shl.page.login.service.CookieService;
 import jp.nauplius.app.shl.page.login.service.LoginService;
+import jp.nauplius.app.shl.page.record.bean.DailyRecordInputModel;
+import jp.nauplius.app.shl.page.record.bean.MonthlyRecordModel;
 import jp.nauplius.app.shl.page.record.service.DailyRecordService;
 import jp.nauplius.app.shl.page.record.service.MonthlyRecordService;
 import lombok.Getter;
@@ -105,7 +107,7 @@ public class DailyRecordController implements ModalControllerListener {
     }
 
     public void init() {
-        this.logger.info("DailyRecordController#init");
+        this.logger.info("#init() begin");
 
         this.initModal();
 
@@ -129,7 +131,7 @@ public class DailyRecordController implements ModalControllerListener {
             this.load();
         }
 
-        this.logger.info("DailyRecordController#init complete");
+        this.logger.info("#init() complete");
     }
 
     /**
@@ -138,7 +140,8 @@ public class DailyRecordController implements ModalControllerListener {
      * @return null
      */
     public String login() {
-        this.logger.info("login");
+        this.logger.info("#login() begin");
+
         if (Objects.isNull(this.loginInfo.getUserInfo())) {
             try {
                 LoginResponse loginResponse = this.loginService.login(this.loginFormModel.getLoginForm());
@@ -154,11 +157,14 @@ public class DailyRecordController implements ModalControllerListener {
                         this.messageBundle.getString("login.msg.failed") + e.getMessage(), null));
             }
         }
+
+        this.logger.info("#login() complete");
         return null;
     }
 
     /**
      * ログイン中のユーザ名を表示
+     * 
      * @return
      */
     public String showLoggingUserName() {
@@ -169,7 +175,7 @@ public class DailyRecordController implements ModalControllerListener {
      * レコード取得
      */
     public void loadRecord() {
-        this.logger.info("DailyRecordController#loadRecord");
+        this.logger.info("#loadRecord()");
         this.dailyRecordService.loadRecord(this.today);
         this.setMessages();
     }
@@ -389,26 +395,30 @@ public class DailyRecordController implements ModalControllerListener {
                     empty = true;
                 } else {
                     switch (NotEnteredNoticeTypeKey.valueOf(notEnteredNotice.getTypeKey())) {
-                    case AWAKE_TIME:
-                        empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
-                        break;
-                    case BED_TIME:
-                        empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
-                        break;
-                    case TEMP_MORNING:
-                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
-                        break;
-                    case TEMP_EVENING:
-                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
-                        break;
-                    case OX_SAT_MORNING:
-                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning()) ? true : false;
-                        break;
-                    case OX_SAT_EVENING:
-                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening()) ? true : false;
-                        break;
-                    default:
-                        break;
+                        case AWAKE_TIME :
+                            empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
+                            break;
+                        case BED_TIME :
+                            empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
+                            break;
+                        case TEMP_MORNING :
+                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
+                            break;
+                        case TEMP_EVENING :
+                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
+                            break;
+                        case OX_SAT_MORNING :
+                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning())
+                                    ? true
+                                    : false;
+                            break;
+                        case OX_SAT_EVENING :
+                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening())
+                                    ? true
+                                    : false;
+                            break;
+                        default :
+                            break;
                     }
                 }
 
@@ -430,7 +440,7 @@ public class DailyRecordController implements ModalControllerListener {
 
     @Override
     public void initModal() {
-        this.logger.debug("initModal");
+        this.logger.debug("#initModal()");
         this.commonConfirmModalBean.setVisible(false);
         this.commonConfirmModalBean.setMessage(StringUtils.EMPTY);
         this.commonConfirmModalController.setModalControllerListener(this);

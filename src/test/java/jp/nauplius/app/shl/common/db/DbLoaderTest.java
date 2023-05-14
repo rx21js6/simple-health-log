@@ -9,12 +9,13 @@ import org.jglue.cdiunit.CdiRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import jp.nauplius.app.shl.common.model.KeyIv;
+import jp.nauplius.app.shl.common.db.loader.DbLoader;
+import jp.nauplius.app.shl.common.db.model.KeyIv;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class})
 public class DbLoaderTest {
     @Inject
     private DbLoader dbLoader;

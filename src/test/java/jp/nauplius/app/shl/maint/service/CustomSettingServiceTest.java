@@ -22,19 +22,19 @@ import org.junit.runner.RunWith;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
-import jp.nauplius.app.shl.common.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.service.AbstractServiceTest;
-import jp.nauplius.app.shl.maint.backing.CustomSettingMailAddressModel;
-import jp.nauplius.app.shl.maint.backing.CustomSettingPasswordModel;
+import jp.nauplius.app.shl.maint.bean.CustomSettingMailAddressModel;
+import jp.nauplius.app.shl.maint.bean.CustomSettingPasswordModel;
 import jp.nauplius.app.shl.maint.bean.TimeZoneInputModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class CustomSettingServiceTest extends AbstractServiceTest {
     @Inject
     private LoginInfo loginInfo;
@@ -108,13 +108,15 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         this.loginInfo.setUserInfo(userInfo);
 
         String password = "ABCDabcd_1234";
-        // String currentEncryptedPassword = this.loginInfo.getUserInfo().getEncryptedPassword();
+        // String currentEncryptedPassword =
+        // this.loginInfo.getUserInfo().getEncryptedPassword();
 
         this.customSettingPasswordModel.setPassword(password);
         this.customSettingService.changePassword();
 
         // LoginInfoが更新されていること
-        // assertNotEquals(currentEncryptedPassword, this.loginInfo.getUserInfo().getEncryptedPassword());
+        // assertNotEquals(currentEncryptedPassword,
+        // this.loginInfo.getUserInfo().getEncryptedPassword());
     }
 
     /**
@@ -195,7 +197,5 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         // LoginInfoが更新されていること
         assertEquals(ZONE_ID, this.loginInfo.getUserInfo().getZoneId());
     }
-
-
 
 }

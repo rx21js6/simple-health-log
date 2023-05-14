@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.page.record.backing;
+package jp.nauplius.app.shl.page.record.bean;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -13,8 +13,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
+import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.PhysicalCondition;
 import lombok.Getter;
 import lombok.Setter;
 

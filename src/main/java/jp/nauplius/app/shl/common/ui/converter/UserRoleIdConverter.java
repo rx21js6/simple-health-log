@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.common.converter;
+package jp.nauplius.app.shl.common.ui.converter;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -15,6 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import jp.nauplius.app.shl.common.constants.UserRole;
 import jp.nauplius.app.shl.common.service.LocaleService;
 
+/**
+ * 権限表示の変換
+ */
 @FacesConverter("userRoleIdConverter")
 public class UserRoleIdConverter implements Converter {
     @Override
@@ -34,18 +37,18 @@ public class UserRoleIdConverter implements Converter {
         if (value instanceof Integer) {
             UserRole userRole = UserRole.valueOf((int) value);
             switch (userRole) {
-            case ADMIN:
-                result = messageBundle.getString("contents.maint.user.label.admin");
-                break;
-            case NORMAL:
-                result = messageBundle.getString("contents.maint.user.label.normal");
-                break;
-            case RESTRICTED:
-                result = messageBundle.getString("contents.maint.user.label.restricted");
-                break;
-            default:
-                result = StringUtils.EMPTY;
-                break;
+                case ADMIN :
+                    result = messageBundle.getString("contents.maint.user.role.label.admin");
+                    break;
+                case USER :
+                    result = messageBundle.getString("contents.maint.user.role.label.user");
+                    break;
+                case RESTRICTED :
+                    result = messageBundle.getString("contents.maint.user.role.label.restricted");
+                    break;
+                default :
+                    result = StringUtils.EMPTY;
+                    break;
             }
 
         }

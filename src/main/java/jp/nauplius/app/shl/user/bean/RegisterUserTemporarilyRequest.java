@@ -13,7 +13,7 @@ import jp.nauplius.app.shl.user.constants.UserRoleId;
 import lombok.Data;
 
 @Data
-@GroupSequence({ RegisterUserTemporarilyRequest.class, FirstOrder.class, Default.class })
+@GroupSequence({RegisterUserTemporarilyRequest.class, FirstOrder.class, Default.class})
 public class RegisterUserTemporarilyRequest {
     @NotBlank(message = "{registerUserTemporarilyRequest.loginId.blank}", groups = FirstOrder.class)
     @Size(min = 4, max = 12)

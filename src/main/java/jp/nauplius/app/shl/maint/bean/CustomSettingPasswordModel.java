@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.maint.backing;
+package jp.nauplius.app.shl.maint.bean;
 
 import java.io.Serializable;
 

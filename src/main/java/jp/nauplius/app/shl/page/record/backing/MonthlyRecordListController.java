@@ -10,6 +10,7 @@ import javax.inject.Named;
 import org.apache.commons.collections.CollectionUtils;
 
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.record.bean.MonthlyRecordModel;
 import jp.nauplius.app.shl.page.record.service.MonthlyRecordService;
 import lombok.Getter;
 import lombok.Setter;

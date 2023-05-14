@@ -51,11 +51,11 @@ public class LoginController implements Serializable {
     private LoginInfo loginInfo;
 
     public void init() {
-        this.logger.info("init()");
+        this.logger.info("#init()");
     }
 
     public String dummy() {
-        this.logger.info("dummy()");
+        this.logger.info("#dummy()");
         return null;
     }
 
@@ -68,7 +68,7 @@ public class LoginController implements Serializable {
     }
 
     public String logout() {
-        this.logger.info("logout");
+        this.logger.info("#logout()");
         try {
             if (!Objects.isNull(this.loginInfo.getUserInfo())) {
                 this.loginService.logout();

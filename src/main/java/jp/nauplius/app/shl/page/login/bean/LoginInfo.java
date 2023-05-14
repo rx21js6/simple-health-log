@@ -11,7 +11,7 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
-import jp.nauplius.app.shl.common.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import lombok.Data;
 
 /**
@@ -26,6 +26,7 @@ public class LoginInfo implements Serializable {
 
     /**
      * ログインユーザの「当日」を返す。
+     * 
      * @return {@link LocalDate}
      */
     public LocalDate getUsersLocalToday() {

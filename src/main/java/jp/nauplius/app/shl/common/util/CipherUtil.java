@@ -16,11 +16,12 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.UserInfo;
 
 /**
  * 暗号ユーティリティ
+ * 
  * @author developer
  *
  */
@@ -54,6 +55,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * Cipher変換方式（AES/CBC/PKCS5Padding: 128bytes）
+     * 
      * @deprecated because of weakness.
      */
     @Deprecated
@@ -61,6 +63,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * Initial Vector生成
+     * 
      * @return
      * @throws NoSuchAlgorithmException
      */
@@ -73,6 +76,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * Key 生成
+     * 
      * @return
      * @throws NoSuchAlgorithmException
      */
@@ -86,6 +90,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * 文字列を暗号化してBase64文字列で返す。
+     * 
      * @param userInfo
      * @param plainText
      * @param keyBytes
@@ -107,6 +112,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * 文字列を暗号化してBase64文字列で返す。（新形式）
+     * 
      * @param id
      * @param sec
      * @param plainText
@@ -129,7 +135,9 @@ public class CipherUtil implements Serializable {
 
     /**
      * 文字列を暗号化してBase64文字列で返す。
-     * @param text 生パスワード文字列
+     * 
+     * @param text
+     *            生パスワード文字列
      * @param keyBytes
      * @param ivBytes
      * @return
@@ -155,11 +163,13 @@ public class CipherUtil implements Serializable {
 
     /**
      * 文字列を復号化
+     * 
      * @param userInfo
      * @param base64EncryptedText
      * @param keyBytes
      * @param ivBytes
-     * @param salt TODO
+     * @param salt
+     *            TODO
      * @return
      */
     public String decrypt(UserInfo userInfo, String base64EncryptedText, byte[] keyBytes, byte[] ivBytes, String salt) {
@@ -178,6 +188,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * 文字列を復号化（新形式）
+     * 
      * @param id
      * @param sec
      * @param base64EncryptedText
@@ -200,6 +211,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * 文字列を復号化
+     * 
      * @param base64EncryptedText
      * @param keyBytes
      * @param ivBytes
@@ -230,6 +242,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * 旧型式でデコード
+     * 
      * @param base64EncryptedText
      * @param keyBytes
      * @param ivBytes
@@ -260,6 +273,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * バイト列をBase64文字列に変換
+     * 
      * @param bytes
      * @return
      */
@@ -269,6 +283,7 @@ public class CipherUtil implements Serializable {
 
     /**
      * Base64文字列をバイト列に変換
+     * 
      * @param base64String
      * @return
      */

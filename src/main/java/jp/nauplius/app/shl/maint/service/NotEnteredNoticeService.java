@@ -16,11 +16,11 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.slf4j.Logger;
 
+import jp.nauplius.app.shl.common.db.model.NotEnteredNotice;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.interceptor.PermissionInterceptor;
-import jp.nauplius.app.shl.common.model.NotEnteredNotice;
 import jp.nauplius.app.shl.common.service.AbstractService;
-import jp.nauplius.app.shl.maint.backing.NotEnteredNoticeFormModel;
+import jp.nauplius.app.shl.maint.bean.NotEnteredNoticeFormModel;
 import jp.nauplius.app.shl.maint.bean.NotEnteredNoticeSelection;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
@@ -42,7 +42,7 @@ public class NotEnteredNoticeService extends AbstractService {
      * 初期設定
      */
     public void init() {
-        this.logger.info("init() start");
+        this.logger.info("#init() begin");
 
         List<NotEnteredNoticeSelection> selections = new ArrayList<NotEnteredNoticeSelection>();
         this.notEnteredNoticeFormModel.setNotEnteredNoticeSelections(selections);
@@ -61,21 +61,22 @@ public class NotEnteredNoticeService extends AbstractService {
             selections.add(selection);
         }
 
-        this.logger.info("init() complete");
+        this.logger.info("#init() complete");
     }
 
     /**
      * 「有効」状態の未入力通知設定情報情報を取得
+     * 
      * @return 有効な判定情報
      */
     public List<NotEnteredNotice> findActivatedNotEnteredNotices() {
-        this.logger.info("findNotEnteredNotices() start");
+        this.logger.info("#findNotEnteredNotices() begin");
 
-        TypedQuery<NotEnteredNotice> query = this.entityManager
-                .createQuery("SELECT n FROM NotEnteredNotice n WHERE n.checked = true ORDER BY n.id", NotEnteredNotice.class);
+        TypedQuery<NotEnteredNotice> query = this.entityManager.createQuery(
+                "SELECT n FROM NotEnteredNotice n WHERE n.checked = true ORDER BY n.id", NotEnteredNotice.class);
         List<NotEnteredNotice> notEnteredNotices = query.getResultList();
 
-        this.logger.info("findNotEnteredNotices() complete");
+        this.logger.info("#findNotEnteredNotices() complete");
         return notEnteredNotices;
     }
 
@@ -85,7 +86,7 @@ public class NotEnteredNoticeService extends AbstractService {
     @PermissionInterceptor
     @Transactional
     public void update() {
-        this.logger.info("update() start");
+        this.logger.info("#update() begin");
 
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
         for (NotEnteredNoticeSelection selection : this.notEnteredNoticeFormModel.getNotEnteredNoticeSelections()) {
@@ -110,6 +111,6 @@ public class NotEnteredNoticeService extends AbstractService {
 
         }
 
-        this.logger.info("update() complete");
+        this.logger.info("#update() complete");
     }
 }

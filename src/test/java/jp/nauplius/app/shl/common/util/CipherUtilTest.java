@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
-import jp.nauplius.app.shl.common.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 
 @RunWith(CdiRunner.class)
 public class CipherUtilTest {

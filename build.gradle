@@ -18,7 +18,9 @@ plugins {
     // id 'eclipse-wtp'
     id "org.gretty" version "3.0.4"
     id 'jacoco'
+    id 'com.diffplug.spotless' version '6.18.0'
 }
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -28,9 +30,7 @@ tasks.withType(JavaCompile) {
 }
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral();
 }
 
 dependencies {
@@ -387,6 +387,20 @@ test {
 }
 
 jacocoTestReport {
+println("jacocoTestReport")
     dependsOn test // tests are required to run before generating the report
 }
 
+spotless {
+  println("spotless")
+  java {
+    eclipse('4.26').configFile("code-style.xml")
+    lineEndings("UNIX")
+  }
+
+  format 'misc', {
+    target '*.gradle'
+    indentWithSpaces(2)
+    lineEndings('UNIX')
+  }
+}

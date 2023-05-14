@@ -17,39 +17,39 @@ public class PasswordUtil {
         int length = 0;
         StringBuilder builder = new StringBuilder();
         switch (strength) {
-        case HIGH:
-            // !-~
-            for (char c = '!'; c <= '~'; c++) {
-                builder.append(c);
-            }
-            length = RandomUtils.nextInt(12, 17);
-            break;
-        case STRONG:
-            // A-Z
-            for (char c = 'A'; c <= 'Z'; c++) {
-                builder.append(c);
-            }
-            // a-z
-            for (char c = 'a'; c <= 'z'; c++) {
-                builder.append(c);
-            }
-            // 0-9
-            for (char c = '0'; c <= '9'; c++) {
-                builder.append(c);
-            }
-            length = RandomUtils.nextInt(10, 13);
-            break;
-        default:
-            // a-z
-            for (char c = 'a'; c <= 'z'; c++) {
-                builder.append(c);
-            }
-            // 0-9
-            for (char c = '0'; c <= '9'; c++) {
-                builder.append(c);
-            }
-            length = RandomUtils.nextInt(8, 11);
-            break;
+            case HIGH :
+                // !-~
+                for (char c = '!'; c <= '~'; c++) {
+                    builder.append(c);
+                }
+                length = RandomUtils.nextInt(12, 17);
+                break;
+            case STRONG :
+                // A-Z
+                for (char c = 'A'; c <= 'Z'; c++) {
+                    builder.append(c);
+                }
+                // a-z
+                for (char c = 'a'; c <= 'z'; c++) {
+                    builder.append(c);
+                }
+                // 0-9
+                for (char c = '0'; c <= '9'; c++) {
+                    builder.append(c);
+                }
+                length = RandomUtils.nextInt(10, 13);
+                break;
+            default :
+                // a-z
+                for (char c = 'a'; c <= 'z'; c++) {
+                    builder.append(c);
+                }
+                // 0-9
+                for (char c = '0'; c <= '9'; c++) {
+                    builder.append(c);
+                }
+                length = RandomUtils.nextInt(8, 11);
+                break;
         }
 
         String params = builder.toString();

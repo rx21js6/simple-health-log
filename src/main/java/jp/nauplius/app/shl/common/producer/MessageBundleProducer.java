@@ -33,7 +33,8 @@ public class MessageBundleProducer {
             if (Objects.isNull(externalContext)) {
                 locale = Locale.getDefault();
             } else {
-                HttpSession httpSession = (HttpSession) this.facesContextProducer.getFacesContext().getExternalContext().getSession(true);
+                HttpSession httpSession = (HttpSession) this.facesContextProducer.getFacesContext().getExternalContext()
+                        .getSession(true);
                 locale = (Locale) httpSession.getAttribute(LocaleService.SESSION_KEY);
                 if (Objects.isNull(locale)) {
                     locale = Locale.getDefault();

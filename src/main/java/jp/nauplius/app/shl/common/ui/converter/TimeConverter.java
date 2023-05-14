@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.common.converter;
+package jp.nauplius.app.shl.common.ui.converter;
 
 import java.sql.Time;
 import java.time.LocalTime;
@@ -11,6 +11,9 @@ import javax.faces.convert.FacesConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 時刻表示の変換
+ */
 @FacesConverter("timeConverter")
 public class TimeConverter implements Converter {
     @Override

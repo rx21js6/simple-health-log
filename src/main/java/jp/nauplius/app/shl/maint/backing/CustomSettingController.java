@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.maint.bean.CustomSettingPasswordModel;
 import jp.nauplius.app.shl.maint.service.CustomSettingService;
 import jp.nauplius.app.shl.user.service.UserService;
 
@@ -135,8 +136,11 @@ public class CustomSettingController implements Serializable {
         try {
             this.userService.performSecurityEnhancement();
 
-            this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.performSecurityEnhancementCompleted"), null));
+            this.facesContext.addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            this.messageBundle.getString(
+                                    "contents.maint.settings.cutomSetting.msg.performSecurityEnhancementCompleted"),
+                            null));
 
         } catch (SimpleHealthLogException e) {
 

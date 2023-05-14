@@ -15,9 +15,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import jp.nauplius.app.shl.common.db.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserToken;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.UserInfo;
-import jp.nauplius.app.shl.common.model.UserToken;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
@@ -28,8 +28,8 @@ import jp.nauplius.app.shl.user.bean.UserInfoListItem;
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class UserServiceTest extends AbstractServiceTest {
     @Inject
     private UserService userService;
@@ -87,7 +87,7 @@ public class UserServiceTest extends AbstractServiceTest {
         form.setLoginId("admin");
 
         // assertThrows(SimpleHealthLogException.class, () -> {
-        //     this.userService.delete(form);
+        // this.userService.delete(form);
         // });
         this.userService.delete(form);
     }
@@ -156,7 +156,6 @@ public class UserServiceTest extends AbstractServiceTest {
         assertTrue("isNewData", maintUserInfo.isNewData());
         assertTrue("isPasswordChanged", maintUserInfo.isPasswordChanged());
         assertEquals(UserRoleId.NORMAL.getInt(), maintUserInfo.getRoleId());
-
 
     }
 

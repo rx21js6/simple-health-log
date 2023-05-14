@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.service.AbstractMailSender;
-import jp.nauplius.app.shl.page.initial.backing.InitialSettingForm;
+import jp.nauplius.app.shl.page.initial.bean.InitialSettingForm;
 
 @Named
 public class InitialSettingMailSender extends AbstractMailSender {
@@ -30,6 +30,8 @@ public class InitialSettingMailSender extends AbstractMailSender {
      * @param initialSettingForm
      */
     public void sendInitialSettingMail(String contextPath, InitialSettingForm initialSettingForm) {
+        this.logger.info("#sendInitialSettingMail() begin");
+
         String mailMessage = this.buildInitialMailMessageText(contextPath, initialSettingForm);
         Properties props = new Properties();
         props.put("mail.smtp.host", this.mailSenderBean.getHost());
@@ -51,6 +53,8 @@ public class InitialSettingMailSender extends AbstractMailSender {
         } catch (Exception e) {
             throw new SimpleHealthLogException(e);
         }
+
+        this.logger.info("#sendInitialSettingMail() complete");
     }
 
     /**
@@ -61,6 +65,7 @@ public class InitialSettingMailSender extends AbstractMailSender {
      * @return
      */
     private String buildInitialMailMessageText(String contextPath, InitialSettingForm initialSettingForm) {
+        this.logger.info("#buildInitialMailMessageText() begin");
 
         try {
             StringBuilder mailMessageBuilder = new StringBuilder();
@@ -78,7 +83,7 @@ public class InitialSettingMailSender extends AbstractMailSender {
             MessageFormat format1 = new MessageFormat(messageBase1);
             format1.setLocale(this.localeService.getLocale());
             String message1 = format1
-                    .format(new String[] { initialSettingForm.getLoginId(), initialSettingForm.getMailAddress() });
+                    .format(new String[]{initialSettingForm.getLoginId(), initialSettingForm.getMailAddress()});
 
             String messageBase2 = this.messageBundle.getString("initial.initialSetting.mail.format2");
             MessageFormat format2 = new MessageFormat(messageBase2);
@@ -87,7 +92,7 @@ public class InitialSettingMailSender extends AbstractMailSender {
             urlBuilder.append(hostName);
             urlBuilder.append(contextPath);
             urlBuilder.append("/");
-            String message2 = format2.format(new String[] { urlBuilder.toString() });
+            String message2 = format2.format(new String[]{urlBuilder.toString()});
 
             this.logger.debug(String.format("message1: %s", message1));
             this.logger.debug(String.format("message2: %s", message2));
@@ -96,9 +101,11 @@ public class InitialSettingMailSender extends AbstractMailSender {
             mailMessageBuilder.append("\n");
             mailMessageBuilder.append(message2);
 
+            this.logger.info("#buildInitialMailMessageText() complete");
             return mailMessageBuilder.toString();
         } catch (UnknownHostException e) {
             e.printStackTrace();
+            this.logger.error(e.getMessage());
             throw new SimpleHealthLogException(e);
         }
     }

@@ -1,7 +1,15 @@
 package jp.nauplius.app.shl.common.constants;
 
+/**
+ * 利用者権限
+ */
 public enum UserRole {
-    ADMIN(0), NORMAL(1), RESTRICTED(2);
+    // 管理者
+    ADMIN(0),
+    // 一般利用者
+    USER(1),
+    // 制限利用者
+    RESTRICTED(2);
 
     private final int id;
 

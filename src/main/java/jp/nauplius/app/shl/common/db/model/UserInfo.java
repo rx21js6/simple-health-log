@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.common.model;
+package jp.nauplius.app.shl.common.db.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -74,7 +74,7 @@ public class UserInfo implements Serializable {
     @Column(name = "zone_id")
     private String zoneId;
 
-    //bi-directional many-to-one association to PhysicalCondition
+    // bi-directional many-to-one association to PhysicalCondition
     @OneToMany(mappedBy = "userInfo")
     private List<PhysicalCondition> physicalConditions;
 
