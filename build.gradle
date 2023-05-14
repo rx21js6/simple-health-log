@@ -387,20 +387,25 @@ test {
 }
 
 jacocoTestReport {
-println("jacocoTestReport")
+    println("jacocoTestReport")
     dependsOn test // tests are required to run before generating the report
 }
 
 spotless {
   println("spotless")
   java {
+    println("spotless - java")
     eclipse('4.26').configFile("code-style.xml")
+    endWithNewline()
+    removeUnusedImports()
     lineEndings("UNIX")
   }
 
   format 'misc', {
+    println("spotless - misc")
     target '*.gradle'
-    indentWithSpaces(2)
+    indentWithSpaces(4)
+    endWithNewline()
     lineEndings('UNIX')
   }
 }

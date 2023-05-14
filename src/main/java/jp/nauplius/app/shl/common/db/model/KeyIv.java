@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 /**
  * The persistent class for the key_iv database table.
- * 
+ *
  */
 @Entity
 @Table(name = "key_iv")
