@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.page.record.backing;
+package jp.nauplius.app.shl.page.record.bean;
 
 import java.math.BigDecimal;
 

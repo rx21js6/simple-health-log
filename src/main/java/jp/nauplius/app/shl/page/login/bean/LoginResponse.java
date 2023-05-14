@@ -2,8 +2,8 @@ package jp.nauplius.app.shl.page.login.bean;
 
 import java.io.Serializable;
 
-import jp.nauplius.app.shl.common.model.UserInfo;
-import jp.nauplius.app.shl.common.model.UserToken;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserToken;
 import lombok.Data;
 
 @Data

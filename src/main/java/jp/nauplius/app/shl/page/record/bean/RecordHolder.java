@@ -2,7 +2,7 @@ package jp.nauplius.app.shl.page.record.bean;
 
 import java.util.Objects;
 
-import jp.nauplius.app.shl.common.model.PhysicalCondition;
+import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
 import lombok.Data;
 
 @Data

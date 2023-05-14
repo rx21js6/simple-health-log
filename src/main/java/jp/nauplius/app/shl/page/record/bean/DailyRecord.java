@@ -1,7 +1,7 @@
 package jp.nauplius.app.shl.page.record.bean;
 
-import jp.nauplius.app.shl.common.model.PhysicalCondition;
-import jp.nauplius.app.shl.common.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

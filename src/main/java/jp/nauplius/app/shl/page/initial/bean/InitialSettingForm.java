@@ -1,5 +1,5 @@
 
-package jp.nauplius.app.shl.page.initial.backing;
+package jp.nauplius.app.shl.page.initial.bean;
 
 import java.io.Serializable;
 import java.util.ResourceBundle;

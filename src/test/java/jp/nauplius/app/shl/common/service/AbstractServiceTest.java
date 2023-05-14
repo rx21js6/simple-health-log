@@ -17,7 +17,7 @@ import org.dbunit.dataset.xml.XmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.jboss.weld.context.bound.BoundSessionContext;
 
-import jp.nauplius.app.shl.common.model.KeyIv;
+import jp.nauplius.app.shl.common.db.model.KeyIv;
 import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 

@@ -1,12 +1,9 @@
-package jp.nauplius.app.shl.common.db;
+package jp.nauplius.app.shl.common.db.loader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -18,10 +15,11 @@ import javax.transaction.Transactional;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 
-import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.producer.InitializationQualifier;
-import jp.nauplius.app.shl.common.util.CipherUtil;
 
+/**
+ * データベース登録・更新（Flyway）機能
+ */
 @Named
 public class DbLoader {
     @Inject
@@ -29,64 +27,38 @@ public class DbLoader {
 
     @Inject
     @InitializationQualifier
-    private EntityManager em;
-
-    @Inject
-    private CipherUtil cipherUtil;
+    private EntityManager entityManager;
 
     /**
-     * テーブル作成
+     * テーブル作成SQL実行
      */
     public void createTables() {
-        EntityTransaction transaction = this.em.getTransaction();
+        this.logger.info("#createTables() begin");
+        EntityTransaction transaction = this.entityManager.getTransaction();
         try {
             transaction.begin();
             String sqlString = this.loadSqlString();
             String[] sqlLines = sqlString.split(";");
             for (String sqlLine : sqlLines) {
                 this.logger.info(String.format("execute query: %s", sqlLine));
-                this.em.createNativeQuery(sqlLine).executeUpdate();
+                this.entityManager.createNativeQuery(sqlLine).executeUpdate();
             }
             transaction.commit();
-
+            this.logger.info("#createTables() complete");
         } catch (Throwable e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
             e.printStackTrace();
-            this.logger.error("craete table failed.");
-            throw new RuntimeException(e);
+            this.logger.error("#craeteTables() failed. : " + e.getMessage());
+            throw e;
         }
     }
 
     /**
-     * KeyIvデータ登録。
+     * 登録用SQL読み込み
+     * @return sql
      */
-    @Transactional
-    public void loadKeyIvData() {
-        System.out.println("Transaction begin.");
-        KeyIv keyIv = new KeyIv();
-        try {
-            byte[] keyBytes = this.cipherUtil.createKey();
-            byte[] ivBytes = this.cipherUtil.createInitialVector();
-            keyIv.setEncryptionKey(this.cipherUtil.byteToBase64String(keyBytes));
-            keyIv.setEncryptionIv(this.cipherUtil.byteToBase64String(ivBytes));
-
-            Timestamp timeStamp = Timestamp.valueOf(LocalDateTime.now());
-
-            keyIv.setCreatedDate(timeStamp);
-            keyIv.setModifiedDate(timeStamp);
-            this.em.persist(keyIv);
-            this.em.merge(keyIv);
-            this.em.flush();
-            System.out.println("key iv registered.");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            System.err.println("key iv insert failed.");
-            throw new RuntimeException(e);
-        }
-    }
-
     private String loadSqlString() {
         StringBuilder sqlBuilder = new StringBuilder();
         String sqlPath = "/sql/create_tables.sql";
@@ -110,16 +82,17 @@ public class DbLoader {
             return sqlString;
         } catch (IOException e) {
             e.printStackTrace();
+            this.logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
     /**
-     * DB更新
+     * DB更新（Flyway）
      */
     @Transactional
     public void updateDb() {
-        Map<String, Object> properties = this.em.getEntityManagerFactory().getProperties();
+        Map<String, Object> properties = this.entityManager.getEntityManagerFactory().getProperties();
         String dbUrl = String.valueOf(properties.get("javax.persistence.jdbc.url"));
         String dbUser = String.valueOf(properties.get("javax.persistence.jdbc.user"));
         String dbPassword = String.valueOf(properties.get("javax.persistence.jdbc.password"));

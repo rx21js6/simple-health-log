@@ -2,6 +2,10 @@ package jp.nauplius.app.shl.common.constants;
 
 import java.time.format.DateTimeFormatter;
 
+/**
+ * 共通定数
+ *
+ */
 public class ShlConstants {
     public static final String LOGIN_SESSION_KEY = "LOGIN_SESSION_KEY";
 

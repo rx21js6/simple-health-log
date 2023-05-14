@@ -2,7 +2,7 @@ package jp.nauplius.app.shl.ws.bean;
 
 import java.util.List;
 
-import jp.nauplius.app.shl.common.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import lombok.Getter;
 import lombok.Setter;
 

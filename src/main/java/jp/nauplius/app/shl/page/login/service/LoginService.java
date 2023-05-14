@@ -18,9 +18,9 @@ import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserToken;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.UserInfo;
-import jp.nauplius.app.shl.common.model.UserToken;
 import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
 import jp.nauplius.app.shl.common.util.CipherUtil;
@@ -148,7 +148,9 @@ public class LoginService extends AbstractService {
      * ログアウト
      */
     public void logout() {
-        this.logger.info("LoginService#logout");
+        this.logger.info("#logout()");
+        this.logger.info(String.format("logout: %s", (Objects.isNull(this.loginInfo.getUserInfo()) ? "UNKNOWN ID"
+                : this.loginInfo.getUserInfo().getLoginId())));
         // セッション削除
         this.loginInfo.setUserInfo(null);
     }
@@ -179,7 +181,7 @@ public class LoginService extends AbstractService {
      */
     @Transactional
     public UserInfo loginFromToken(String token) {
-        this.logger.info("loginFromToken");
+        this.logger.info("#loginFromToken() begin");
 
         this.logger.debug(String.format("token: %s", token));
 
@@ -196,6 +198,7 @@ public class LoginService extends AbstractService {
         query.setParameter("expirationDate", timestamp);
         List<UserInfo> results = query.getResultList();
         if (results.size() == 0) {
+            this.logger.warn("Token unmatched or expired.");
             this.loginInfo.setUserInfo(null);
             return null;
         }
@@ -207,6 +210,8 @@ public class LoginService extends AbstractService {
         this.createToken(userInfo, false);
 
         this.loginInfo.setUserInfo(userInfo);
+
+        this.logger.info("#loginFromToken() complete");
         return userInfo;
     }
 
@@ -265,6 +270,7 @@ public class LoginService extends AbstractService {
             return userToken;
         } catch (Throwable e) {
             e.printStackTrace();
+            this.logger.error(e.getMessage());
             throw new SimpleHealthLogException(e);
         }
     }

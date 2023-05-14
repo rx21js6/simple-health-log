@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.maint.bean.CustomSettingPasswordModel;
 import jp.nauplius.app.shl.maint.service.CustomSettingService;
 import jp.nauplius.app.shl.user.service.UserService;
 

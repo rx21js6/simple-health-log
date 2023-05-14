@@ -27,7 +27,8 @@ public class EntityManagerProducer implements Serializable {
     @Default
     @RequestScoped
     public EntityManager getEntityManager() {
-        this.logger.debug(String.format("getEntityManager: %s", ShlConstants.PERSISTENCE_UNIT_NAME));
+        this.logger.debug("#getEntityManager()");
+        this.logger.debug(String.format("unitName: %s", ShlConstants.PERSISTENCE_UNIT_NAME));
 
         EntityManager entityManager = this.factory.createEntityManager();
         this.logger.debug(String.format("entityManager: %s", entityManager));
@@ -38,8 +39,10 @@ public class EntityManagerProducer implements Serializable {
     @Produces
     @InitializationQualifier
     public EntityManager getInitialQualifier() {
+        this.logger.debug("#getInitialQualifier()");
+
         EntityManager entityManager = this.factory.createEntityManager();
-        this.logger.debug(String.format("getInitialQualifier: entityManager: %s", entityManager));
+        this.logger.debug(String.format("entityManager: %s", entityManager));
 
         return entityManager;
     }

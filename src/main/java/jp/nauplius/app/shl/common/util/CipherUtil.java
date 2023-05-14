@@ -16,8 +16,8 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.UserInfo;
 
 /**
  * 暗号ユーティリティ

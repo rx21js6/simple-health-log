@@ -71,7 +71,8 @@ public class MaintUserController implements ModalControllerListener {
 
     @PostConstruct
     public void init() {
-        this.logger.debug("init: " + selectedMaintUserInfo);
+        this.logger.debug("#init()");
+        this.logger.debug("selectedMaintUserInfo: " + selectedMaintUserInfo);
     }
 
     public void loadUserInfos() {
@@ -79,7 +80,7 @@ public class MaintUserController implements ModalControllerListener {
     }
 
     public String showList() {
-        this.logger.info("MaintUserController#showList");
+        this.logger.info("#showList()");
         return "/contents/maint/user/userList.xhtml?faces-redirect=true";
     }
 
@@ -178,7 +179,8 @@ public class MaintUserController implements ModalControllerListener {
 
     @Override
     public void initModal() {
-        this.logger.debug("initModal: " + selectedMaintUserInfo);
+        this.logger.debug("#initModal()");
+        this.logger.debug("selectedMaintUserInfo: " + selectedMaintUserInfo);
         this.commonConfirmModalBean.setMessage(StringUtils.EMPTY);
         this.commonConfirmModalBean.setVisible(false);
         this.commonConfirmModalController.setModalControllerListener(this);

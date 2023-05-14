@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.common.model;
+package jp.nauplius.app.shl.common.db.model;
 
 import java.io.Serializable;
 import javax.persistence.*;

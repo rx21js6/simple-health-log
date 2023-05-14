@@ -22,13 +22,13 @@ import org.junit.runner.RunWith;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
-import jp.nauplius.app.shl.common.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.service.AbstractServiceTest;
-import jp.nauplius.app.shl.maint.backing.CustomSettingMailAddressModel;
-import jp.nauplius.app.shl.maint.backing.CustomSettingPasswordModel;
+import jp.nauplius.app.shl.maint.bean.CustomSettingMailAddressModel;
+import jp.nauplius.app.shl.maint.bean.CustomSettingPasswordModel;
 import jp.nauplius.app.shl.maint.bean.TimeZoneInputModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 

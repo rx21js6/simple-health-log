@@ -1,7 +1,15 @@
 package jp.nauplius.app.shl.common.constants;
 
+/**
+ * セキュリティレベル
+ * @author developer
+ *
+ */
 public enum SecurityLevel {
-    LEVEL0(0), LEVEL1(1);
+    // 旧
+    LEVEL0(0),
+    // 現
+    LEVEL1(1);
 
     private final int id;
 

@@ -18,10 +18,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserToken;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.interceptor.PermissionInterceptor;
-import jp.nauplius.app.shl.common.model.UserInfo;
-import jp.nauplius.app.shl.common.model.UserToken;
 import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
@@ -347,7 +347,8 @@ public class UserService extends AbstractService {
         }
 
         // 現在のパスワードを取得
-        String plainPassword = this.cipherUtil.decrypt(userInfo, userInfo.getEncryptedPassword(), keyBytes, ivBytes, salt);
+        String plainPassword = this.cipherUtil.decrypt(userInfo, userInfo.getEncryptedPassword(), keyBytes, ivBytes,
+                salt);
 
         // 強化処理
         userInfo.setSecurityLevel(SecurityLevel.LEVEL1.getInt());

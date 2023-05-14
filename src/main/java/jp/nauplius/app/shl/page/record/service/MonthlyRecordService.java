@@ -13,10 +13,10 @@ import javax.persistence.TypedQuery;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
-import jp.nauplius.app.shl.common.model.PhysicalCondition;
+import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
-import jp.nauplius.app.shl.page.record.backing.MonthlyRecordModel;
+import jp.nauplius.app.shl.page.record.bean.MonthlyRecordModel;
 import jp.nauplius.app.shl.page.record.bean.RecordHolder;
 
 @Named

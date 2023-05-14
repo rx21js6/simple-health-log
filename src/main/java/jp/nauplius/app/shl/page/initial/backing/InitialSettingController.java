@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.page.initial.bean.InitialSettingForm;
 import jp.nauplius.app.shl.page.initial.service.InitialSettingService;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,7 +40,7 @@ public class InitialSettingController implements Serializable {
     private transient ResourceBundle messageBundle;
 
     public void init() {
-        this.logger.info("init()");
+        this.logger.info("#init()");
         this.initialSettingForm.setLoginId(ShlConstants.LOGIN_ID_ADMIN);
         this.initialSettingForm.setName(this.messageBundle.getString("initial.initialSetting.label.admin"));
         this.initialSettingForm.setPassword(StringUtils.EMPTY);

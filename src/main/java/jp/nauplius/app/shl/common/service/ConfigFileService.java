@@ -33,6 +33,8 @@ public class ConfigFileService implements Serializable {
     private final String CONFIG_BASE_DIR = "/simple-health-log/";
     private final String CONFIG_FILE_NAME = "config.yml";
     private final String KEY_SALT = "salt";
+    private final String PROP_USER_HOME = "user.home";
+    private final String PROP_OS_NAME = "os.name";
 
     @Inject
     private Logger logger;
@@ -41,14 +43,17 @@ public class ConfigFileService implements Serializable {
     private ResourceBundle messageBundle;
 
     public void createFile() throws IOException {
-        String homeDir = System.getProperty("user.home");
-        logger.info("Creating config file in : " + homeDir);
+        this.logger.info("#createFile() begin");
+
+        String homeDir = System.getProperty(PROP_USER_HOME);
 
         if (StringUtils.isEmpty(homeDir) || StringUtils.equals(homeDir, "/nonexistent")) {
-            throw new IOException(this.messageBundle.getString("common.msg.homeDirectoryNotDeclared"));
+            String message = this.messageBundle.getString("common.msg.homeDirectoryNotDeclared");
+            this.logger.error(message);
+            throw new IOException(message);
         }
 
-        File dir = new File(System.getProperty("user.home") + CONFIG_BASE_DIR);
+        File dir = new File(homeDir + CONFIG_BASE_DIR);
         if (!dir.exists()) {
             boolean result = dir.mkdir();
             if (!result) {
@@ -56,16 +61,18 @@ public class ConfigFileService implements Serializable {
                 MessageFormat format = new MessageFormat(messageBase);
                 String message = format.format(new String[] { dir.getAbsolutePath() });
 
+                this.logger.error(message);
                 throw new IOException(message);
             }
         }
 
-        File configFile = new File(System.getProperty("user.home") + CONFIG_BASE_DIR + CONFIG_FILE_NAME);
+        File configFile = new File(homeDir + CONFIG_BASE_DIR + CONFIG_FILE_NAME);
         if (configFile.exists()) {
-            logger.info(configFile.getAbsolutePath() + ": exists");
+            this.logger.info(String.format("Config file already exists. : %s ", configFile.getAbsolutePath()));
             return;
         }
 
+        this.logger.info("Creating config file in: " + homeDir);
         String ramdomString = PasswordUtil.createRandomText(PasswordStrength.STRONG);
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put(KEY_SALT, ramdomString);
@@ -76,7 +83,7 @@ public class ConfigFileService implements Serializable {
             writer = new FileWriter(configFile);
             yaml.dump(dataMap, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            this.logger.error(e.getMessage());
             throw e;
         } finally {
             if (Objects.nonNull(writer)) {
@@ -84,9 +91,9 @@ public class ConfigFileService implements Serializable {
             }
         }
 
-        String osName = System.getProperty("os.name").toLowerCase();
+        String osName = System.getProperty(PROP_OS_NAME).toLowerCase();
         if (osName.startsWith("windows")) {
-            logger.info("Running on windows? Permission settings skipped.");
+            this.logger.info("Running on windows? Permission settings skipped.");
         } else {
             // permission
             Set<PosixFilePermission> perms = new HashSet<>();
@@ -96,13 +103,14 @@ public class ConfigFileService implements Serializable {
 
         }
 
-        logger.info(configFile.getAbsolutePath() + ": created.");
+        this.logger.info(configFile.getAbsolutePath() + ": created.");
+        this.logger.info("#createFile() complete");
     }
 
     public synchronized String loadSalt() throws IOException {
         Yaml yaml = new Yaml();
 
-        File configFile = new File(System.getProperty("user.home") + CONFIG_BASE_DIR + CONFIG_FILE_NAME);
+        File configFile = new File(System.getProperty(PROP_USER_HOME) + CONFIG_BASE_DIR + CONFIG_FILE_NAME);
         FileReader reader = null;
         String salt = null;
         try {
@@ -110,7 +118,7 @@ public class ConfigFileService implements Serializable {
             Map<String, String> data = yaml.load(reader);
             salt = data.get(KEY_SALT);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            this.logger.error(e.getMessage());
             throw e;
         } finally {
             if (Objects.nonNull(reader)) {

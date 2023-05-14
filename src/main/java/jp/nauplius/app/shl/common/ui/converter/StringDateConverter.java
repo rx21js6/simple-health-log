@@ -1,4 +1,4 @@
-package jp.nauplius.app.shl.common.converter;
+package jp.nauplius.app.shl.common.ui.converter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 
+/**
+ * 日付表示の変換
+ */
 @FacesConverter("stringDateConverter")
 public class StringDateConverter implements Converter {
 

@@ -52,18 +52,19 @@ public class LoginFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.logger.info("LoginFilter#init");
+        this.logger.info("#init()");
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        this.logger.debug("doFilter");
+        this.logger.debug("#doFilter()");
+
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         String requestUri = httpServletRequest.getRequestURI();
-        this.logger.debug("doFilter" + requestUri);
+        this.logger.debug("requestUri: " + requestUri);
         String contextPath = httpServletRequest.getContextPath();
         String servletPath = httpServletRequest.getServletPath();
 
@@ -84,7 +85,7 @@ public class LoginFilter implements Filter {
 
         if (!this.keyIvHolderService.isRegistered()) {
             // 初期設定前
-            this.logger.info("Not registered.");
+            this.logger.info("Key/IV Not registered.");
             // 初期設定
             boolean pathAllowed = ALLOWED_PATHS_INITIAL.stream().anyMatch(allowedPath -> path.startsWith(allowedPath));
             if (pathAllowed) {
@@ -111,7 +112,7 @@ public class LoginFilter implements Filter {
                     // 入力画面に遷移
                     httpServletResponse.sendRedirect(contextPath + "/contents/record/recordInput.xhtml");
                     return;
-                } else if (!this.authService.isNormalUserVisible(servletPath)) {
+                } else if (!this.authService.isUserAccessible(servletPath)) {
                     // 表示権限がない場合
                     httpServletResponse.sendRedirect(contextPath + "/error/authError.xhtml");
                     return;

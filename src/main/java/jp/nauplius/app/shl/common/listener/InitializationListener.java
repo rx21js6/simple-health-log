@@ -13,9 +13,9 @@ import javax.servlet.annotation.WebListener;
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.slf4j.Logger;
 
-import jp.nauplius.app.shl.common.db.DbLoader;
+import jp.nauplius.app.shl.common.db.loader.DbLoader;
+import jp.nauplius.app.shl.common.db.model.KeyIv;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.producer.InitializationQualifier;
 import jp.nauplius.app.shl.common.service.ConfigFileService;
 
@@ -27,7 +27,7 @@ public class InitializationListener implements ServletContextListener {
 
     @Inject
     @InitializationQualifier
-    private EntityManager em;
+    private EntityManager entityManager;
 
     @Inject
     private DbLoader dbLoader;
@@ -37,7 +37,8 @@ public class InitializationListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        this.logger.info("InitializationListener#contextInitialized() em: " + this.em);
+        this.logger.info("#contextInitialized() begin");
+        this.logger.debug("entityManager: " + this.entityManager);
 
         this.checkDbInitialized();
         this.dbLoader.updateDb();
@@ -47,18 +48,20 @@ public class InitializationListener implements ServletContextListener {
         } catch (IOException e) {
             throw new SimpleHealthLogException(e);
         }
+
+        this.logger.info("#contextInitialized() complete");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        this.logger.info("InitializationListener#contextDestroyed()");
+        this.logger.info("#contextDestroyed()");
     }
 
     private void checkDbInitialized() {
         KeyIv keyIv = null;
 
         try {
-            keyIv = this.em.find(KeyIv.class, 1);
+            keyIv = this.entityManager.find(KeyIv.class, 1);
             if (Objects.nonNull(keyIv)) {
                 this.logger.info("KeyIv found.");
                 return;
@@ -69,7 +72,6 @@ public class InitializationListener implements ServletContextListener {
         }
 
         this.logger.warn("KeyIv not found.");
-        // this.dbLoader.loadKeyIvData();
     }
 
 }

@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.service.AbstractMailSender;
-import jp.nauplius.app.shl.page.initial.backing.InitialSettingForm;
+import jp.nauplius.app.shl.page.initial.bean.InitialSettingForm;
 
 @Named
 public class InitialSettingMailSender extends AbstractMailSender {
@@ -30,6 +30,8 @@ public class InitialSettingMailSender extends AbstractMailSender {
      * @param initialSettingForm
      */
     public void sendInitialSettingMail(String contextPath, InitialSettingForm initialSettingForm) {
+        this.logger.info("#sendInitialSettingMail() begin");
+
         String mailMessage = this.buildInitialMailMessageText(contextPath, initialSettingForm);
         Properties props = new Properties();
         props.put("mail.smtp.host", this.mailSenderBean.getHost());
@@ -51,6 +53,8 @@ public class InitialSettingMailSender extends AbstractMailSender {
         } catch (Exception e) {
             throw new SimpleHealthLogException(e);
         }
+
+        this.logger.info("#sendInitialSettingMail() complete");
     }
 
     /**
@@ -61,6 +65,7 @@ public class InitialSettingMailSender extends AbstractMailSender {
      * @return
      */
     private String buildInitialMailMessageText(String contextPath, InitialSettingForm initialSettingForm) {
+        this.logger.info("#buildInitialMailMessageText() begin");
 
         try {
             StringBuilder mailMessageBuilder = new StringBuilder();
@@ -96,9 +101,11 @@ public class InitialSettingMailSender extends AbstractMailSender {
             mailMessageBuilder.append("\n");
             mailMessageBuilder.append(message2);
 
+            this.logger.info("#buildInitialMailMessageText() complete");
             return mailMessageBuilder.toString();
         } catch (UnknownHostException e) {
             e.printStackTrace();
+            this.logger.error(e.getMessage());
             throw new SimpleHealthLogException(e);
         }
     }
