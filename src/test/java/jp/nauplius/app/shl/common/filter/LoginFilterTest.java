@@ -66,10 +66,10 @@ public class LoginFilterTest extends AbstractServiceTest {
      * @throws ServletException
      */
     @Test
-    public void testDoFilterNormal() throws IOException, ServletException {
+    public void testDoFilterUser() throws IOException, ServletException {
         UserInfo normalUserInfo = new UserInfo();
         normalUserInfo.setId(2);
-        normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
+        normalUserInfo.setRoleId(UserRoleId.USER.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
@@ -96,10 +96,10 @@ public class LoginFilterTest extends AbstractServiceTest {
      * @throws ServletException
      */
     @Test
-    public void testDoFilterNormalRedirection() throws IOException, ServletException {
+    public void testDoFilterUserRedirection() throws IOException, ServletException {
         UserInfo normalUserInfo = new UserInfo();
         normalUserInfo.setId(2);
-        normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
+        normalUserInfo.setRoleId(UserRoleId.USER.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
@@ -153,7 +153,7 @@ public class LoginFilterTest extends AbstractServiceTest {
     public void testDoFilterNormalNotAuthorized() throws IOException, ServletException {
         UserInfo normalUserInfo = new UserInfo();
         normalUserInfo.setId(2);
-        normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
+        normalUserInfo.setRoleId(UserRoleId.USER.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");

@@ -14,7 +14,7 @@ import lombok.Data;
 @Named
 @SessionScoped
 @Data
-public class MaintUserInfo implements Serializable {
+public class UserEditingModel implements Serializable {
     private int id;
 
     @NotEmpty(message = "{userEditing.loginId.notEmpty}")

@@ -22,7 +22,7 @@ import jp.nauplius.app.shl.common.ui.backing.ModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalControllerListener;
 import jp.nauplius.app.shl.common.ui.bean.CommonConfirmModalBean;
 import jp.nauplius.app.shl.common.ui.bean.TimeZoneInfo;
-import jp.nauplius.app.shl.user.bean.MaintUserInfo;
+import jp.nauplius.app.shl.user.bean.UserEditingModel;
 import jp.nauplius.app.shl.user.bean.UserInfoListItem;
 import jp.nauplius.app.shl.user.service.UserService;
 import lombok.Getter;
@@ -63,20 +63,18 @@ public class MaintUserController implements ModalControllerListener {
     @Getter
     private List<TimeZoneInfo> timeZoneInfos;
 
-    @Getter
-    @Setter
-    private MaintUserInfo selectedMaintUserInfo;
+    @Inject
+    private UserEditingModel userEditingModel;
 
     private String methodName;
 
     @PostConstruct
     public void init() {
         this.logger.debug("#init()");
-        this.logger.debug("selectedMaintUserInfo: " + selectedMaintUserInfo);
     }
 
     public void loadUserInfos() {
-        this.userInfos = this.userService.loadMaintUserInfos();
+        this.userInfos = this.userService.getUserInfoListItems();
     }
 
     public String showList() {
@@ -85,13 +83,13 @@ public class MaintUserController implements ModalControllerListener {
     }
 
     public String newData() {
-        this.selectedMaintUserInfo = this.userService.createNewData();
+        this.userService.createNewData();
         this.timeZoneInfos = this.timeZoneHolderService.getTimeZoneInfos();
         return "/contents/maint/user/userEditing.xhtml?faces-redirect=true";
     }
 
     public String editData() {
-        this.selectedMaintUserInfo = this.userService.getMaintUsernfo(this.selectedId);
+        this.userService.loadMaintUsernfo(this.selectedId);
         this.timeZoneInfos = this.timeZoneHolderService.getTimeZoneInfos();
         return "/contents/maint/user/userEditing.xhtml?faces-redirect=true";
     }
@@ -101,13 +99,13 @@ public class MaintUserController implements ModalControllerListener {
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
         try {
-            if (this.selectedMaintUserInfo.isNewData()) {
-                this.userService.register(this.selectedMaintUserInfo);
+            if (this.userEditingModel.isNewData()) {
+                this.userService.register();
 
                 facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         this.messageBundle.getString("contents.maint.user.userList.msg.userRegistered"), null));
             } else {
-                this.userService.update(this.selectedMaintUserInfo);
+                this.userService.update();
                 facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         this.messageBundle.getString("contents.maint.user.userList.msg.userUpdated"), null));
             }
@@ -121,16 +119,17 @@ public class MaintUserController implements ModalControllerListener {
 
     public String showDeletionModal() {
         try {
-            this.selectedMaintUserInfo = this.userService.getMaintUsernfo(this.selectedId);
+            this.userService.loadMaintUsernfo(this.selectedId);
 
             String message = MessageFormat.format(
                     this.messageBundle.getString("contents.maint.user.userList.msg.confirmDeletion"),
-                    this.selectedMaintUserInfo.getLoginId());
+                    this.userEditingModel.getLoginId());
 
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder.append(message);
             List<String> messages = Arrays
-                    .asList(new String[]{messageBuilder.toString(), this.messageBundle.getString("common.msg.sure")});
+                    .asList(new String[] { messageBuilder.toString(),
+                            this.messageBundle.getString("common.msg.sure") });
             this.commonConfirmModalBean
                     .setTitle(this.messageBundle.getString("contents.maint.user.userList.label.userDeletion"));
             this.commonConfirmModalBean.setMessages(messages);
@@ -159,7 +158,7 @@ public class MaintUserController implements ModalControllerListener {
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
         try {
-            this.userService.delete(selectedMaintUserInfo);
+            this.userService.delete();
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     this.messageBundle.getString("contents.maint.user.userList.msg.userDeleted"), null));
         } catch (SimpleHealthLogException e) {
@@ -180,7 +179,7 @@ public class MaintUserController implements ModalControllerListener {
     @Override
     public void initModal() {
         this.logger.debug("#initModal()");
-        this.logger.debug("selectedMaintUserInfo: " + selectedMaintUserInfo);
+        this.logger.debug("userEditingModel: " + this.userEditingModel);
         this.commonConfirmModalBean.setMessage(StringUtils.EMPTY);
         this.commonConfirmModalBean.setVisible(false);
         this.commonConfirmModalController.setModalControllerListener(this);

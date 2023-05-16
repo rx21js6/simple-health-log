@@ -4,7 +4,7 @@ package jp.nauplius.app.shl.user.constants;
  * ユーザロール
  */
 public enum MaintUserRole {
-    ADMIN("ADMIN"), NORMAL("NORMAL"),;
+    ADMIN("ADMIN"), USER("USER"),;
 
     private final String text;
 

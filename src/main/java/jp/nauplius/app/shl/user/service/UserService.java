@@ -16,6 +16,7 @@ import javax.persistence.TypedQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
@@ -26,7 +27,7 @@ import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
-import jp.nauplius.app.shl.user.bean.MaintUserInfo;
+import jp.nauplius.app.shl.user.bean.UserEditingModel;
 import jp.nauplius.app.shl.user.bean.UserInfoListItem;
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 import jp.nauplius.app.shl.user.constants.UserStatus;
@@ -36,6 +37,9 @@ import jp.nauplius.app.shl.user.constants.UserStatus;
  */
 @Named
 public class UserService extends AbstractService {
+    @Inject
+    private Logger logger;
+
     @Inject
     private transient ResourceBundle messageBundle;
 
@@ -48,6 +52,9 @@ public class UserService extends AbstractService {
     @Inject
     private KeyIvHolderService keyIvHolderService;
 
+    @Inject
+    private UserEditingModel userEditingModel;
+
     /**
      * 画面から登録
      *
@@ -55,10 +62,10 @@ public class UserService extends AbstractService {
      */
     @PermissionInterceptor
     @Transactional
-    public void register(MaintUserInfo maintUserInfo) {
+    public void register() {
 
         // ユーザ存在チェック
-        String loginId = maintUserInfo.getLoginId();
+        String loginId = this.userEditingModel.getLoginId();
         TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
         userInfoQuery.setParameter("loginId", loginId);
@@ -77,11 +84,11 @@ public class UserService extends AbstractService {
         UserInfo userInfo = new UserInfo();
         LocalDateTime timestamp = LocalDateTime.now();
         userInfo.setEncryptedPassword(StringUtils.EMPTY);
-        userInfo.setLoginId(maintUserInfo.getLoginId());
+        userInfo.setLoginId(this.userEditingModel.getLoginId());
         userInfo.setName(StringUtils.EMPTY);
         userInfo.setMailAddress(StringUtils.EMPTY);
-        userInfo.setRoleId(maintUserInfo.getRoleId());
-        userInfo.setZoneId(maintUserInfo.getZoneId());
+        userInfo.setRoleId(this.userEditingModel.getRoleId());
+        userInfo.setZoneId(this.userEditingModel.getZoneId());
         userInfo.setStatus(UserStatus.REGISTERED.getInt()); // いきなり本登録、本来は仮登録
         userInfo.setDeleted(false);
         userInfo.setCreatedBy(this.loginInfo.getUserInfo().getId());
@@ -95,14 +102,17 @@ public class UserService extends AbstractService {
         this.entityManager.flush();
 
         // 暗号化項目の設定
-        String encryptedPassword = this.cipherUtil.encrypt(userInfo, maintUserInfo.getPassword(), keyBytes, ivBytes,
+        String encryptedPassword = this.cipherUtil.encrypt(userInfo, this.userEditingModel.getPassword(), keyBytes,
+                ivBytes,
                 salt);
         userInfo.setEncryptedPassword(encryptedPassword);
 
-        String encryptedName = this.cipherUtil.encrypt(userInfo, maintUserInfo.getName(), keyBytes, ivBytes, salt);
+        String encryptedName = this.cipherUtil.encrypt(userInfo, this.userEditingModel.getName(), keyBytes, ivBytes,
+                salt);
         userInfo.setEncryptedName(encryptedName);
 
-        String encryptedMailAddress = this.cipherUtil.encrypt(userInfo, maintUserInfo.getMailAddress().toLowerCase(),
+        String encryptedMailAddress = this.cipherUtil.encrypt(userInfo,
+                this.userEditingModel.getMailAddress().toLowerCase(),
                 keyBytes, ivBytes, salt);
         userInfo.setEncryptedMailAddress(encryptedMailAddress);
 
@@ -119,15 +129,13 @@ public class UserService extends AbstractService {
     /**
      * 更新
      *
-     * @param maintUserInfo
-     *            利用者情報
      */
     @PermissionInterceptor
     @Transactional
-    public void update(MaintUserInfo maintUserInfo) {
+    public void update() {
 
         // ユーザ存在チェック
-        String loginId = maintUserInfo.getLoginId();
+        String loginId = this.userEditingModel.getLoginId();
         TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
         userInfoQuery.setParameter("loginId", loginId);
@@ -147,22 +155,25 @@ public class UserService extends AbstractService {
         UserInfo userInfo = results.get(0);
         userInfo.setName(StringUtils.EMPTY);
         userInfo.setMailAddress(StringUtils.EMPTY);
-        userInfo.setRoleId(maintUserInfo.getRoleId());
-        userInfo.setZoneId(maintUserInfo.getZoneId());
+        userInfo.setRoleId(this.userEditingModel.getRoleId());
+        userInfo.setZoneId(this.userEditingModel.getZoneId());
         userInfo.setSecurityLevel(SecurityLevel.LEVEL1.getInt()); // 固定
 
         LocalDateTime timestamp = LocalDateTime.now();
 
         // 暗号化項目の設定
-        String encryptedName = this.cipherUtil.encrypt(userInfo, maintUserInfo.getName(), keyBytes, ivBytes, salt);
+        String encryptedName = this.cipherUtil.encrypt(userInfo, this.userEditingModel.getName(), keyBytes, ivBytes,
+                salt);
         userInfo.setEncryptedName(encryptedName);
 
-        String encryptedMailAddress = this.cipherUtil.encrypt(userInfo, maintUserInfo.getMailAddress().toLowerCase(),
+        String encryptedMailAddress = this.cipherUtil.encrypt(userInfo,
+                this.userEditingModel.getMailAddress().toLowerCase(),
                 keyBytes, ivBytes, salt);
         userInfo.setEncryptedMailAddress(encryptedMailAddress);
 
-        if (maintUserInfo.isPasswordChanged()) {
-            String encryptedPassword = this.cipherUtil.encrypt(userInfo, maintUserInfo.getPassword(), keyBytes, ivBytes,
+        if (this.userEditingModel.isPasswordChanged()) {
+            String encryptedPassword = this.cipherUtil.encrypt(userInfo, this.userEditingModel.getPassword(), keyBytes,
+                    ivBytes,
                     salt);
             userInfo.setEncryptedPassword(encryptedPassword);
         }
@@ -178,14 +189,12 @@ public class UserService extends AbstractService {
 
     /**
      * 利用者削除（論理削除）
-     *
-     * @param maintUserInfo
      */
     @PermissionInterceptor
     @Transactional
-    public void delete(MaintUserInfo maintUserInfo) {
+    public void delete() {
         // ユーザ存在チェック
-        String loginId = maintUserInfo.getLoginId();
+        String loginId = this.userEditingModel.getLoginId();
 
         TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
@@ -227,7 +236,7 @@ public class UserService extends AbstractService {
      * @return
      */
     @PermissionInterceptor
-    public List<UserInfoListItem> loadMaintUserInfos() {
+    public List<UserInfoListItem> getUserInfoListItems() {
         List<UserInfoListItem> results = new ArrayList<>();
 
         TypedQuery<UserInfo> query = this.entityManager
@@ -262,27 +271,23 @@ public class UserService extends AbstractService {
     /**
      * 新規登録用情報生成
      *
-     * @return {@link MaintUserInfo}
      */
     @PermissionInterceptor
-    public MaintUserInfo createNewData() {
-        MaintUserInfo maintUserInfo = new MaintUserInfo();
-        maintUserInfo.setId(0);
-        maintUserInfo.setNewData(true);
-        maintUserInfo.setPasswordChanged(true);
-        maintUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
-
-        return maintUserInfo;
+    public void createNewData() {
+        // this.userEditingModel = new UserEditingModel();
+        this.userEditingModel.setId(0);
+        this.userEditingModel.setNewData(true);
+        this.userEditingModel.setPasswordChanged(true);
+        this.userEditingModel.setRoleId(UserRoleId.USER.getInt());
     }
 
     /**
      * ユーザ管理画面用の情報を取得
      *
      * @param id
-     * @return {@link MaintUserInfo}
      */
     @PermissionInterceptor
-    public MaintUserInfo getMaintUsernfo(int id) {
+    public void loadMaintUsernfo(int id) {
         UserInfo userInfo = this.entityManager.find(UserInfo.class, id);
         if (userInfo == null) {
             throw new SimpleHealthLogException(
@@ -293,9 +298,9 @@ public class UserService extends AbstractService {
             throw new SimpleHealthLogException(
                     this.messageBundle.getString("contents.maint.user.userEditing.msg.alreadyDeleted"));
         }
-        MaintUserInfo maintUserInfo = new MaintUserInfo();
         try {
-            BeanUtils.copyProperties(maintUserInfo, userInfo);
+            BeanUtils.copyProperties(this.userEditingModel, userInfo);
+            this.userEditingModel.setNewData(false);
 
             if (SecurityLevel.LEVEL0.getInt() < userInfo.getSecurityLevel()) {
                 // 新形式の場合
@@ -308,16 +313,14 @@ public class UserService extends AbstractService {
                 String plainMailAddress = this.cipherUtil.decrypt(userInfo, userInfo.getEncryptedMailAddress(),
                         keyBytes, ivBytes, salt);
 
-                maintUserInfo.setName(plainName);
-                maintUserInfo.setMailAddress(plainMailAddress);
+                this.userEditingModel.setName(plainName);
+                this.userEditingModel.setMailAddress(plainMailAddress);
             }
 
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
-
+            this.logger.error(e.getMessage());
         }
-
-        return maintUserInfo;
     }
 
     /**

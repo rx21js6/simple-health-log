@@ -23,19 +23,22 @@ import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.service.AbstractServiceTest;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
-import jp.nauplius.app.shl.user.bean.MaintUserInfo;
+import jp.nauplius.app.shl.user.bean.UserEditingModel;
 import jp.nauplius.app.shl.user.bean.UserInfoListItem;
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class})
+@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class })
 public class UserServiceTest extends AbstractServiceTest {
     @Inject
     private UserService userService;
 
     @Inject
     private LoginInfo loginInfo;
+
+    @Inject
+    private UserEditingModel userEditingModel;
 
     @Before
     public void setUp() throws Exception {
@@ -62,16 +65,16 @@ public class UserServiceTest extends AbstractServiceTest {
 
         this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
 
-        MaintUserInfo form = new MaintUserInfo();
-        form.setId(2);
-        form.setLoginId("test1");
+        this.userEditingModel.setId(2);
+        this.userEditingModel.setLoginId("test1");
 
-        this.userService.delete(form);
+        this.userService.delete();
 
-        UserInfo resultUserInfo = this.userService.getEntityManager().find(UserInfo.class, form.getId());
+        UserInfo resultUserInfo = this.userService.getEntityManager().find(UserInfo.class,
+                this.userEditingModel.getId());
         assertTrue(resultUserInfo.getDeleted());
 
-        assertNull(this.userService.getEntityManager().find(UserToken.class, form.getId()));
+        assertNull(this.userService.getEntityManager().find(UserToken.class, this.userEditingModel.getId()));
     }
 
     @Test(expected = SimpleHealthLogException.class)
@@ -82,14 +85,13 @@ public class UserServiceTest extends AbstractServiceTest {
 
         this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
 
-        MaintUserInfo form = new MaintUserInfo();
-        form.setId(1);
-        form.setLoginId("admin");
+        this.userEditingModel.setId(1);
+        this.userEditingModel.setLoginId("admin");
 
         // assertThrows(SimpleHealthLogException.class, () -> {
         // this.userService.delete(form);
         // });
-        this.userService.delete(form);
+        this.userService.delete();
     }
 
     @Test
@@ -101,16 +103,15 @@ public class UserServiceTest extends AbstractServiceTest {
 
         this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
 
-        MaintUserInfo form = new MaintUserInfo();
-        form.setLoginId("test3");
-        form.setName("テスト３");
-        form.setMailAddress("test3@test.maybe.not.exist.com");
-        form.setPassword("123xyz");
-        form.setPasswordRetype("123xyz");
-        form.setNewData(true);
-        form.setZoneId(StringUtils.EMPTY);
+        this.userEditingModel.setLoginId("test3");
+        this.userEditingModel.setName("テスト３");
+        this.userEditingModel.setMailAddress("test3@test.maybe.not.exist.com");
+        this.userEditingModel.setPassword("123xyz");
+        this.userEditingModel.setPasswordRetype("123xyz");
+        this.userEditingModel.setNewData(true);
+        this.userEditingModel.setZoneId(StringUtils.EMPTY);
 
-        this.userService.register(form);
+        this.userService.register();
     }
 
     @Test
@@ -124,15 +125,15 @@ public class UserServiceTest extends AbstractServiceTest {
 
         this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
 
-        MaintUserInfo maintUserInfo = this.userService.getMaintUsernfo(2);
-        maintUserInfo.setName(NAME);
-        maintUserInfo.setZoneId(ZONE_ID);
+        this.userService.loadMaintUsernfo(2);
+        this.userEditingModel.setName(NAME);
+        this.userEditingModel.setZoneId(ZONE_ID);
 
-        this.userService.update(maintUserInfo);
+        this.userService.update();
 
-        MaintUserInfo resultUserInfo = this.userService.getMaintUsernfo(2);
-        assertEquals(NAME, resultUserInfo.getName());
-        assertEquals(ZONE_ID, resultUserInfo.getZoneId());
+        this.userService.loadMaintUsernfo(2);
+        assertEquals(NAME, this.userEditingModel.getName());
+        assertEquals(ZONE_ID, this.userEditingModel.getZoneId());
     }
 
     @Test
@@ -143,19 +144,19 @@ public class UserServiceTest extends AbstractServiceTest {
 
         this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
 
-        List<UserInfoListItem> userInfos = this.userService.loadMaintUserInfos();
+        List<UserInfoListItem> userInfos = this.userService.getUserInfoListItems();
         assertEquals(2, userInfos.size());
 
     }
 
     @Test
     public void testCreateNewData() {
-        MaintUserInfo maintUserInfo = this.userService.createNewData();
+        this.userService.createNewData();
 
-        assertNotNull(maintUserInfo);
-        assertTrue("isNewData", maintUserInfo.isNewData());
-        assertTrue("isPasswordChanged", maintUserInfo.isPasswordChanged());
-        assertEquals(UserRoleId.NORMAL.getInt(), maintUserInfo.getRoleId());
+        assertNotNull(this.userEditingModel);
+        assertTrue("isNewData", this.userEditingModel.isNewData());
+        assertTrue("isPasswordChanged", this.userEditingModel.isPasswordChanged());
+        assertEquals(UserRoleId.USER.getInt(), this.userEditingModel.getRoleId());
 
     }
 
@@ -163,11 +164,11 @@ public class UserServiceTest extends AbstractServiceTest {
     public void testGetMaintUsernfo() {
         this.insertTestDataXml(this.userService.getEntityManager(), "dbunit/UserServiceTest_data01.xml");
 
-        MaintUserInfo maintUserInfo = this.userService.getMaintUsernfo(1);
+        this.userService.loadMaintUsernfo(1);
 
-        assertNotNull(maintUserInfo);
-        assertEquals(1, maintUserInfo.getId());
-        assertEquals("admin", maintUserInfo.getLoginId());
+        assertNotNull(this.userEditingModel);
+        assertEquals(1, this.userEditingModel.getId());
+        assertEquals("admin", this.userEditingModel.getLoginId());
     }
 
     @Test
