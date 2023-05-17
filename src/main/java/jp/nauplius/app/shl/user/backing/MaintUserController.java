@@ -16,17 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.service.TimeZoneHolderService;
 import jp.nauplius.app.shl.common.ui.backing.CommonConfirmModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalController;
 import jp.nauplius.app.shl.common.ui.backing.ModalControllerListener;
 import jp.nauplius.app.shl.common.ui.bean.CommonConfirmModalBean;
-import jp.nauplius.app.shl.common.ui.bean.TimeZoneInfo;
 import jp.nauplius.app.shl.user.bean.UserEditingModel;
-import jp.nauplius.app.shl.user.bean.UserInfoListItem;
 import jp.nauplius.app.shl.user.service.UserService;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * ユーザ管理画面コントローラ
@@ -44,27 +39,13 @@ public class MaintUserController implements ModalControllerListener {
     private UserService userService;
 
     @Inject
-    private TimeZoneHolderService timeZoneHolderService;
+    private UserEditingModel userEditingModel;
 
     @Inject
     private CommonConfirmModalController commonConfirmModalController;
 
     @Inject
     private CommonConfirmModalBean commonConfirmModalBean;
-
-    @Getter
-    @Setter
-    private List<UserInfoListItem> userInfos;
-
-    @Getter
-    @Setter
-    private int selectedId;
-
-    @Getter
-    private List<TimeZoneInfo> timeZoneInfos;
-
-    @Inject
-    private UserEditingModel userEditingModel;
 
     private String methodName;
 
@@ -73,8 +54,8 @@ public class MaintUserController implements ModalControllerListener {
         this.logger.debug("#init()");
     }
 
-    public void loadUserInfos() {
-        this.userInfos = this.userService.getUserInfoListItems();
+    public void loadUserInfoListItems() {
+        this.userService.loadUserInfoListItems();
     }
 
     public String showList() {
@@ -84,13 +65,11 @@ public class MaintUserController implements ModalControllerListener {
 
     public String newData() {
         this.userService.createNewData();
-        this.timeZoneInfos = this.timeZoneHolderService.getTimeZoneInfos();
         return "/contents/maint/user/userEditing.xhtml?faces-redirect=true";
     }
 
     public String editData() {
-        this.userService.loadMaintUsernfo(this.selectedId);
-        this.timeZoneInfos = this.timeZoneHolderService.getTimeZoneInfos();
+        this.userService.loadMaintUsernfo();
         return "/contents/maint/user/userEditing.xhtml?faces-redirect=true";
     }
 
@@ -119,17 +98,16 @@ public class MaintUserController implements ModalControllerListener {
 
     public String showDeletionModal() {
         try {
-            this.userService.loadMaintUsernfo(this.selectedId);
+            this.userService.loadMaintUsernfo();
 
             String message = MessageFormat.format(
                     this.messageBundle.getString("contents.maint.user.userList.msg.confirmDeletion"),
-                    this.userEditingModel.getLoginId());
+                    this.userEditingModel.getUserEditingFormModel().getLoginId());
 
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder.append(message);
             List<String> messages = Arrays
-                    .asList(new String[] { messageBuilder.toString(),
-                            this.messageBundle.getString("common.msg.sure") });
+                    .asList(new String[]{messageBuilder.toString(), this.messageBundle.getString("common.msg.sure")});
             this.commonConfirmModalBean
                     .setTitle(this.messageBundle.getString("contents.maint.user.userList.label.userDeletion"));
             this.commonConfirmModalBean.setMessages(messages);

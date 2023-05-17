@@ -25,10 +25,13 @@ import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.interceptor.PermissionInterceptor;
 import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
+import jp.nauplius.app.shl.common.service.TimeZoneHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.user.bean.UserEditingFormModel;
 import jp.nauplius.app.shl.user.bean.UserEditingModel;
 import jp.nauplius.app.shl.user.bean.UserInfoListItem;
+import jp.nauplius.app.shl.user.bean.UserListModel;
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 import jp.nauplius.app.shl.user.constants.UserStatus;
 
@@ -53,19 +56,24 @@ public class UserService extends AbstractService {
     private KeyIvHolderService keyIvHolderService;
 
     @Inject
+    private TimeZoneHolderService timeZoneHolderService;
+
+    @Inject
     private UserEditingModel userEditingModel;
+
+    @Inject
+    private UserListModel userListModel;
 
     /**
      * 画面から登録
      *
-     * @param userRegistration
      */
     @PermissionInterceptor
     @Transactional
     public void register() {
-
+        UserEditingFormModel userEditingFormModel = this.userEditingModel.getUserEditingFormModel();
         // ユーザ存在チェック
-        String loginId = this.userEditingModel.getLoginId();
+        String loginId = userEditingFormModel.getLoginId();
         TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
         userInfoQuery.setParameter("loginId", loginId);
@@ -84,11 +92,11 @@ public class UserService extends AbstractService {
         UserInfo userInfo = new UserInfo();
         LocalDateTime timestamp = LocalDateTime.now();
         userInfo.setEncryptedPassword(StringUtils.EMPTY);
-        userInfo.setLoginId(this.userEditingModel.getLoginId());
+        userInfo.setLoginId(loginId);
         userInfo.setName(StringUtils.EMPTY);
         userInfo.setMailAddress(StringUtils.EMPTY);
-        userInfo.setRoleId(this.userEditingModel.getRoleId());
-        userInfo.setZoneId(this.userEditingModel.getZoneId());
+        userInfo.setRoleId(userEditingFormModel.getRoleId());
+        userInfo.setZoneId(userEditingFormModel.getZoneId());
         userInfo.setStatus(UserStatus.REGISTERED.getInt()); // いきなり本登録、本来は仮登録
         userInfo.setDeleted(false);
         userInfo.setCreatedBy(this.loginInfo.getUserInfo().getId());
@@ -102,18 +110,16 @@ public class UserService extends AbstractService {
         this.entityManager.flush();
 
         // 暗号化項目の設定
-        String encryptedPassword = this.cipherUtil.encrypt(userInfo, this.userEditingModel.getPassword(), keyBytes,
-                ivBytes,
-                salt);
+        String encryptedPassword = this.cipherUtil.encrypt(userInfo, userEditingFormModel.getPassword(), keyBytes,
+                ivBytes, salt);
         userInfo.setEncryptedPassword(encryptedPassword);
 
-        String encryptedName = this.cipherUtil.encrypt(userInfo, this.userEditingModel.getName(), keyBytes, ivBytes,
+        String encryptedName = this.cipherUtil.encrypt(userInfo, userEditingFormModel.getName(), keyBytes, ivBytes,
                 salt);
         userInfo.setEncryptedName(encryptedName);
 
         String encryptedMailAddress = this.cipherUtil.encrypt(userInfo,
-                this.userEditingModel.getMailAddress().toLowerCase(),
-                keyBytes, ivBytes, salt);
+                userEditingFormModel.getMailAddress().toLowerCase(), keyBytes, ivBytes, salt);
         userInfo.setEncryptedMailAddress(encryptedMailAddress);
 
         this.entityManager.merge(userInfo);
@@ -133,9 +139,9 @@ public class UserService extends AbstractService {
     @PermissionInterceptor
     @Transactional
     public void update() {
-
+        UserEditingFormModel userEditingFormModel = this.userEditingModel.getUserEditingFormModel();
         // ユーザ存在チェック
-        String loginId = this.userEditingModel.getLoginId();
+        String loginId = userEditingFormModel.getLoginId();
         TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
         userInfoQuery.setParameter("loginId", loginId);
@@ -155,26 +161,24 @@ public class UserService extends AbstractService {
         UserInfo userInfo = results.get(0);
         userInfo.setName(StringUtils.EMPTY);
         userInfo.setMailAddress(StringUtils.EMPTY);
-        userInfo.setRoleId(this.userEditingModel.getRoleId());
-        userInfo.setZoneId(this.userEditingModel.getZoneId());
+        userInfo.setRoleId(userEditingFormModel.getRoleId());
+        userInfo.setZoneId(userEditingFormModel.getZoneId());
         userInfo.setSecurityLevel(SecurityLevel.LEVEL1.getInt()); // 固定
 
         LocalDateTime timestamp = LocalDateTime.now();
 
         // 暗号化項目の設定
-        String encryptedName = this.cipherUtil.encrypt(userInfo, this.userEditingModel.getName(), keyBytes, ivBytes,
+        String encryptedName = this.cipherUtil.encrypt(userInfo, userEditingFormModel.getName(), keyBytes, ivBytes,
                 salt);
         userInfo.setEncryptedName(encryptedName);
 
         String encryptedMailAddress = this.cipherUtil.encrypt(userInfo,
-                this.userEditingModel.getMailAddress().toLowerCase(),
-                keyBytes, ivBytes, salt);
+                userEditingFormModel.getMailAddress().toLowerCase(), keyBytes, ivBytes, salt);
         userInfo.setEncryptedMailAddress(encryptedMailAddress);
 
-        if (this.userEditingModel.isPasswordChanged()) {
-            String encryptedPassword = this.cipherUtil.encrypt(userInfo, this.userEditingModel.getPassword(), keyBytes,
-                    ivBytes,
-                    salt);
+        if (userEditingFormModel.isPasswordChanged()) {
+            String encryptedPassword = this.cipherUtil.encrypt(userInfo, userEditingFormModel.getPassword(), keyBytes,
+                    ivBytes, salt);
             userInfo.setEncryptedPassword(encryptedPassword);
         }
         userInfo.setModifiedBy(this.loginInfo.getUserInfo().getId());
@@ -193,8 +197,9 @@ public class UserService extends AbstractService {
     @PermissionInterceptor
     @Transactional
     public void delete() {
+        UserEditingFormModel userEditingFormModel = this.userEditingModel.getUserEditingFormModel();
         // ユーザ存在チェック
-        String loginId = this.userEditingModel.getLoginId();
+        String loginId = userEditingFormModel.getLoginId();
 
         TypedQuery<UserInfo> userInfoQuery = this.entityManager
                 .createQuery("SELECT ui FROM UserInfo ui WHERE ui.loginId = :loginId", UserInfo.class);
@@ -232,12 +237,10 @@ public class UserService extends AbstractService {
 
     /**
      * 利用者管理画面用の利用者一覧取得
-     *
-     * @return
      */
     @PermissionInterceptor
-    public List<UserInfoListItem> getUserInfoListItems() {
-        List<UserInfoListItem> results = new ArrayList<>();
+    public void loadUserInfoListItems() {
+        List<UserInfoListItem> userInfoListItems = new ArrayList<>();
 
         TypedQuery<UserInfo> query = this.entityManager
                 .createQuery("SELECT u FROM UserInfo u WHERE u.deleted = FALSE ORDER BY u.id", UserInfo.class);
@@ -261,11 +264,11 @@ public class UserService extends AbstractService {
                 item.setMailAddress(plainMailAddress);
             }
 
-            results.add(item);
+            userInfoListItems.add(item);
 
         }
 
-        return results;
+        this.userListModel.setUserInfoListItems(userInfoListItems);
     }
 
     /**
@@ -274,21 +277,24 @@ public class UserService extends AbstractService {
      */
     @PermissionInterceptor
     public void createNewData() {
-        // this.userEditingModel = new UserEditingModel();
-        this.userEditingModel.setId(0);
+        UserEditingFormModel userEditingFormModel = new UserEditingFormModel();
+        userEditingFormModel.setId(0);
+        userEditingFormModel.setPasswordChanged(true);
+        userEditingFormModel.setRoleId(UserRoleId.USER.getInt());
+
         this.userEditingModel.setNewData(true);
-        this.userEditingModel.setPasswordChanged(true);
-        this.userEditingModel.setRoleId(UserRoleId.USER.getInt());
+        this.userEditingModel.setTimeZoneInfos(this.timeZoneHolderService.getTimeZoneInfos());
+
+        this.userEditingModel.setUserEditingFormModel(userEditingFormModel);
     }
 
     /**
      * ユーザ管理画面用の情報を取得
      *
-     * @param id
      */
     @PermissionInterceptor
-    public void loadMaintUsernfo(int id) {
-        UserInfo userInfo = this.entityManager.find(UserInfo.class, id);
+    public void loadMaintUsernfo() {
+        UserInfo userInfo = this.entityManager.find(UserInfo.class, this.userListModel.getSelectedId());
         if (userInfo == null) {
             throw new SimpleHealthLogException(
                     this.messageBundle.getString("contents.maint.user.userEditing.msg.notFound"));
@@ -299,8 +305,11 @@ public class UserService extends AbstractService {
                     this.messageBundle.getString("contents.maint.user.userEditing.msg.alreadyDeleted"));
         }
         try {
-            BeanUtils.copyProperties(this.userEditingModel, userInfo);
+            UserEditingFormModel userEditingFormModel = new UserEditingFormModel();
+            BeanUtils.copyProperties(userEditingFormModel, userInfo);
+
             this.userEditingModel.setNewData(false);
+            this.userEditingModel.setTimeZoneInfos(this.timeZoneHolderService.getTimeZoneInfos());
 
             if (SecurityLevel.LEVEL0.getInt() < userInfo.getSecurityLevel()) {
                 // 新形式の場合
@@ -313,9 +322,11 @@ public class UserService extends AbstractService {
                 String plainMailAddress = this.cipherUtil.decrypt(userInfo, userInfo.getEncryptedMailAddress(),
                         keyBytes, ivBytes, salt);
 
-                this.userEditingModel.setName(plainName);
-                this.userEditingModel.setMailAddress(plainMailAddress);
+                userEditingFormModel.setName(plainName);
+                userEditingFormModel.setMailAddress(plainMailAddress);
             }
+
+            this.userEditingModel.setUserEditingFormModel(userEditingFormModel);
 
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
