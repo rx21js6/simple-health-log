@@ -11,7 +11,7 @@
                 value="#{msg['contents.maint.user.userList.title']}" /></title>
         <f:metadata>
             <f:event type="preRenderView"
-                listener="#{maintUserController.loadUserInfos}" />
+                listener="#{maintUserController.loadUserInfoListItems()}" />
             <f:viewAction action="#{maintUserController.initModal()}" />
         </f:metadata>
     </h:head>
@@ -19,6 +19,7 @@
         <b:container>
             <b:row>
                 <h2>
+                    <b:iconAwesome value="user"></b:iconAwesome>
                     <h:outputText value="#{msg['contents.maint.user.userList.title']}" />
                 </h2>
             </b:row>
@@ -28,7 +29,7 @@
                     <b:column>
                         <b:commandButton
                             value="#{msg['contents.maint.user.userList.button.signUp']}"
-                            icon="pencil" action="#{maintUserController.newData}"></b:commandButton>
+                            iconAwesome="user-plus" action="#{maintUserController.newData()}"></b:commandButton>
                         <b:commandButton
                             value="#{msg['contents.maint.user.userList.button.conditionInput']}"
                             icon="heart-empty" action="#{dailyRecordController.showInput()}">
@@ -37,7 +38,7 @@
                 </h:form>
             </b:row>
             <b:row>
-                <b:dataTable value="#{maintUserController.userInfos}" var="userInfo"
+                <b:dataTable value="#{userListModel.userInfoListItems}" var="userInfo"
                     searching="false">
                     <b:dataTableColumn
                         label="#{msg['contents.maint.user.userList.label.loginId']}"
@@ -58,14 +59,14 @@
                                 value="#{msg['contents.maint.user.userList.button.edit']}"
                                 action="#{maintUserController.editData}">
                                 <f:setPropertyActionListener value="#{userInfo.id}"
-                                    target="#{maintUserController.selectedId}" />
+                                    target="#{userListModel.selectedId}" />
                             </b:commandButton>
                             <b:commandButton icon="trash"
                                 value="#{msg['contents.maint.user.userList.button.delete']}"
                                 rendered="#{userInfo.id != loginInfo.userInfo.id}"
                                 action="#{maintUserController.showDeletionModal}">
                                 <f:setPropertyActionListener value="#{userInfo.id}"
-                                    target="#{maintUserController.selectedId}" />
+                                    target="#{userListModel.selectedId}" />
                             </b:commandButton>
                         </h:form>
                     </b:dataTableColumn>

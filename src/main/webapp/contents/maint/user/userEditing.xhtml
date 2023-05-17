@@ -23,16 +23,16 @@
             <h:form id="cancelForm">
                 <b:row>
                     <h2>
+                        <b:iconAwesome value="user"></b:iconAwesome>
                         <h:outputText
                             value="#{msg['contents.maint.user.userEditing.title']}" />
                     </h2>
                 </b:row>
+                <b:messages globalOnly="true"></b:messages>
                 <b:row>
-                    <b:row>
-                        <b:commandButton action="#{maintUserController.cancel()}">
-                            <h:outputText value="#{msg['common.button.return']}" />
-                        </b:commandButton>
-                    </b:row>
+                    <b:commandButton action="#{maintUserController.cancel()}"
+                        icon="backward" value="#{msg['common.button.return']}">
+                    </b:commandButton>
                 </b:row>
             </h:form>
         </b:container>
@@ -40,49 +40,43 @@
             <h:form id="detailForm">
                 <b:row>
                     <b:panelGrid columns="1" cellpadding="5">
-                        <b:inputText
-                            value="#{maintUserController.selectedMaintUserInfo.loginId}"
-                            disabled="#{!maintUserController.selectedMaintUserInfo.newData}"
+                        <b:inputText value="#{userEditingModel.userEditingFormModel.loginId}"
+                            disabled="#{!userEditingModel.newData}"
                             label="#{msg['common.label.loginId']}" span="6" maxlength="100" />
                         <b:message for="@previous" />
 
-                        <b:inputText
-                            value="#{maintUserController.selectedMaintUserInfo.name}"
+                        <b:inputText value="#{userEditingModel.userEditingFormModel.name}"
                             label="#{msg['common.label.name']}" span="6" maxlength="100" />
                         <b:message for="@previous" />
 
-                        <b:inputText
-                            value="#{maintUserController.selectedMaintUserInfo.mailAddress}"
+                        <b:inputText value="#{userEditingModel.userEditingFormModel.mailAddress}"
                             label="#{msg['common.label.mailAddress']}" span="6"
                             maxlength="100" />
                         <b:message for="@previous" />
 
-                        <b:inputSecret
-                            disabled="#{!maintUserController.selectedMaintUserInfo.passwordChanged}"
-                            value="#{maintUserController.selectedMaintUserInfo.password}"
+                        <b:inputSecret disabled="#{!userEditingModel.userEditingFormModel.passwordChanged}"
+                            value="#{userEditingModel.userEditingFormModel.password}"
                             label="#{msg['common.label.password']}" span="6" maxlength="100" />
                         <b:message for="@previous" />
 
-                        <b:inputSecret
-                            disabled="#{!maintUserController.selectedMaintUserInfo.passwordChanged}"
-                            value="#{maintUserController.selectedMaintUserInfo.passwordRetype}"
+                        <b:inputSecret disabled="#{!userEditingModel.userEditingFormModel.passwordChanged}"
+                            value="#{userEditingModel.userEditingFormModel.passwordRetype}"
                             label="#{msg['common.label.passwordReenter']}" span="6"
                             maxlength="100" />
                         <b:message for="@previous" />
 
-                        <b:selectBooleanCheckbox
-                            rendered="#{!maintUserController.selectedMaintUserInfo.newData}"
-                            value="#{maintUserController.selectedMaintUserInfo.passwordChanged}"
+                        <b:selectBooleanCheckbox rendered="#{!userEditingModel.newData}"
+                            value="#{userEditingModel.userEditingFormModel.passwordChanged}"
                             caption="#{msg['common.label.change']}"
                             label="#{msg['common.label.passwordChanging']}" update="@form"
                             span="6"
                             onchange="ajax:maintUserController.onPasswordCheckboxChanged()" />
 
                         <b:selectOneMenu
-                            disabled="#{maintUserController.selectedMaintUserInfo.id == loginInfo.userInfo.id}"
-                            value="#{maintUserController.selectedMaintUserInfo.roleId}"
-                            label="#{msg['common.label.roleType']}"
-                            span="6" maxlength="100" converter="javax.faces.Integer">
+                            disabled="#{userEditingModel.userEditingFormModel.id == loginInfo.userInfo.id}"
+                            value="#{userEditingModel.userEditingFormModel.roleId}"
+                            label="#{msg['common.label.roleType']}" span="6" maxlength="100"
+                            converter="javax.faces.Integer">
                             <f:selectItem
                                 itemLabel="#{msg['contents.maint.user.role.label.admin']}"
                                 itemValue="0" />
@@ -92,11 +86,10 @@
                         </b:selectOneMenu>
 
                         <!-- TimeZone -->
-                        <b:selectOneMenu value="#{maintUserController.selectedMaintUserInfo.zoneId}"
+                        <b:selectOneMenu value="#{userEditingModel.userEditingFormModel.zoneId}"
                             label="#{msg['common.label.timeZoneSelection']}" span="6"
                             maxlength="100">
-                            <f:selectItems
-                                value="#{maintUserController.timeZoneInfos}"
+                            <f:selectItems value="#{userEditingModel.timeZoneInfos}"
                                 var="timeZoneInfo" itemValue="#{timeZoneInfo.zoneId}"
                                 itemLabel="#{timeZoneInfo.zoneIdLabelText}" />
                         </b:selectOneMenu>
