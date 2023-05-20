@@ -38,14 +38,28 @@
                 </b:column>
             </b:row>
             <b:row>
+                <b:column>
+                    <h2>
+                        <h:outputText
+                            value="#{msg['contents.record.monthlyRecord.title']}" />
+                    </h2>
+                </b:column>
             </b:row>
-            <b:column>
-                <h2>
-                    <h:outputText value="#{msg['contents.record.monthlyRecord.title']}" />
-                </h2>
-            </b:column>
+            <ui:fragment
+                rendered="#{monthlyRecordListController.isCurrentMonth()}">
+                <b:row>
+                    <b:column>
+                        <b:commandButton
+                            value="#{msg['contents.record.monthlyRecord.label.inputToday']}"
+                            icon="edit"
+                            action="#{monthlyRecordListController.showRecordInput()}">
+                            <f:setPropertyActionListener value="#{loginInfo.getInputToday()}"
+                                target="#{dailyRecordInputModel.selectedDate}" />
+                        </b:commandButton>
+                    </b:column>
+                </b:row>
+            </ui:fragment>
             <b:row>
-
                 <b:column>
                     <h3>
                         <h:outputText
@@ -108,30 +122,38 @@
                         <h:outputText value="#{record.dateText}"
                             converter="stringDateConverter" />
                     </b:dataTableColumn>
-                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
+                    <b:dataTableColumn
+                        styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <h:outputText value="#{record.physicalCondition.awakeTime}"
                             converter="timeConverter" />
                     </b:dataTableColumn>
-                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
+                    <b:dataTableColumn
+                        styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <h:outputText value="#{record.physicalCondition.bedTime}"
                             converter="timeConverter" />
                     </b:dataTableColumn>
-                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
+                    <b:dataTableColumn
+                        styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
                         value="#{record.physicalCondition.bodyTemperatureMorning}" />
-                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
+                    <b:dataTableColumn
+                        styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
                         value="#{record.physicalCondition.bodyTemperatureEvening}" />
-                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
+                    <b:dataTableColumn
+                        styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
                         value="#{record.physicalCondition.oxygenSaturationMorning}" />
-                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
+                    <b:dataTableColumn
+                        styleClass="#{record.isToday() ? 'monthly_record_today' : ''}"
                         value="#{record.physicalCondition.oxygenSaturationEvening}" />
-                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
+                    <b:dataTableColumn
+                        styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <ui:repeat var="conditionNote"
                             value="#{record.splitConditionNote()}">
                             <h:outputText value="#{conditionNote}"></h:outputText>
                             <br />
                         </ui:repeat>
                     </b:dataTableColumn>
-                    <b:dataTableColumn styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
+                    <b:dataTableColumn
+                        styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <b:commandButton
                             value="#{msg['contents.record.monthlyRecord.label.input']}"
                             icon="edit" look="#{record.isToday() ? 'primary' : ''}"
