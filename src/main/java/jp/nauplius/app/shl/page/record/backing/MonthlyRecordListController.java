@@ -81,6 +81,20 @@ public class MonthlyRecordListController implements Serializable {
     }
 
     /**
+     * 表示月が当月か判定
+     *
+     * @return 当月の場合true
+     */
+    public boolean isCurrentMonth() {
+        LocalDate tmpToday = this.loginInfo.getUsersLocalToday();
+        if (tmpToday.getYear() == this.today.getYear() && tmpToday.getMonthValue() == this.today.getMonthValue()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 日次入力画面表示
      *
      * @return 日次入力画面

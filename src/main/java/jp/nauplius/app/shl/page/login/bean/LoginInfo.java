@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
+import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import lombok.Data;
 
@@ -34,5 +35,14 @@ public class LoginInfo implements Serializable {
                 ? ZoneId.systemDefault()
                 : ZoneId.of(this.userInfo.getZoneId());
         return ZonedDateTime.now(zoneId).toLocalDate();
+    }
+
+    /**
+     * 当日日付をキー文字列に変換して返す。
+     *
+     * @return ログインユーザの「当日」を"yyyyMMdd"形式に変換した文字列
+     */
+    public String getInputToday() {
+        return ShlConstants.RECORDING_DATE_FORMATTER.format(this.getUsersLocalToday());
     }
 }
