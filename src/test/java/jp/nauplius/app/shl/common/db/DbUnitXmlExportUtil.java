@@ -17,11 +17,10 @@ public class DbUnitXmlExportUtil {
         String dbPassword = args[3];
         String dbUrl = String.format("jdbc:postgresql://%s:5432/%s", dbHost, dbName);
 
-        JdbcDatabaseTester tester = new JdbcDatabaseTester(
-                "org.postgresql.Driver", dbUrl, dbUser, dbPassword);
+        JdbcDatabaseTester tester = new JdbcDatabaseTester("org.postgresql.Driver", dbUrl, dbUser, dbPassword);
         IDatabaseConnection connection = tester.getConnection();
 
-        String[] tableNamesToDump = new String[] { "not_entered_notice" };
+        String[] tableNamesToDump = new String[]{"not_entered_notice"};
         IDataSet target = connection.createDataSet(tableNamesToDump);
         FileOutputStream stream = new FileOutputStream("/tmp/simple_health_log_export.xml");
         XmlDataSet.write(target, stream);

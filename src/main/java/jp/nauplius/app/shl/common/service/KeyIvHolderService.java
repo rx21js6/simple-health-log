@@ -10,12 +10,15 @@ import javax.inject.Inject;
 
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
+import jp.nauplius.app.shl.common.db.model.KeyIv;
 import jp.nauplius.app.shl.common.exception.DatabaseException;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.KeyIv;
 import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 
+/**
+ * Key/IV管理
+ */
 @ApplicationScoped
 public class KeyIvHolderService extends AbstractService {
     @Inject

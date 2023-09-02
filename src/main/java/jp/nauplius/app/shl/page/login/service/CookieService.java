@@ -31,7 +31,8 @@ public class CookieService implements Serializable {
      * @param token
      */
     public void registerToken(FacesContext context, String token) {
-        this.logger.debug("registerToken");
+        this.logger.debug("#registerToken()");
+
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
         Cookie[] cookies = request.getCookies();
@@ -58,6 +59,7 @@ public class CookieService implements Serializable {
 
     /**
      * 認証用トークン取得
+     *
      * @param context
      * @return
      */
@@ -87,7 +89,8 @@ public class CookieService implements Serializable {
      * @param context
      */
     public void removeToken(FacesContext context) {
-        this.logger.debug("removeToken");
+        this.logger.debug("#removeToken()");
+
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
         Cookie[] cookies = request.getCookies();

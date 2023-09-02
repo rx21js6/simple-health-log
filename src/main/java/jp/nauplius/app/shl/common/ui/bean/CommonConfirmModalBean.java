@@ -7,27 +7,27 @@ import javax.inject.Named;
 @ViewScoped
 public class CommonConfirmModalBean extends ModalBean {
 
-	private String okButtonValue;
-	private String cancelButtonValue;
+    private String okButtonValue;
+    private String cancelButtonValue;
 
-	public CommonConfirmModalBean() {
-		this.okButtonValue = "OK";
-		this.cancelButtonValue = "CANCEL";
-		this.visible = false;
-	}
-	public String getOkButtonValue() {
-		return okButtonValue;
-	}
+    public CommonConfirmModalBean() {
+        this.okButtonValue = "OK";
+        this.cancelButtonValue = "CANCEL";
+        this.visible = false;
+    }
+    public String getOkButtonValue() {
+        return okButtonValue;
+    }
 
-	public void setOkButtonValue(String okButtonValue) {
-		this.okButtonValue = okButtonValue;
-	}
+    public void setOkButtonValue(String okButtonValue) {
+        this.okButtonValue = okButtonValue;
+    }
 
-	public String getCancelButtonValue() {
-		return cancelButtonValue;
-	}
+    public String getCancelButtonValue() {
+        return cancelButtonValue;
+    }
 
-	public void setCancelButtonValue(String cancelButtonValue) {
-		this.cancelButtonValue = cancelButtonValue;
-	}
+    public void setCancelButtonValue(String cancelButtonValue) {
+        this.cancelButtonValue = cancelButtonValue;
+    }
 }

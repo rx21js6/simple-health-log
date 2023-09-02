@@ -24,7 +24,6 @@ public class NotEnteredNoticeController implements Serializable {
     @Inject
     private transient ResourceBundle messageBundle;
 
-
     public void init() {
         this.notEnteredNoticeService.init();
     }
@@ -36,7 +35,8 @@ public class NotEnteredNoticeController implements Serializable {
             this.notEnteredNoticeService.update();
 
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.notEnteredNoticeChanged"), null));
+                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.notEnteredNoticeChanged"),
+                    null));
 
         } catch (SimpleHealthLogException e) {
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, e.getMessage(), null));
@@ -46,4 +46,3 @@ public class NotEnteredNoticeController implements Serializable {
 
     }
 }
-

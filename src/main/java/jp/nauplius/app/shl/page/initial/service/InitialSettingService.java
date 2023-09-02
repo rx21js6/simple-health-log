@@ -13,11 +13,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.DatabaseException;
-import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
-import jp.nauplius.app.shl.page.initial.backing.InitialSettingForm;
+import jp.nauplius.app.shl.page.initial.bean.InitialSettingForm;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @Named
@@ -26,7 +26,7 @@ public class InitialSettingService implements Serializable {
     private transient ResourceBundle messageBundle;
 
     @Inject
-    private EntityManager em;
+    private EntityManager entityManager;
 
     @Inject
     private KeyIvHolderService keyIvHolderService;
@@ -55,7 +55,7 @@ public class InitialSettingService implements Serializable {
         }
         this.keyIvHolderService.registerKeyIv();
 
-        if (this.em.find(UserInfo.class, 1) != null) {
+        if (this.entityManager.find(UserInfo.class, 1) != null) {
             throw new DatabaseException(new RollbackException(
                     this.messageBundle.getString("initial.initialSetting.msg.alreadyRegistered")));
         }
@@ -75,9 +75,9 @@ public class InitialSettingService implements Serializable {
         loginUser.setModifiedBy(0);
         loginUser.setModifiedDate(timestamp);
         loginUser.setSecurityLevel(SecurityLevel.LEVEL0.getInt());
-        this.em.persist(loginUser);
-        this.em.merge(loginUser);
-        this.em.flush();
+        this.entityManager.persist(loginUser);
+        this.entityManager.merge(loginUser);
+        this.entityManager.flush();
 
         // 暗号化項目
         loginUser.setSecurityLevel(SecurityLevel.LEVEL1.getInt());
@@ -95,8 +95,8 @@ public class InitialSettingService implements Serializable {
                 this.keyIvHolderService.getKeyBytes(), this.keyIvHolderService.getIvBytes(),
                 this.keyIvHolderService.getSalt());
         loginUser.setEncryptedPassword(encryptedPassword);
-        this.em.merge(loginUser);
-        this.em.flush();
+        this.entityManager.merge(loginUser);
+        this.entityManager.flush();
 
         // メール送信
         if (this.initialSettingMailSender.isActive()) {

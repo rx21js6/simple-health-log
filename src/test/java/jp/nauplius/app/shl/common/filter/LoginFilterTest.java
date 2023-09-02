@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import jp.nauplius.app.shl.common.model.UserInfo;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
@@ -31,8 +31,8 @@ import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class LoginFilterTest extends AbstractServiceTest {
     @Inject
     private LoginFilter loginFilter;
@@ -66,10 +66,10 @@ public class LoginFilterTest extends AbstractServiceTest {
      * @throws ServletException
      */
     @Test
-    public void testDoFilterNormal() throws IOException, ServletException {
+    public void testDoFilterUser() throws IOException, ServletException {
         UserInfo normalUserInfo = new UserInfo();
         normalUserInfo.setId(2);
-        normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
+        normalUserInfo.setRoleId(UserRoleId.USER.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
@@ -96,10 +96,10 @@ public class LoginFilterTest extends AbstractServiceTest {
      * @throws ServletException
      */
     @Test
-    public void testDoFilterNormalRedirection() throws IOException, ServletException {
+    public void testDoFilterUserRedirection() throws IOException, ServletException {
         UserInfo normalUserInfo = new UserInfo();
         normalUserInfo.setId(2);
-        normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
+        normalUserInfo.setRoleId(UserRoleId.USER.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
@@ -153,7 +153,7 @@ public class LoginFilterTest extends AbstractServiceTest {
     public void testDoFilterNormalNotAuthorized() throws IOException, ServletException {
         UserInfo normalUserInfo = new UserInfo();
         normalUserInfo.setId(2);
-        normalUserInfo.setRoleId(UserRoleId.NORMAL.getInt());
+        normalUserInfo.setRoleId(UserRoleId.USER.getInt());
         this.loginInfo.setUserInfo(normalUserInfo);
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
@@ -205,6 +205,7 @@ public class LoginFilterTest extends AbstractServiceTest {
 
     /**
      * ダミーのFilterChain生成
+     *
      * @return
      */
     private FilterChain createDummyFilterChain() {

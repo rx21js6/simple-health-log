@@ -13,9 +13,9 @@ public interface ModalControllerListener extends Serializable {
      *
      * <pre>
      * public void initModal() {
-     * 	// (some routines.. eg. this.commonConfirmModalBean.setVisible(false); )
-     * 	//
-     * 	this.commonConfirmModalController.setModalControllerListener(this);
+     *     // (some routines.. eg. this.commonConfirmModalBean.setVisible(false); )
+     *     //
+     *     this.commonConfirmModalController.setModalControllerListener(this);
      * }
      * </pre>
      *

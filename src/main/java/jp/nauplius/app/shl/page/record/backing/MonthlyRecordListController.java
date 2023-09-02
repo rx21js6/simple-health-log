@@ -10,6 +10,7 @@ import javax.inject.Named;
 import org.apache.commons.collections.CollectionUtils;
 
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.record.bean.MonthlyRecordModel;
 import jp.nauplius.app.shl.page.record.service.MonthlyRecordService;
 import lombok.Getter;
 import lombok.Setter;
@@ -77,6 +78,20 @@ public class MonthlyRecordListController implements Serializable {
         this.monthlyRecordService.loadMonthlyRecords();
 
         return null;
+    }
+
+    /**
+     * 表示月が当月か判定
+     *
+     * @return 当月の場合true
+     */
+    public boolean isCurrentMonth() {
+        LocalDate tmpToday = this.loginInfo.getUsersLocalToday();
+        if (tmpToday.getYear() == this.today.getYear() && tmpToday.getMonthValue() == this.today.getMonthValue()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

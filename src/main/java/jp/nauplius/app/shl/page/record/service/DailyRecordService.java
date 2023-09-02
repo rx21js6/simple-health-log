@@ -18,17 +18,17 @@ import org.slf4j.Logger;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.constants.ShlConstants;
+import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
+import jp.nauplius.app.shl.common.db.model.PhysicalConditionPK;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.PhysicalCondition;
-import jp.nauplius.app.shl.common.model.PhysicalConditionPK;
-import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
-import jp.nauplius.app.shl.page.record.backing.DailyRecordInputModel;
-import jp.nauplius.app.shl.page.record.backing.DailyRecordListModel;
 import jp.nauplius.app.shl.page.record.bean.DailyRecord;
+import jp.nauplius.app.shl.page.record.bean.DailyRecordInputModel;
+import jp.nauplius.app.shl.page.record.bean.DailyRecordListModel;
 
 @Named
 @SessionScoped
@@ -108,7 +108,8 @@ public class DailyRecordService extends AbstractService {
     /**
      * 有効な利用者の指定日データ取得
      *
-     * @param date 指定日
+     * @param date
+     *            指定日
      * @return
      */
     public List<DailyRecord> loadDailyRecords(LocalDate date) {

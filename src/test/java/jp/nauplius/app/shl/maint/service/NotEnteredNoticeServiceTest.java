@@ -17,20 +17,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import jp.nauplius.app.shl.common.db.model.NotEnteredNotice;
+import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
-import jp.nauplius.app.shl.common.model.NotEnteredNotice;
-import jp.nauplius.app.shl.common.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.service.AbstractServiceTest;
-import jp.nauplius.app.shl.maint.backing.NotEnteredNoticeFormModel;
+import jp.nauplius.app.shl.maint.bean.NotEnteredNoticeFormModel;
 import jp.nauplius.app.shl.maint.bean.NotEnteredNoticeSelection;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class NotEnteredNoticeServiceTest extends AbstractServiceTest {
     @Inject
     private LoginInfo loginInfo;

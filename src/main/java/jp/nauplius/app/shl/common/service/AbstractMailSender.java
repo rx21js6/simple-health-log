@@ -42,6 +42,8 @@ public abstract class AbstractMailSender implements Serializable {
 
     @PostConstruct
     public void init() {
+        this.logger.info("#init() being");
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -51,11 +53,13 @@ public abstract class AbstractMailSender implements Serializable {
             JAXBContext jaxbContext = JAXBContext.newInstance(MailSenderBean.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             this.mailSenderBean = (MailSenderBean) unmarshaller.unmarshal(is);
-            this.logger.info("host: " + this.mailSenderBean.getHost());
+            this.logger.debug("host: " + this.mailSenderBean.getHost());
 
         } catch (Throwable e) {
             throw new SimpleHealthLogException(e);
         }
+
+        this.logger.info("#init() complete");
     }
 
     /**
@@ -92,6 +96,7 @@ public abstract class AbstractMailSender implements Serializable {
 
     /**
      * Sender文字列取得
+     *
      * @return Sender文字列
      * @throws UnknownHostException
      */

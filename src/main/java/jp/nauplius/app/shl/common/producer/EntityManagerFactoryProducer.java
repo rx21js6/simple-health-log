@@ -23,7 +23,8 @@ public class EntityManagerFactoryProducer implements Serializable {
 
     @Produces
     public EntityManagerFactory getEntityManagerFactory() {
-        this.logger.debug(String.format("getEntityManagerFactory: %s", ShlConstants.PERSISTENCE_UNIT_NAME));
+        this.logger.debug("#getEntityManagerFactory()");
+        this.logger.debug(String.format("unitName: %s", ShlConstants.PERSISTENCE_UNIT_NAME));
 
         if (this.factory == null || !this.factory.isOpen()) {
             synchronized (this) {

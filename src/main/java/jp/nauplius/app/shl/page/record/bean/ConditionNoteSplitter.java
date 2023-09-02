@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import jp.nauplius.app.shl.common.model.PhysicalCondition;
+import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
 
 public interface ConditionNoteSplitter extends Serializable {
     PhysicalCondition getPhysicalCondition();

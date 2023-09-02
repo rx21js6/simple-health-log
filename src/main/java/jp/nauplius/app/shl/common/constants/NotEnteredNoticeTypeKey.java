@@ -1,5 +1,9 @@
 package jp.nauplius.app.shl.common.constants;
 
+/**
+ * 未入力時に通知する情報のキー
+ *
+ */
 public enum NotEnteredNoticeTypeKey {
     /** 起床時刻 */
     AWAKE_TIME,
