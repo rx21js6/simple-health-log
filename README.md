@@ -2,9 +2,9 @@
 
 (Pardon my broken English.😅)
 
-Updated at 2023-05-13
+Updated at 2023-09-03
 
-* Users can now specify their time zone.
+* (Mmonthly record view)When selecting "Current month", "Input today's condition" button is displayed.
 * Fixed some bugs.
 
 ---
