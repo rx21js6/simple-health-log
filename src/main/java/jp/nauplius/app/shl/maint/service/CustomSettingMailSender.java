@@ -44,7 +44,7 @@ public class CustomSettingMailSender extends AbstractMailSender {
             messageContent.setFrom(new InternetAddress(adminMailAddress, sender, CHARSET));
             messageContent.addRecipient(Message.RecipientType.TO, new InternetAddress(mailAddress));
             String messageSubject = this.messageBundle
-                    .getString("contents.maint.settings.cutomSetting.msg.passwordChangedMailSubject");
+                    .getString("contents.maint.settings.customSetting.msg.passwordChangedMailSubject");
 
             // 件名
             messageContent.setSubject(String.format("[%s]%s", sender, messageSubject), CHARSET);
@@ -82,7 +82,7 @@ public class CustomSettingMailSender extends AbstractMailSender {
             messageContent.setFrom(new InternetAddress(adminMailAddress, sender, CHARSET));
             messageContent.addRecipient(Message.RecipientType.TO, new InternetAddress(maiAddress));
             String messageSubject = this.messageBundle
-                    .getString("contents.maint.settings.cutomSetting.msg.testMailSubject");
+                    .getString("contents.maint.settings.customSetting.msg.testMailSubject");
 
             // 件名
             messageContent.setSubject(String.format("[%s]%s", sender, messageSubject), CHARSET);
@@ -120,7 +120,7 @@ public class CustomSettingMailSender extends AbstractMailSender {
             messageContent.setFrom(new InternetAddress(adminMailAddress, sender, CHARSET));
             messageContent.addRecipient(Message.RecipientType.TO, new InternetAddress(mailAddress));
             String messageSubject = this.messageBundle
-                    .getString("contents.maint.settings.cutomSetting.msg.addressChangedMailSubject");
+                    .getString("contents.maint.settings.customSetting.msg.addressChangedMailSubject");
 
             // 件名
             messageContent.setSubject(String.format("[%s]%s", sender, messageSubject), CHARSET);
@@ -144,7 +144,7 @@ public class CustomSettingMailSender extends AbstractMailSender {
         StringBuilder mailMessageBuilder = new StringBuilder();
 
         mailMessageBuilder.append(
-                this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.passwordChangedMailMessage"));
+                this.messageBundle.getString("contents.maint.settings.customSetting.msg.passwordChangedMailMessage"));
         mailMessageBuilder.append("\n");
 
         return mailMessageBuilder.toString();
@@ -160,7 +160,7 @@ public class CustomSettingMailSender extends AbstractMailSender {
         StringBuilder mailMessageBuilder = new StringBuilder();
 
         mailMessageBuilder
-                .append(this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.testMailMessage"));
+                .append(this.messageBundle.getString("contents.maint.settings.customSetting.msg.testMailMessage"));
         mailMessageBuilder.append("\n");
 
         return mailMessageBuilder.toString();
@@ -176,7 +176,7 @@ public class CustomSettingMailSender extends AbstractMailSender {
         StringBuilder mailMessageBuilder = new StringBuilder();
 
         mailMessageBuilder.append(
-                this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.addressChangedMailMessage"));
+                this.messageBundle.getString("contents.maint.settings.customSetting.msg.addressChangedMailMessage"));
         mailMessageBuilder.append("\n");
 
         return mailMessageBuilder.toString();

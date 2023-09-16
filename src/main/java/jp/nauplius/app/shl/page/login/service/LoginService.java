@@ -316,7 +316,7 @@ public class LoginService extends AbstractService {
 
         if (!userInfo.getName().equals(name) || !StringUtils.equals(mailAddress, plainMailAddress)) {
             throw new SimpleHealthLogException(
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.nameOrMailAddressUnmatch"));
+                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.nameOrMailAddressUnmatch"));
         }
 
         // すべて一致したらパスワードをリセット

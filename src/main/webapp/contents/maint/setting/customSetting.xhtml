@@ -8,7 +8,7 @@
 <f:view>
     <h:head>
         <title><h:outputText
-                value="#{msg['contents.maint.settings.cutomSetting.label.title']}" /></title>
+                value="#{msg['contents.maint.settings.customSetting.label.title']}" /></title>
         <f:metadata>
             <f:viewAction action="#{customSettingController.init()}" />
             <f:viewAction action="#{notEnteredNoticeController.init()}" />
@@ -29,7 +29,7 @@
             <b:row>
                 <h2>
                     <h:outputText
-                        value="#{msg['contents.maint.settings.cutomSetting.label.title']}" />
+                        value="#{msg['contents.maint.settings.customSetting.label.title']}" />
                 </h2>
             </b:row>
             <b:row>
@@ -57,18 +57,18 @@
         <ui:fragment rendered="#{loginInfo.userInfo.securityLevel lt 1}">
             <b:container>
                 <b:panel
-                    title="#{msg['contents.maint.settings.cutomSetting.label.securityEnhancement']}"
+                    title="#{msg['contents.maint.settings.customSetting.label.securityEnhancement']}"
                     collapsible="false">
                     <b:form id="enhancementSecurityform">
                         <b:row>
                             <h3>
                                 <h:outputText
-                                    value="#{msg['contents.maint.settings.cutomSetting.label.securityEnhancement']}" />
+                                    value="#{msg['contents.maint.settings.customSetting.label.securityEnhancement']}" />
                             </h3>
                         </b:row>
                         <b:row>
                             <h:outputText
-                                value="#{msg['contents.maint.settings.cutomSetting.msg.performSecurityEnhancement']}" />
+                                value="#{msg['contents.maint.settings.customSetting.msg.performSecurityEnhancement']}" />
                         </b:row>
                         <b:row>
                             <b:commandButton value="#{msg['common.label.run']}"
@@ -102,7 +102,7 @@
         <!-- passwordChangingForm -->
         <b:container>
             <b:panel
-                title="#{msg['contents.maint.settings.cutomSetting.label.passwordChanging']}"
+                title="#{msg['contents.maint.settings.customSetting.label.passwordChanging']}"
                 collapsible="false">
                 <b:form id="passwordChangingForm">
                     <b:row>
@@ -130,13 +130,13 @@
         <!-- mailAddressChangingForm -->
         <b:container>
             <b:panel
-                title="#{msg['contents.maint.settings.cutomSetting.label.mailAddressChanging']}"
+                title="#{msg['contents.maint.settings.customSetting.label.mailAddressChanging']}"
                 collapsible="false">
                 <b:form id="mailAddressChangingForm">
                     <b:row>
                         <h4>
                             <h:outputText
-                                value="#{msg['contents.maint.settings.cutomSetting.label.currentMailAddress']}" />
+                                value="#{msg['contents.maint.settings.customSetting.label.currentMailAddress']}" />
                         </h4>
                         <h:outputText
                             value="#{customSettingMailAddressModel.currentMailAddress}" />
@@ -144,7 +144,7 @@
                     <b:row>
                         <h4>
                             <h:outputText
-                                value="#{msg['contents.maint.settings.cutomSetting.label.mailAddressChanging']}" />
+                                value="#{msg['contents.maint.settings.customSetting.label.mailAddressChanging']}" />
                         </h4>
                         <b:panelGrid columns="1" cellpadding="5">
                             <b:inputText value="#{customSettingMailAddressModel.mailAddress}"
@@ -152,7 +152,7 @@
                                 maxlength="100" />
                             <b:message for="@previous" />
                             <b:commandButton icon="send"
-                                value="#{msg['contents.maint.settings.cutomSetting.buton.testMailSending']}"
+                                value="#{msg['contents.maint.settings.customSetting.buton.testMailSending']}"
                                 disabled="#{!customSettingMailSender.isActive()}"
                                 action="#{customSettingController.sendTestMail()}">
                             </b:commandButton>
@@ -169,7 +169,7 @@
         <!-- timeZoneChangingForm -->
         <b:container>
             <b:panel
-                title="#{msg['contents.maint.settings.cutomSetting.label.timeZoneChanging']}"
+                title="#{msg['contents.maint.settings.customSetting.label.timeZoneChanging']}"
                 collapsible="false">
                 <b:form id="timeZoneChangingForm">
                     <b:row>

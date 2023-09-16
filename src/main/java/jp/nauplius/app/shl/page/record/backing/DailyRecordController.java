@@ -365,7 +365,7 @@ public class DailyRecordController implements ModalControllerListener {
         // セキュリティ警告
         if (this.loginInfo.getUserInfo().getSecurityLevel() < SecurityLevel.LEVEL1.getInt()) {
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.securityLevelWarning"),
+                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.securityLevelWarning"),
                     null));
         }
 
