@@ -128,6 +128,10 @@
                         <b:commandButton id="settingButton"
                             action="#{dailyRecordController.showCustomSetting(false)}"
                             value="#{msg['common.label.setting']}" icon="cog" />
+                        <b:commandButton id="adminSettingButton"
+                            rendered="#{loginInfo.userInfo.roleId == 0}"
+                            action="#{dailyRecordController.showAdminSetting(false)}"
+                            value="#{msg['common.label.adminSetting']}" icon="cog" />
                     </b:column>
                     <!-- Date changing -->
                     <b:column>

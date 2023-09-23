@@ -14,14 +14,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
-import jp.nauplius.app.shl.common.db.model.KeyIv;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.service.AbstractService;
 import jp.nauplius.app.shl.common.service.KeyIvHolderService;
 import jp.nauplius.app.shl.common.service.TimeZoneHolderService;
 import jp.nauplius.app.shl.common.util.CipherUtil;
-import jp.nauplius.app.shl.maint.bean.CustomSettingKeyIvModel;
 import jp.nauplius.app.shl.maint.bean.CustomSettingMailAddressModel;
 import jp.nauplius.app.shl.maint.bean.CustomSettingPasswordModel;
 import jp.nauplius.app.shl.maint.bean.TimeZoneInputModel;
@@ -57,9 +55,6 @@ public class CustomSettingService extends AbstractService {
     private CustomSettingMailSender customSettingMailSender;
 
     @Inject
-    private CustomSettingKeyIvModel customSettingKeyIvModel;
-
-    @Inject
     private TimeZoneInputModel timeZoneInputModel;
 
     /**
@@ -75,10 +70,7 @@ public class CustomSettingService extends AbstractService {
             throw new SimpleHealthLogException(message);
         }
 
-        KeyIv keyIv = this.entityManager.find(KeyIv.class, 1);
-        this.customSettingKeyIvModel.setKey(keyIv.getEncryptionKey());
-        this.customSettingKeyIvModel.setIv(keyIv.getEncryptionIv());
-
+        // メールアドレス取得
         if (userInfo.getSecurityLevel() == SecurityLevel.LEVEL1.getInt()) {
             byte[] keyBytes = this.keyIvHolderService.getKeyBytes();
             byte[] ivBytes = this.keyIvHolderService.getIvBytes();

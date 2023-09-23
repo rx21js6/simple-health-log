@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:head>
+        <title><h:outputText
+                value="#{msg['contents.maint.settings.adminSetting.label.title']}" /></title>
+        <f:metadata>
+            <f:viewAction action="#{adminSettingController.init()}" />
+            <f:viewAction action="#{notEnteredNoticeController.init()}" />
+        </f:metadata>
+        <meta charset="UTF-8" />
+    </h:head>
+    <h:body>
+        <b:form id="modalForm">
+            <ui:fragment rendered="#{commonConfirmModalBean.visible}">
+                <ui:insert>
+                    <ui:include src="/contents/common/commonConfirmModal.jsf" />
+                </ui:insert>
+            </ui:fragment>
+        </b:form>
+
+        <!-- title -->
+        <b:container>
+            <b:row>
+                <h2>
+                    <h:outputText
+                        value="#{msg['contents.maint.settings.customSetting.label.title']}" />
+                </h2>
+            </b:row>
+            <b:row>
+                <b:column>
+                    <b:messages globalOnly="true"></b:messages>
+                </b:column>
+            </b:row>
+        </b:container>
+
+        <!-- cancelForm -->
+        <b:container>
+            <b:form id="cancelForm">
+                <b:row>
+                    <b:row>
+                        <b:commandButton icon="heart-empty"
+                            value="#{msg['record.dailyRecord.physicalCondition']}"
+                            action="#{adminSettingController.cancel()}">
+                        </b:commandButton>
+                    </b:row>
+                </b:row>
+            </b:form>
+        </b:container>
+
+        <!-- keyIvForm -->
+        <ui:fragment rendered="#{loginInfo.userInfo.roleId == 0}">
+            <b:container>
+                <b:panel title="Key/Iv" collapsible="false">
+                    <b:form id="keyIvForm">
+                        <b:row>
+                            <b:panelGrid columns="1" cellpadding="5">
+                                <b:inputText label="Key" value="#{customSettingKeyIvModel.key}"
+                                    span="6" disabled="true"></b:inputText>
+                                <b:inputText label="Iv" value="#{customSettingKeyIvModel.iv}"
+                                    span="6" disabled="true"></b:inputText>
+                            </b:panelGrid>
+                        </b:row>
+                    </b:form>
+                </b:panel>
+            </b:container>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{loginInfo.userInfo.roleId == 0}">
+            <ui:insert>
+                <ui:include src="/contents/common/notEnteredNotice.jsf" />
+            </ui:insert>
+        </ui:fragment>
+        <b:container>
+            <b:row></b:row>
+        </b:container>
+    </h:body>
+</f:view>
+</html>

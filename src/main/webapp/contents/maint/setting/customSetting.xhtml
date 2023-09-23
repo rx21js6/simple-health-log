@@ -81,24 +81,6 @@
             </b:container>
         </ui:fragment>
 
-        <!-- keyIvForm -->
-        <ui:fragment rendered="#{loginInfo.userInfo.roleId == 0}">
-            <b:container>
-                <b:panel title="Key/Iv" collapsible="false">
-                    <b:form id="keyIvForm">
-                        <b:row>
-                            <b:panelGrid columns="1" cellpadding="5">
-                                <b:inputText label="Key" value="#{customSettingKeyIvModel.key}"
-                                    span="6" disabled="true"></b:inputText>
-                                <b:inputText label="Iv" value="#{customSettingKeyIvModel.iv}"
-                                    span="6" disabled="true"></b:inputText>
-                            </b:panelGrid>
-                        </b:row>
-                    </b:form>
-                </b:panel>
-            </b:container>
-        </ui:fragment>
-
         <!-- passwordChangingForm -->
         <b:container>
             <b:panel
@@ -195,13 +177,6 @@
                 </b:form>
             </b:panel>
         </b:container>
-
-
-        <ui:fragment rendered="#{loginInfo.userInfo.roleId == 0}">
-            <ui:insert>
-                <ui:include src="/contents/common/notEnteredNotice.jsf" />
-            </ui:insert>
-        </ui:fragment>
         <b:container>
             <b:row></b:row>
         </b:container>
