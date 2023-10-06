@@ -96,12 +96,4 @@ public class AdminSettingServiceTest extends AbstractServiceTest {
 
         this.adminSettingService.load();
     }
-
-    /**
-     * ダウンロード
-     */
-    @Test
-    public void testDownloadConfigYml() {
-
-    }
 }
