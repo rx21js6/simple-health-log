@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -24,17 +25,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 
+import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.ui.bean.HomeDirectoryInfo;
 import jp.nauplius.app.shl.common.util.PasswordUtil;
 import jp.nauplius.app.shl.common.util.PasswordUtil.PasswordStrength;
 
 @Named
 @ApplicationScoped
 public class ConfigFileService implements Serializable {
-    private final String CONFIG_BASE_DIR = "/simple-health-log/";
-    private final String CONFIG_FILE_NAME = "config.yml";
-    private final String KEY_SALT = "salt";
-    private final String PROP_USER_HOME = "user.home";
-    private final String PROP_OS_NAME = "os.name";
+    public static final String CONFIG_BASE_DIR = "simple-health-log";
+    public static final String CONFIG_FILE_NAME = "config.yml";
+    private static final String KEY_SALT = "salt";
+    private static final String PROP_OS_NAME = "os.name";
 
     @Inject
     private Logger logger;
@@ -42,10 +44,13 @@ public class ConfigFileService implements Serializable {
     @Inject
     private ResourceBundle messageBundle;
 
+    @Inject
+    private HomeDirectoryInfo homeDirectoryInfo;
+
     public void createFile() throws IOException {
         this.logger.info("#createFile() begin");
 
-        String homeDir = System.getProperty(PROP_USER_HOME);
+        String homeDir = this.homeDirectoryInfo.getHomeDirectory();
 
         if (StringUtils.isEmpty(homeDir) || StringUtils.equals(homeDir, "/nonexistent")) {
             String message = this.messageBundle.getString("common.msg.homeDirectoryNotDeclared");
@@ -53,20 +58,20 @@ public class ConfigFileService implements Serializable {
             throw new IOException(message);
         }
 
-        File dir = new File(homeDir + CONFIG_BASE_DIR);
+        File dir = Paths.get(homeDir, CONFIG_BASE_DIR).toFile();
         if (!dir.exists()) {
             boolean result = dir.mkdir();
             if (!result) {
                 String messageBase = this.messageBundle.getString("common.msg.mkdirFailed");
                 MessageFormat format = new MessageFormat(messageBase);
-                String message = format.format(new String[]{dir.getAbsolutePath()});
+                String message = format.format(new String[] { dir.getAbsolutePath() });
 
                 this.logger.error(message);
                 throw new IOException(message);
             }
         }
 
-        File configFile = new File(homeDir + CONFIG_BASE_DIR + CONFIG_FILE_NAME);
+        File configFile = Paths.get(homeDir, CONFIG_BASE_DIR, CONFIG_FILE_NAME).toFile();
         if (configFile.exists()) {
             this.logger.info(String.format("Config file already exists. : %s ", configFile.getAbsolutePath()));
             return;
@@ -110,7 +115,8 @@ public class ConfigFileService implements Serializable {
     public synchronized String loadSalt() throws IOException {
         Yaml yaml = new Yaml();
 
-        File configFile = new File(System.getProperty(PROP_USER_HOME) + CONFIG_BASE_DIR + CONFIG_FILE_NAME);
+        File configFile = Paths.get(this.homeDirectoryInfo.getHomeDirectory(), CONFIG_BASE_DIR, CONFIG_FILE_NAME)
+                .toFile();
         FileReader reader = null;
         String salt = null;
         try {
@@ -126,5 +132,28 @@ public class ConfigFileService implements Serializable {
             }
         }
         return salt;
+    }
+
+    /**
+     * config.ymlのバイト列を返す。
+     *
+     * @return
+     */
+    public byte[] getConfigYmlByteArray() {
+        File configFile = Paths.get(this.homeDirectoryInfo.getHomeDirectory(), CONFIG_BASE_DIR, CONFIG_FILE_NAME)
+                .toFile();
+
+        if (!Files.isReadable(configFile.toPath())) {
+            this.logger.error("config.yml is not found or can not readable.");
+            throw new SimpleHealthLogException(
+                    this.messageBundle.getString("contents.maint.settings.adminSetting.msg.configYmlCannotReadable"));
+        }
+
+        try {
+            byte[] byteArray = Files.readAllBytes(configFile.toPath());
+            return byteArray;
+        } catch (IOException e) {
+            throw new SimpleHealthLogException(e);
+        }
     }
 }

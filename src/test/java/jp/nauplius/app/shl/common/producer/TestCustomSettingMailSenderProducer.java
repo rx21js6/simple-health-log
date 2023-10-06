@@ -16,7 +16,7 @@ import jp.nauplius.app.shl.maint.service.CustomSettingMailSender;
 @ApplicationScoped
 public class TestCustomSettingMailSenderProducer {
     @Produces
-    public CustomSettingMailSender getAbstractCustomSettingMailSender() {
+    public CustomSettingMailSender getCustomSettingMailSenderMock() {
         CustomSettingMailSender mock = Mockito.mock(CustomSettingMailSender.class);
         when(mock.isActive()).thenReturn(false);
         return mock;
