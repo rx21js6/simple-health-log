@@ -29,7 +29,7 @@
             <b:row>
                 <h2>
                     <h:outputText
-                        value="#{msg['contents.maint.settings.customSetting.label.title']}" />
+                        value="#{msg['contents.maint.settings.adminSetting.label.title']}" />
                 </h2>
             </b:row>
             <b:row>
@@ -51,6 +51,19 @@
                     </b:row>
                 </b:row>
             </b:form>
+        </b:container>
+
+        <!-- configDownloadForm -->
+        <b:container>
+            <b:panel title="config.yml" collapsible="false">
+                <b:form id="configDownloadForm">
+                    <b:row>
+                        <b:commandButton value="#{msg['common.label.download']}"
+                            look="primary" size="lg"
+                            actionListener="#{adminSettingController.downloadConfigYml()}"></b:commandButton>
+                    </b:row>
+                </b:form>
+            </b:panel>
         </b:container>
 
         <!-- keyIvForm -->
