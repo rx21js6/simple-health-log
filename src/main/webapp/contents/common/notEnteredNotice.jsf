@@ -24,8 +24,8 @@
                         </ui:repeat>
                     </b:row>
                     <b:row>
-                        <b:commandButton value="#{msg['common.label.change']}"
-                            look="primary" size="lg"
+                        <b:commandButton iconAwesome="check-square-o"
+                            value="#{msg['common.label.change']}" look="primary" size="lg"
                             action="#{notEnteredNoticeController.update()}">
                         </b:commandButton>
                     </b:row>

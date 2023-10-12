@@ -50,7 +50,8 @@
             <b:row rendered="#{loginInfo.userInfo != null}">
                 <b:column>
                     <b:commandButton action="#{loginController.logout()}"
-                        icon="log-out" value="#{msg['common.label.screen.logout']}">
+                        iconAwesome="sign-out"
+                        value="#{msg['common.label.screen.logout']}">
                     </b:commandButton>
                 </b:column>
             </b:row>
@@ -76,18 +77,19 @@
                         </b:panelGrid>
                     </b:column>
                     <b:column>
-                        <b:commandButton value="#{msg['common.button.login']}"
-                            action="#{dailyRecordController.login()}" icon="log-in"
-                            look="primary" size="lg" />
+                        <b:commandButton iconAwesome="sign-in"
+                            value="#{msg['common.button.login']}"
+                            action="#{dailyRecordController.login()}" look="primary"
+                            size="lg" />
                     </b:column>
                 </b:row>
             </b:form>
             <b:form>
                 <b:row>
                     <b:column>
-                        <b:commandButton value="#{msg['login.forgottenPassword']}"
-                            action="#{passwordResetController.showPage()}"
-                            icon-awesome="question-circle-o" />
+                        <b:commandButton iconAwesome="question-circle-o"
+                            value="#{msg['login.forgottenPassword']}"
+                            action="#{passwordResetController.showPage()}" />
                     </b:column>
                 </b:row>
             </b:form>
@@ -107,14 +109,14 @@
                 <b:row>
                     <b:column>
                         <b:commandButton id="monthlyListButton"
-                            value="#{msg['common.label.monthly']}" icon="list"
+                            value="#{msg['common.label.monthly']}" iconAwesome="list"
                             action="#{dailyRecordController.showMonthlyList(false)}">
                             <f:setPropertyActionListener
                                 value="#{dailyRecordController.today}"
                                 target="#{monthlyRecordListController.today}" />
                         </b:commandButton>
                         <b:commandButton id="dailyListButton"
-                            value="#{msg['common.label.allUser']}" icon="list"
+                            value="#{msg['common.label.allUser']}" iconAwesome="list"
                             action="#{dailyRecordController.showDailyList(false)}"
                             rendered="#{loginInfo.userInfo.roleId == 0}">
                             <f:setPropertyActionListener
@@ -127,22 +129,24 @@
                             rendered="#{loginInfo.userInfo.roleId == 0}" />
                         <b:commandButton id="settingButton"
                             action="#{dailyRecordController.showCustomSetting(false)}"
-                            value="#{msg['common.label.setting']}" icon="cog" />
+                            value="#{msg['common.label.setting']}" iconAwesome="cog" />
                         <b:commandButton id="adminSettingButton"
                             rendered="#{loginInfo.userInfo.roleId == 0}"
                             action="#{dailyRecordController.showAdminSetting(false)}"
-                            value="#{msg['common.label.adminSetting']}" icon="cog" />
+                            value="#{msg['common.label.adminSetting']}" iconAwesome="cog" />
                     </b:column>
                     <!-- Date changing -->
                     <b:column>
                         <b:commandButton id="yesterdayButton"
-                            value="#{msg['common.label.yesterday']}" icon="chevron-left"
+                            value="#{msg['common.label.yesterday']}"
+                            iconAwesome="chevron-left"
                             action="#{dailyRecordController.loadYesterday(false)}" />
                         <b:commandButton id="todayButton"
-                            value="#{msg['common.label.today']}" icon="chevron-up"
+                            value="#{msg['common.label.today']}" iconAwesome="chevron-up"
                             action="#{dailyRecordController.loadToday(false)}" />
                         <b:commandButton id="tomorrowButton"
-                            value="#{msg['common.label.tomorrow']}" icon="chevron-right"
+                            value="#{msg['common.label.tomorrow']}"
+                            iconAwesome="chevron-right"
                             action="#{dailyRecordController.loadTomorrow(false)}" />
                     </b:column>
                 </b:row>
@@ -249,9 +253,10 @@
                 <b:row>
                     <b:column>
                         <b:panelGrid columns="6">
-                            <b:commandButton id="registrationButton"
-                                value="#{msg['common.button.register']}" look="primary"
-                                size="lg" action="#{dailyRecordController.register()}" />
+                            <b:commandButton iconAwesome="check-square-o"
+                                id="registrationButton" value="#{msg['common.button.register']}"
+                                look="primary" size="lg"
+                                action="#{dailyRecordController.register()}" />
                         </b:panelGrid>
                         <b:defaultCommand target="registrationButton" />
                     </b:column>

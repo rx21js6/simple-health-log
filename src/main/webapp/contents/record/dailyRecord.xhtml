@@ -40,7 +40,8 @@
             </b:row>
             <b:row>
                 <b:column>
-                    <b:commandButton value="#{msg['common.label.input']}" icon="pencil"
+                    <b:commandButton value="#{msg['common.label.input']}"
+                        iconAwesome="pencil-square-o"
                         action="#{dailyRecordController.showInput()}">
                         <f:setPropertyActionListener
                             value="#{dailyRecordListController.getTodayText()}"
@@ -49,13 +50,13 @@
                 </b:column>
                 <b:column>
                     <b:commandButton value="#{msg['common.label.yesterday']}"
-                        icon="chevron-left"
+                        iconAwesome="chevron-left"
                         action="#{dailyRecordListController.loadYesterday()}" />
                     <b:commandButton value="#{msg['common.label.today']}"
-                        icon="chevron-up"
+                        iconAwesome="chevron-up"
                         action="#{dailyRecordListController.loadToday()}" />
                     <b:commandButton value="#{msg['common.label.tomorrow']}"
-                        icon="chevron-right"
+                        iconAwesome="chevron-right"
                         action="#{dailyRecordListController.loadTomorrow()}" />
                 </b:column>
             </b:row>

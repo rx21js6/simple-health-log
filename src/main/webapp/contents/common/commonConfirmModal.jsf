@@ -14,10 +14,10 @@
             <p>#{message}</p>
         </ui:repeat>
         <f:facet name="footer">
-            <b:button value="#{commonConfirmModalBean.cancelButtonValue}"
-                dismiss="modal" />
-            <b:commandButton value="#{commonConfirmModalBean.okButtonValue}"
-                look="primary"
+            <b:button iconAwesome="close"
+                value="#{commonConfirmModalBean.cancelButtonValue}" dismiss="modal" />
+            <b:commandButton iconAwesome="check-square-o"
+                value="#{commonConfirmModalBean.okButtonValue}" look="primary"
                 action="#{commonConfirmModalController.fireAction(OK)}"></b:commandButton>
         </f:facet>
     </b:modal>

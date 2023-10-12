@@ -28,6 +28,7 @@
         <b:container>
             <b:row>
                 <h2>
+                    <b:iconAwesome value="cog" />
                     <h:outputText
                         value="#{msg['contents.maint.settings.customSetting.label.title']}" />
                 </h2>
@@ -44,7 +45,7 @@
             <b:form id="cancelForm">
                 <b:row>
                     <b:row>
-                        <b:commandButton icon="heart-empty"
+                        <b:commandButton iconAwesome="pencil-square-o"
                             value="#{msg['record.dailyRecord.physicalCondition']}"
                             action="#{customSettingController.cancel()}">
                         </b:commandButton>
@@ -71,8 +72,8 @@
                                 value="#{msg['contents.maint.settings.customSetting.msg.performSecurityEnhancement']}" />
                         </b:row>
                         <b:row>
-                            <b:commandButton value="#{msg['common.label.run']}"
-                                look="primary" size="lg"
+                            <b:commandButton iconAwesome="check-square-o"
+                                value="#{msg['common.label.run']}" look="primary" size="lg"
                                 action="#{customSettingController.performSecurityEnhancement()}">
                             </b:commandButton>
                         </b:row>
@@ -99,8 +100,8 @@
                                 maxlength="100" />
                             <b:message for="@previous" />
 
-                            <b:commandButton value="#{msg['common.label.change']}"
-                                look="primary" size="lg"
+                            <b:commandButton iconAwesome="check-square-o"
+                                value="#{msg['common.label.change']}" look="primary" size="lg"
                                 action="#{customSettingController.changePassword()}">
                             </b:commandButton>
                         </b:panelGrid>
@@ -133,13 +134,13 @@
                                 label="#{msg['common.label.mailAddress']}" span="6"
                                 maxlength="100" />
                             <b:message for="@previous" />
-                            <b:commandButton icon="send"
+                            <b:commandButton iconAwesome="send"
                                 value="#{msg['contents.maint.settings.customSetting.buton.testMailSending']}"
                                 disabled="#{!customSettingMailSender.isActive()}"
                                 action="#{customSettingController.sendTestMail()}">
                             </b:commandButton>
-                            <b:commandButton value="#{msg['common.label.change']}"
-                                look="primary" size="lg"
+                            <b:commandButton iconAwesome="check-square-o"
+                                value="#{msg['common.label.change']}" look="primary" size="lg"
                                 action="#{customSettingController.changeMailAddress()}">
                             </b:commandButton>
                         </b:panelGrid>
@@ -168,8 +169,8 @@
                             </b:selectOneMenu>
                             <b:message for="@previous" />
 
-                            <b:commandButton value="#{msg['common.label.change']}"
-                                look="primary" size="lg"
+                            <b:commandButton iconAwesome="check-square-o"
+                                value="#{msg['common.label.change']}" look="primary" size="lg"
                                 action="#{customSettingController.changeTimeZone()}">
                             </b:commandButton>
                         </b:panelGrid>

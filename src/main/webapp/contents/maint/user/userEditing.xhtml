@@ -23,15 +23,16 @@
             <h:form id="cancelForm">
                 <b:row>
                     <h2>
-                        <b:iconAwesome value="user"></b:iconAwesome>
+                        <b:iconAwesome value="user" />
                         <h:outputText
                             value="#{msg['contents.maint.user.userEditing.title']}" />
                     </h2>
                 </b:row>
                 <b:messages globalOnly="true"></b:messages>
                 <b:row>
-                    <b:commandButton action="#{maintUserController.cancel()}"
-                        icon="backward" value="#{msg['common.button.return']}">
+                    <b:commandButton iconAwesome="backward"
+                        action="#{maintUserController.cancel()}"
+                        value="#{msg['common.button.return']}">
                     </b:commandButton>
                 </b:row>
             </h:form>
@@ -40,7 +41,8 @@
             <h:form id="detailForm">
                 <b:row>
                     <b:panelGrid columns="1" cellpadding="5">
-                        <b:inputText value="#{userEditingModel.userEditingFormModel.loginId}"
+                        <b:inputText
+                            value="#{userEditingModel.userEditingFormModel.loginId}"
                             disabled="#{!userEditingModel.newData}"
                             label="#{msg['common.label.loginId']}" span="6" maxlength="100" />
                         <b:message for="@previous" />
@@ -49,17 +51,20 @@
                             label="#{msg['common.label.name']}" span="6" maxlength="100" />
                         <b:message for="@previous" />
 
-                        <b:inputText value="#{userEditingModel.userEditingFormModel.mailAddress}"
+                        <b:inputText
+                            value="#{userEditingModel.userEditingFormModel.mailAddress}"
                             label="#{msg['common.label.mailAddress']}" span="6"
                             maxlength="100" />
                         <b:message for="@previous" />
 
-                        <b:inputSecret disabled="#{!userEditingModel.userEditingFormModel.passwordChanged}"
+                        <b:inputSecret
+                            disabled="#{!userEditingModel.userEditingFormModel.passwordChanged}"
                             value="#{userEditingModel.userEditingFormModel.password}"
                             label="#{msg['common.label.password']}" span="6" maxlength="100" />
                         <b:message for="@previous" />
 
-                        <b:inputSecret disabled="#{!userEditingModel.userEditingFormModel.passwordChanged}"
+                        <b:inputSecret
+                            disabled="#{!userEditingModel.userEditingFormModel.passwordChanged}"
                             value="#{userEditingModel.userEditingFormModel.passwordRetype}"
                             label="#{msg['common.label.passwordReenter']}" span="6"
                             maxlength="100" />
@@ -86,7 +91,8 @@
                         </b:selectOneMenu>
 
                         <!-- TimeZone -->
-                        <b:selectOneMenu value="#{userEditingModel.userEditingFormModel.zoneId}"
+                        <b:selectOneMenu
+                            value="#{userEditingModel.userEditingFormModel.zoneId}"
                             label="#{msg['common.label.timeZoneSelection']}" span="6"
                             maxlength="100">
                             <f:selectItems value="#{userEditingModel.timeZoneInfos}"
@@ -94,9 +100,9 @@
                                 itemLabel="#{timeZoneInfo.zoneIdLabelText}" />
                         </b:selectOneMenu>
 
-                        <b:commandButton action="#{maintUserController.register()}">
-                            <h:outputText value="#{msg['common.label.registerUpdate']}" />
-                        </b:commandButton>
+                        <b:commandButton iconAwesome="check-square-o"
+                            action="#{maintUserController.register()}" look="primary"
+                            size="lg" value="#{msg['common.label.registerUpdate']}"></b:commandButton>
                     </b:panelGrid>
                 </b:row>
             </h:form>
