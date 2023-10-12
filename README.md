@@ -2,9 +2,11 @@
 
 (Pardon my broken English.😅)
 
-Updated at 2023-09-03
+Updated at 2023-10-14
 
-* (Mmonthly record view)When selecting "Current month", "Input today's condition" button is displayed.
+* Added icons to almost all buttons.
+* The "Settings" screen has been split into "Admin Settings" and "Custom Settings".
+* Enabled download of "config.yml".
 * Fixed some bugs.
 
 ---

@@ -40,7 +40,8 @@
             </b:row>
             <b:row>
                 <b:column>
-                    <b:commandButton value="#{msg['common.label.input']}" icon="pencil"
+                    <b:commandButton value="#{msg['common.label.input']}"
+                        iconAwesome="pencil-square-o"
                         action="#{dailyRecordController.showInput()}">
                         <f:setPropertyActionListener
                             value="#{dailyRecordListController.getTodayText()}"
@@ -49,66 +50,79 @@
                 </b:column>
                 <b:column>
                     <b:commandButton value="#{msg['common.label.yesterday']}"
-                        icon="chevron-left"
+                        iconAwesome="chevron-left"
                         action="#{dailyRecordListController.loadYesterday()}" />
                     <b:commandButton value="#{msg['common.label.today']}"
-                        icon="chevron-up"
+                        iconAwesome="chevron-up"
                         action="#{dailyRecordListController.loadToday()}" />
                     <b:commandButton value="#{msg['common.label.tomorrow']}"
-                        icon="chevron-right"
+                        iconAwesome="chevron-right"
                         action="#{dailyRecordListController.loadTomorrow()}" />
                 </b:column>
             </b:row>
             <b:row>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th><h:outputText
-                                    value="#{msg['contents.record.dailyRecord.label.name']}" /></th>
-                            <th><h:outputText
-                                    value="#{msg['contents.record.dailyRecord.label.awakeTime']}" /></th>
-                            <th><h:outputText
-                                    value="#{msg['contents.record.dailyRecord.label.bedTime']}" /></th>
-                            <th><h:outputText
-                                    value="#{msg['contents.record.dailyRecord.label.tempMorning']}" /></th>
-                            <th><h:outputText
-                                    value="#{msg['contents.record.dailyRecord.label.tempEvening']}" /></th>
-                            <th><h:outputText
-                                    value="#{msg['contents.record.dailyRecord.label.oxSatMorning']}" /></th>
-                            <th><h:outputText
-                                    value="#{msg['contents.record.dailyRecord.label.oxSatEvening']}" /></th>
-                            <th><h:outputText
-                                    value="#{msg['contents.record.dailyRecord.label.conditionNote']}" /></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ui:repeat var="record"
-                            value="#{dailyRecordListModel.dailyRecords}">
-                            <tr>
-                                <td><h:outputText value="#{record.name}" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.awakeTime}"
-                                        converter="timeConverter" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.bedTime}"
-                                        converter="timeConverter" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.bodyTemperatureMorning}" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.bodyTemperatureEvening}" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.oxygenSaturationMorning}" /></td>
-                                <td><h:outputText
-                                        value="#{record.physicalCondition.oxygenSaturationEvening}" /></td>
-                                <td><ui:repeat var="conditionNote"
-                                        value="#{record.splitConditionNote()}">
-                                        <h:outputText value="#{conditionNote}"></h:outputText>
-                                        <br />
-                                    </ui:repeat></td>
-                            </tr>
-                        </ui:repeat>
-                    </tbody>
-                </table>
+                <b:row>
+                    <b:dataTable var="record"
+                        value="#{dailyRecordListModel.dailyRecords}">
+                        <f:facet name="header">
+                            <thead>
+                                <tr>
+                                    <th><h:outputText
+                                            value="#{msg['contents.record.dailyRecord.label.name']}" /></th>
+                                    <th><h:outputText
+                                            value="#{msg['contents.record.dailyRecord.label.awakeTime']}" /></th>
+                                    <th><h:outputText
+                                            value="#{msg['contents.record.dailyRecord.label.bedTime']}" /></th>
+                                    <th><h:outputText
+                                            value="#{msg['contents.record.dailyRecord.label.tempMorning']}" /></th>
+                                    <th><h:outputText
+                                            value="#{msg['contents.record.dailyRecord.label.tempEvening']}" /></th>
+                                    <th><h:outputText
+                                            value="#{msg['contents.record.dailyRecord.label.oxSatMorning']}" /></th>
+                                    <th><h:outputText
+                                            value="#{msg['contents.record.dailyRecord.label.oxSatEvening']}" /></th>
+                                    <th><h:outputText
+                                            value="#{msg['contents.record.dailyRecord.label.conditionNote']}" /></th>
+                                </tr>
+                            </thead>
+                        </f:facet>
+
+                        <b:dataTableColumn>
+                            <h:outputText value="#{record.name}" />
+                        </b:dataTableColumn>
+                        <b:dataTableColumn>
+                            <h:outputText value="#{record.physicalCondition.awakeTime}"
+                                converter="timeConverter" />
+                        </b:dataTableColumn>
+                        <b:dataTableColumn>
+                            <h:outputText value="#{record.physicalCondition.bedTime}"
+                                converter="timeConverter" />
+                        </b:dataTableColumn>
+                        <b:dataTableColumn>
+                            <h:outputText
+                                value="#{record.physicalCondition.bodyTemperatureMorning}" />
+                        </b:dataTableColumn>
+                        <b:dataTableColumn>
+                            <h:outputText
+                                value="#{record.physicalCondition.bodyTemperatureEvening}" />
+                        </b:dataTableColumn>
+                        <b:dataTableColumn>
+                            <h:outputText
+                                value="#{record.physicalCondition.oxygenSaturationMorning}" />
+                        </b:dataTableColumn>
+                        <b:dataTableColumn>
+                            <h:outputText
+                                value="#{record.physicalCondition.oxygenSaturationEvening}" />
+                        </b:dataTableColumn>
+                        <b:dataTableColumn>
+                            <ui:repeat var="conditionNote"
+                                value="#{record.splitConditionNote()}">
+                                <h:outputText value="#{conditionNote}"></h:outputText>
+                                <br />
+                            </ui:repeat>
+                        </b:dataTableColumn>
+                    </b:dataTable>
+                </b:row>
             </b:row>
         </b:form>
     </b:container>

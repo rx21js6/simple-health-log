@@ -1,17 +1,10 @@
 package jp.nauplius.app.shl.maint.service;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-
 import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
 
-import org.hamcrest.CoreMatchers;
 import org.jglue.cdiunit.ActivatedAlternatives;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
@@ -23,6 +16,8 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
 import jp.nauplius.app.shl.common.db.model.UserInfo;
+import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
+import jp.nauplius.app.shl.common.producer.TestCustomSettingMailSenderProducer;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
@@ -34,8 +29,8 @@ import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @RunWith(CdiRunner.class)
 @ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
-public class CustomSettingServiceTest extends AbstractServiceTest {
+        TestMessageBundleProducer.class, TestCustomSettingMailSenderProducer.class })
+public class CustomSettingServiceMockTest extends AbstractServiceTest {
     @Inject
     private LoginInfo loginInfo;
 
@@ -75,10 +70,26 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
     }
 
     /**
-     * 画面ロード
+     * 画面ロード（失敗） User not exists.
      */
-    @Test
-    public void testLoad() {
+    @Test(expected = SimpleHealthLogException.class)
+    public void testLoadUserNotExists() {
+        this.insertTestDataXml(this.customSettingService.getEntityManager(),
+                "dbunit/CustomSettingServiceTest_data01.xml");
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(65535);
+        userInfo.setMailAddress(null);
+        this.loginInfo.setUserInfo(userInfo);
+
+        this.customSettingService.load();
+    }
+
+    /**
+     * 画面ロード（失敗） MailSender is not active.
+     */
+    @Test(expected = SimpleHealthLogException.class)
+    public void testLoadMailSenderNotActive() {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
                 "dbunit/CustomSettingServiceTest_data01.xml");
 
@@ -88,21 +99,18 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         this.loginInfo.setUserInfo(userInfo);
 
         this.customSettingService.load();
-
-        assertThat(this.customSettingMailAddressModel.getCurrentMailAddress(),
-                is("normal_test@maybe.noexistant.nauplius.jp"));
     }
 
     /**
-     * パスワード変更
+     * パスワード変更 User not exists.
      */
-    @Test
-    public void testChangePassword() {
+    @Test(expected = SimpleHealthLogException.class)
+    public void testChangePasswordUserNotExists() {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
                 "dbunit/CustomSettingServiceTest_data01.xml");
 
         UserInfo userInfo = new UserInfo();
-        userInfo.setId(2);
+        userInfo.setId(65535);
         userInfo.setMailAddress(null);
         userInfo.setEncryptedPassword("dCpslkAK/OHhhhnWw7JvcFE0lL+hj4sMNql5IHtm8vg=");
         this.loginInfo.setUserInfo(userInfo);
@@ -113,49 +121,20 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
 
         this.customSettingPasswordModel.setPassword(password);
         this.customSettingService.changePassword();
-
-        // LoginInfoが更新されていること
-        // assertNotEquals(currentEncryptedPassword,
-        // this.loginInfo.getUserInfo().getEncryptedPassword());
     }
 
     /**
-     * テストメール送信
+     * メールアドレス変更（失敗） User not exists.
      *
      * @throws MessagingException
      */
-    @Test
-    public void testSendTestMail() throws MessagingException {
-        this.insertTestDataXml(this.customSettingService.getEntityManager(),
-                "dbunit/CustomSettingServiceTest_data01.xml");
-
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(2);
-        userInfo.setMailAddress(null);
-        this.loginInfo.setUserInfo(userInfo);
-
-        String mailAddress = "changed@foobar.xxxxxxxxxxxxxxxx123456789.com";
-        this.customSettingMailAddressModel.setMailAddress(mailAddress);
-        this.customSettingService.sendTestMail();
-
-        // テストメール送信確認
-        assertThat(this.greenMail.getReceivedMessages().length, is(1));
-        MimeMessage actual = this.greenMail.getReceivedMessages()[0];
-        assertThat(actual.getRecipients(RecipientType.TO)[0].toString(), CoreMatchers.is(mailAddress));
-    }
-
-    /**
-     * メールアドレス変更
-     *
-     * @throws MessagingException
-     */
-    @Test
+    @Test(expected = SimpleHealthLogException.class)
     public void testChangeMailAddress() throws MessagingException {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
                 "dbunit/CustomSettingServiceTest_data01.xml");
 
         UserInfo userInfo = new UserInfo();
-        userInfo.setId(2);
+        userInfo.setId(65535);
         userInfo.setMailAddress(null);
         this.loginInfo.setUserInfo(userInfo);
 
@@ -163,29 +142,18 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
         this.customSettingMailAddressModel.setMailAddress(mailAddress);
 
         this.customSettingService.changeMailAddress();
-
-        // LoginInfoが更新されていること
-        assertEquals(mailAddress, this.loginInfo.getUserInfo().getMailAddress());
-
-        // テストメール送信確認
-        assertThat(this.greenMail.getReceivedMessages().length, is(1));
-        MimeMessage actual = this.greenMail.getReceivedMessages()[0];
-        assertThat(actual.getRecipients(RecipientType.TO)[0].toString(), CoreMatchers.is(mailAddress));
-
-        assertThat(this.customSettingMailAddressModel.getCurrentMailAddress(), is(mailAddress));
-
     }
 
     /**
-     * タイムゾーン変更
+     * タイムゾーン変更（失敗） User not exists.
      */
-    @Test
+    @Test(expected = SimpleHealthLogException.class)
     public void testChangeTimeZone() {
         this.insertTestDataXml(this.customSettingService.getEntityManager(),
                 "dbunit/CustomSettingServiceTest_data01.xml");
 
         UserInfo userInfo = new UserInfo();
-        userInfo.setId(2);
+        userInfo.setId(65535);
         userInfo.setZoneId("UTC");
         this.loginInfo.setUserInfo(userInfo);
 
@@ -193,9 +161,5 @@ public class CustomSettingServiceTest extends AbstractServiceTest {
 
         this.timeZoneInputModel.setSelectedZoneId(ZONE_ID);
         this.customSettingService.changeTimeZone();
-
-        // LoginInfoが更新されていること
-        assertEquals(ZONE_ID, this.loginInfo.getUserInfo().getZoneId());
     }
-
 }

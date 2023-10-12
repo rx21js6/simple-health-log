@@ -19,7 +19,7 @@
         <b:container>
             <b:row>
                 <h2>
-                    <b:iconAwesome value="user"></b:iconAwesome>
+                    <b:iconAwesome value="user" />
                     <h:outputText value="#{msg['contents.maint.user.userList.title']}" />
                 </h2>
             </b:row>
@@ -32,14 +32,15 @@
                             iconAwesome="user-plus" action="#{maintUserController.newData()}"></b:commandButton>
                         <b:commandButton
                             value="#{msg['contents.maint.user.userList.button.conditionInput']}"
-                            icon="heart-empty" action="#{dailyRecordController.showInput()}">
+                            iconAwesome="pencil-square-o"
+                            action="#{dailyRecordController.showInput()}">
                         </b:commandButton>
                     </b:column>
                 </h:form>
             </b:row>
             <b:row>
-                <b:dataTable value="#{userListModel.userInfoListItems}" var="userInfo"
-                    searching="false">
+                <b:dataTable value="#{userListModel.userInfoListItems}"
+                    var="userInfo" searching="false">
                     <b:dataTableColumn
                         label="#{msg['contents.maint.user.userList.label.loginId']}"
                         orderable="false" value="#{userInfo.loginId}" />
@@ -55,13 +56,13 @@
                     <b:dataTableColumn orderable="false"
                         label="#{msg['contents.maint.user.userList.label.operation']}">
                         <h:form>
-                            <b:commandButton icon="pencil"
+                            <b:commandButton iconAwesome="pencil"
                                 value="#{msg['contents.maint.user.userList.button.edit']}"
                                 action="#{maintUserController.editData}">
                                 <f:setPropertyActionListener value="#{userInfo.id}"
                                     target="#{userListModel.selectedId}" />
                             </b:commandButton>
-                            <b:commandButton icon="trash"
+                            <b:commandButton iconAwesome="trash"
                                 value="#{msg['contents.maint.user.userList.button.delete']}"
                                 rendered="#{userInfo.id != loginInfo.userInfo.id}"
                                 action="#{maintUserController.showDeletionModal}">

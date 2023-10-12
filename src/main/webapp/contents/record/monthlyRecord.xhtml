@@ -27,7 +27,8 @@
 </style>
 </h:head>
 <h:body>
-    <h:outputStylesheet library="css" name="monthlyRecord.css"></h:outputStylesheet>
+    <h:outputStylesheet library="css" name="monthlyRecord.css"
+        position="last"></h:outputStylesheet>
     <b:container>
         <b:form inline="true">
             <b:row>
@@ -51,7 +52,7 @@
                     <b:column>
                         <b:commandButton
                             value="#{msg['contents.record.monthlyRecord.label.inputToday']}"
-                            icon="edit"
+                            iconAwesome="pencil-square-o"
                             action="#{monthlyRecordListController.showRecordInput()}">
                             <f:setPropertyActionListener value="#{loginInfo.getInputToday()}"
                                 target="#{dailyRecordInputModel.selectedDate}" />
@@ -78,20 +79,20 @@
                 <b:column>
                     <b:commandButton
                         value="#{msg['contents.record.monthlyRecord.label.previousMonth']}"
-                        icon="chevron-left"
+                        iconAwesome="chevron-left"
                         action="#{monthlyRecordListController.loadPreviousMonth()}" />
                     <b:commandButton
                         value="#{msg['contents.record.monthlyRecord.label.currentMonth']}"
-                        icon="chevron-up"
+                        iconAwesome="chevron-up"
                         action="#{monthlyRecordListController.loadCurrentMonth()}" />
                     <b:commandButton
                         value="#{msg['contents.record.monthlyRecord.label.nextMonth']}"
-                        icon="chevron-right"
+                        iconAwesome="chevron-right"
                         action="#{monthlyRecordListController.loadNextMonth()}" />
                 </b:column>
             </b:row>
             <b:row>
-                <b:dataTable var="record" style-class="monthly_record_table"
+                <b:dataTable var="record"
                     value="#{monthlyRecordModel.monthlyRecords}">
                     <f:facet name="header">
                         <thead class="monthly_record_header">
@@ -156,7 +157,8 @@
                         styleClass="#{record.isToday() ? 'monthly_record_today' : ''}">
                         <b:commandButton
                             value="#{msg['contents.record.monthlyRecord.label.input']}"
-                            icon="edit" look="#{record.isToday() ? 'primary' : ''}"
+                            iconAwesome="pencil-square-o"
+                            look="#{record.isToday() ? 'primary' : ''}"
                             action="#{monthlyRecordListController.showRecordInput()}">
                             <f:setPropertyActionListener value="#{record.dateText}"
                                 target="#{dailyRecordInputModel.selectedDate}" />

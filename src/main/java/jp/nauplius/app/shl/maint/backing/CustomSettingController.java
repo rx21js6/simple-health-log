@@ -76,7 +76,7 @@ public class CustomSettingController implements Serializable {
             this.customSettingService.changePassword();
 
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.passwordChanged"), null));
+                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.passwordChanged"), null));
 
         } catch (SimpleHealthLogException e) {
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, e.getMessage(), null));
@@ -96,7 +96,7 @@ public class CustomSettingController implements Serializable {
             this.customSettingService.sendTestMail();
 
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.testMailSent"), null));
+                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.testMailSent"), null));
 
         } catch (SimpleHealthLogException e) {
 
@@ -117,7 +117,7 @@ public class CustomSettingController implements Serializable {
             this.customSettingService.changeMailAddress();
 
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.mailAddressChanged"), null));
+                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.mailAddressChanged"), null));
 
         } catch (SimpleHealthLogException e) {
 
@@ -139,7 +139,7 @@ public class CustomSettingController implements Serializable {
             this.facesContext.addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
                             this.messageBundle.getString(
-                                    "contents.maint.settings.cutomSetting.msg.performSecurityEnhancementCompleted"),
+                                    "contents.maint.settings.customSetting.msg.performSecurityEnhancementCompleted"),
                             null));
 
         } catch (SimpleHealthLogException e) {
@@ -160,7 +160,7 @@ public class CustomSettingController implements Serializable {
             this.customSettingService.changeTimeZone();
 
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.timeZoneChanged"), null));
+                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.timeZoneChanged"), null));
 
         } catch (SimpleHealthLogException e) {
 

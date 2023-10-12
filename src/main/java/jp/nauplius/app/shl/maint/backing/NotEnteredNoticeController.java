@@ -35,7 +35,7 @@ public class NotEnteredNoticeController implements Serializable {
             this.notEnteredNoticeService.update();
 
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.notEnteredNoticeChanged"),
+                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.notEnteredNoticeChanged"),
                     null));
 
         } catch (SimpleHealthLogException e) {

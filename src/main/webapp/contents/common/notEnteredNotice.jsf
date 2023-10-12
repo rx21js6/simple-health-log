@@ -9,12 +9,12 @@
     <h:body>
         <b:container>
             <b:panel
-                title="#{msg['contents.maint.settings.cutomSetting.label.notEnteredNotice']}"
+                title="#{msg['contents.maint.settings.customSetting.label.notEnteredNotice']}"
                 collapsible="false">
                 <b:form id="notEntieredNoticeForm">
                     <b:row>
                         <h:outputText
-                            value="#{msg['contents.maint.settings.cutomSetting.msg.notEnteredNotice']}" />
+                            value="#{msg['contents.maint.settings.customSetting.msg.notEnteredNotice']}" />
                     </b:row>
                     <b:row>
                         <ui:repeat var="selection"
@@ -24,8 +24,8 @@
                         </ui:repeat>
                     </b:row>
                     <b:row>
-                        <b:commandButton value="#{msg['common.label.change']}"
-                            look="primary" size="lg"
+                        <b:commandButton iconAwesome="check-square-o"
+                            value="#{msg['common.label.change']}" look="primary" size="lg"
                             action="#{notEnteredNoticeController.update()}">
                         </b:commandButton>
                     </b:row>

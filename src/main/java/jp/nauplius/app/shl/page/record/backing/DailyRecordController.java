@@ -345,6 +345,27 @@ public class DailyRecordController implements ModalControllerListener {
     }
 
     /**
+     * 管理者設定表示
+     *
+     * @param force
+     * @return
+     */
+    public String showAdminSetting(boolean force) {
+        this.commonConfirmModalBean.setVisible(false);
+        if (!force && this.isFormEdited()) {
+            this.setModal("showAdminSetting");
+            return null;
+        }
+
+        this.dailyRecordInputModel.reset();
+        this.today = LocalDate.of(this.today.getYear(), this.today.getMonth(), 1);
+        this.monthlyRecordModel.setToday(this.today);
+        this.monthlyRecordService.loadMonthlyRecords();
+
+        return "/contents/maint/setting/adminSetting.xhtml?faces-redirect=true";
+    }
+
+    /**
      * メッセージを設定
      */
     private void setMessages() {
@@ -365,7 +386,7 @@ public class DailyRecordController implements ModalControllerListener {
         // セキュリティ警告
         if (this.loginInfo.getUserInfo().getSecurityLevel() < SecurityLevel.LEVEL1.getInt()) {
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                    this.messageBundle.getString("contents.maint.settings.cutomSetting.msg.securityLevelWarning"),
+                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.securityLevelWarning"),
                     null));
         }
 
@@ -395,30 +416,26 @@ public class DailyRecordController implements ModalControllerListener {
                     empty = true;
                 } else {
                     switch (NotEnteredNoticeTypeKey.valueOf(notEnteredNotice.getTypeKey())) {
-                        case AWAKE_TIME :
-                            empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
-                            break;
-                        case BED_TIME :
-                            empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
-                            break;
-                        case TEMP_MORNING :
-                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
-                            break;
-                        case TEMP_EVENING :
-                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
-                            break;
-                        case OX_SAT_MORNING :
-                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning())
-                                    ? true
-                                    : false;
-                            break;
-                        case OX_SAT_EVENING :
-                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening())
-                                    ? true
-                                    : false;
-                            break;
-                        default :
-                            break;
+                    case AWAKE_TIME:
+                        empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
+                        break;
+                    case BED_TIME:
+                        empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
+                        break;
+                    case TEMP_MORNING:
+                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
+                        break;
+                    case TEMP_EVENING:
+                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
+                        break;
+                    case OX_SAT_MORNING:
+                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning()) ? true : false;
+                        break;
+                    case OX_SAT_EVENING:
+                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening()) ? true : false;
+                        break;
+                    default:
+                        break;
                     }
                 }
 
