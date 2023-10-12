@@ -28,6 +28,7 @@
         <b:container>
             <b:row>
                 <h2>
+                    <b:iconAwesome value="cog" />
                     <h:outputText
                         value="#{msg['contents.maint.settings.adminSetting.label.title']}" />
                 </h2>
@@ -44,7 +45,7 @@
             <b:form id="cancelForm">
                 <b:row>
                     <b:row>
-                        <b:commandButton icon="heart-empty"
+                        <b:commandButton iconAwesome="pencil-square-o"
                             value="#{msg['record.dailyRecord.physicalCondition']}"
                             action="#{adminSettingController.cancel()}">
                         </b:commandButton>
@@ -58,8 +59,8 @@
             <b:panel title="config.yml" collapsible="false">
                 <b:form id="configDownloadForm">
                     <b:row>
-                        <b:commandButton value="#{msg['common.label.download']}"
-                            look="primary" size="lg"
+                        <b:commandButton iconAwesome="download"
+                            value="#{msg['common.label.download']}" look="primary" size="lg"
                             actionListener="#{adminSettingController.downloadConfigYml()}"></b:commandButton>
                     </b:row>
                 </b:form>
