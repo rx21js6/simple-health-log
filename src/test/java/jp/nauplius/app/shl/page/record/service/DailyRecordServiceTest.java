@@ -1,8 +1,10 @@
 package jp.nauplius.app.shl.page.record.service;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.Time;
@@ -20,13 +22,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
 import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.service.AbstractServiceTest;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
+import jp.nauplius.app.shl.page.record.bean.DailyRecordForm;
 import jp.nauplius.app.shl.page.record.bean.DailyRecordInputModel;
 import jp.nauplius.app.shl.page.record.bean.DailyRecordListModel;
 
@@ -78,14 +80,13 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         this.dailyRecordService.loadRecord(LocalDate.of(2021, 8, 2));
 
         // 当日分
-        assertNotNull(this.dailyRecordInputModel.getPhysicalCondition());
-        assertThat(this.dailyRecordInputModel.getPhysicalCondition().getId().getRecordingDate(), is("20210802"));
+        assertNotNull(this.dailyRecordInputModel.getDailyRecordForm());
+        assertThat(this.dailyRecordInputModel.getDailyRecordForm().getId().getRecordingDate(), is("20210802"));
 
         // 前日分
-        assertNotNull(this.dailyRecordInputModel.getPreviousPhysicalCondition());
-        assertThat(this.dailyRecordInputModel.getPreviousPhysicalCondition().getId().getRecordingDate(),
-                is("20210801"));
-        assertThat(this.dailyRecordInputModel.getPreviousPhysicalCondition().getBodyTemperatureEvening(),
+        assertNotNull(this.dailyRecordInputModel.getPreviousDailyRecordForm());
+        assertThat(this.dailyRecordInputModel.getPreviousDailyRecordForm().getId().getRecordingDate(), is("20210801"));
+        assertThat(this.dailyRecordInputModel.getPreviousDailyRecordForm().getBodyTemperatureEvening(),
                 is(BigDecimal.valueOf(36.3)));
     }
 
@@ -100,13 +101,12 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         this.dailyRecordService.loadRecord(LocalDate.of(2021, 7, 31));
 
         // 当日分
-        assertNotNull(this.dailyRecordInputModel.getPhysicalCondition());
-        assertThat(this.dailyRecordInputModel.getPhysicalCondition().getId().getRecordingDate(), is("20210731"));
+        assertNotNull(this.dailyRecordInputModel.getDailyRecordForm());
+        assertThat(this.dailyRecordInputModel.getDailyRecordForm().getId().getRecordingDate(), is("20210731"));
         // 前日分
-        assertNotNull(this.dailyRecordInputModel.getPreviousPhysicalCondition());
-        assertThat(this.dailyRecordInputModel.getPreviousPhysicalCondition().getId().getRecordingDate(),
-                is("20210730"));
-        assertNull(this.dailyRecordInputModel.getPreviousPhysicalCondition().getBodyTemperatureEvening());
+        assertNotNull(this.dailyRecordInputModel.getPreviousDailyRecordForm());
+        assertThat(this.dailyRecordInputModel.getPreviousDailyRecordForm().getId().getRecordingDate(), is("20210730"));
+        assertNull(this.dailyRecordInputModel.getPreviousDailyRecordForm().getBodyTemperatureEvening());
     }
 
     @Test
@@ -121,20 +121,20 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "dbunit/DailyRecordServiceTest_data01.xml");
         this.dailyRecordService.loadRecord(localDate);
 
-        PhysicalCondition conditionForRegistration = this.dailyRecordInputModel.getPhysicalCondition();
+        DailyRecordForm conditionForRegistration = this.dailyRecordInputModel.getDailyRecordForm();
         conditionForRegistration.setAwakeTime(Time.valueOf(LocalTime.of(6, 20, 0)));
         conditionForRegistration.setBedTime(Time.valueOf(LocalTime.of(23, 20, 0)));
         conditionForRegistration.setBodyTemperatureMorning(BigDecimal.valueOf(36.3));
         conditionForRegistration.setBodyTemperatureMorning(BigDecimal.valueOf(36.4));
         conditionForRegistration.setConditionNote("𠮷野家で牛丼食った😎\n健康");
 
-        this.dailyRecordInputModel.setPhysicalCondition(conditionForRegistration);
+        this.dailyRecordInputModel.setPhysicalCondition(conditionForRegistration.toPhysicalCondition());
 
         this.dailyRecordService.register();
 
         this.dailyRecordService.loadRecord(localDate);
 
-        PhysicalCondition conditionResult = this.dailyRecordInputModel.getPhysicalCondition();
+        DailyRecordForm conditionResult = this.dailyRecordInputModel.getDailyRecordForm();
 
         assertNotNull(conditionResult);
         assertThat(conditionResult.getAwakeTime(), is(conditionForRegistration.getAwakeTime()));
@@ -160,7 +160,7 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         this.insertTestDataXml(this.dailyRecordService.getEntityManager(), "dbunit/DailyRecordServiceTest_data01.xml");
         this.dailyRecordService.loadRecord(LocalDate.of(2021, 8, 1));
 
-        PhysicalCondition conditionForUpdate = this.dailyRecordInputModel.getPhysicalCondition();
+        DailyRecordForm conditionForUpdate = this.dailyRecordInputModel.getDailyRecordForm();
         assertNotNull(conditionForUpdate);
         conditionForUpdate.setAwakeTime(Time.valueOf(LocalTime.of(6, 20, 0)));
         conditionForUpdate.setBedTime(Time.valueOf(LocalTime.of(23, 20, 0)));
@@ -168,12 +168,12 @@ public class DailyRecordServiceTest extends AbstractServiceTest {
         conditionForUpdate.setBodyTemperatureMorning(BigDecimal.valueOf(36.4));
         conditionForUpdate.setConditionNote("ちょっと熱っぽいな🤒\nメロン食べるか😋🍈");
 
-        this.dailyRecordInputModel.setPhysicalCondition(conditionForUpdate);
+        this.dailyRecordInputModel.setPhysicalCondition(conditionForUpdate.toPhysicalCondition());
 
         this.dailyRecordService.register();
 
         this.dailyRecordService.loadRecord(LocalDate.of(2021, 8, 1));
-        PhysicalCondition conditionResult = this.dailyRecordInputModel.getPhysicalCondition();
+        DailyRecordForm conditionResult = this.dailyRecordInputModel.getDailyRecordForm();
         assertNotNull(conditionResult);
         assertThat(conditionResult.getAwakeTime(), is(conditionForUpdate.getAwakeTime()));
         assertThat(conditionResult.getBedTime(), is(conditionForUpdate.getBedTime()));

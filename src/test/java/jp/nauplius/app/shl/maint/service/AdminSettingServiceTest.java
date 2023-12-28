@@ -26,8 +26,8 @@ import jp.nauplius.app.shl.maint.bean.CustomSettingKeyIvModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class AdminSettingServiceTest extends AbstractServiceTest {
     @Inject
     private LoginInfo loginInfo;
