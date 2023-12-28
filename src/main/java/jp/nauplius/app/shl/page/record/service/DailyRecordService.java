@@ -27,6 +27,7 @@ import jp.nauplius.app.shl.common.ui.bean.KeyIvHolder;
 import jp.nauplius.app.shl.common.util.CipherUtil;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.record.bean.DailyRecord;
+import jp.nauplius.app.shl.page.record.bean.DailyRecordForm;
 import jp.nauplius.app.shl.page.record.bean.DailyRecordInputModel;
 import jp.nauplius.app.shl.page.record.bean.DailyRecordListModel;
 
@@ -60,7 +61,9 @@ public class DailyRecordService extends AbstractService {
     public void loadRecord(LocalDate recordingDate) {
         this.dailyRecordInputModel.setPhysicalCondition(this.loadSelectedDateRecord(recordingDate));
         LocalDate previousDate = recordingDate.minusDays(1);
-        this.dailyRecordInputModel.setPreviousPhysicalCondition(this.loadSelectedDateRecord(previousDate));
+
+        this.dailyRecordInputModel
+                .setPreviousDailyRecordForm(DailyRecordForm.valueOf(this.loadSelectedDateRecord(previousDate)));
     }
 
     /**
@@ -71,14 +74,22 @@ public class DailyRecordService extends AbstractService {
     public void register() {
         this.logger.debug(String.format("register entityManager: %s", this.entityManager));
 
-        PhysicalCondition physicalCondition = this.dailyRecordInputModel.getPhysicalCondition();
-        physicalCondition.getId().setId(loginInfo.getUserInfo().getId());
+        DailyRecordForm dailyRecordform = this.dailyRecordInputModel.getDailyRecordForm();
+        dailyRecordform.getId().setId(loginInfo.getUserInfo().getId());
         PhysicalCondition conditionForUpdate = this.entityManager.find(PhysicalCondition.class,
-                physicalCondition.getId());
+                dailyRecordform.getId());
         LocalDateTime now = LocalDateTime.now();
         if (Objects.isNull(conditionForUpdate)) {
             // 新規
+            PhysicalCondition physicalCondition = new PhysicalCondition();
+            try {
+                BeanUtils.copyProperties(physicalCondition, dailyRecordform);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new SimpleHealthLogException(e);
+            }
+
             this.entityManager.persist(physicalCondition);
+            physicalCondition.setUserInfo(this.loginInfo.getUserInfo());
             physicalCondition.setCreatedBy(this.loginInfo.getUserInfo().getId());
             physicalCondition.setCreatedDate(Timestamp.valueOf(now));
             physicalCondition.setModifiedBy(this.loginInfo.getUserInfo().getId());
@@ -87,7 +98,7 @@ public class DailyRecordService extends AbstractService {
         } else {
             // 更新
             try {
-                BeanUtils.copyProperties(conditionForUpdate, physicalCondition);
+                BeanUtils.copyProperties(conditionForUpdate, dailyRecordform);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new SimpleHealthLogException(e);
             }
@@ -99,7 +110,7 @@ public class DailyRecordService extends AbstractService {
 
         // ミラー更新するため読み直し
         LocalDate recordingDate = LocalDate.parse(
-                this.dailyRecordInputModel.getPhysicalCondition().getId().getRecordingDate(),
+                this.dailyRecordInputModel.getDailyRecordForm().getId().getRecordingDate(),
                 ShlConstants.RECORDING_DATE_FORMATTER);
 
         this.loadRecord(recordingDate);

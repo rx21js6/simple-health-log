@@ -64,7 +64,7 @@ public class ConfigFileService implements Serializable {
             if (!result) {
                 String messageBase = this.messageBundle.getString("common.msg.mkdirFailed");
                 MessageFormat format = new MessageFormat(messageBase);
-                String message = format.format(new String[] { dir.getAbsolutePath() });
+                String message = format.format(new String[]{dir.getAbsolutePath()});
 
                 this.logger.error(message);
                 throw new IOException(message);

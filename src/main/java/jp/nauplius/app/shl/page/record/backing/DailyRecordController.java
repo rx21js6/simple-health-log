@@ -23,7 +23,6 @@ import jp.nauplius.app.shl.common.constants.NotEnteredNoticeTypeKey;
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.db.model.NotEnteredNotice;
-import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.ui.backing.CommonConfirmModalController;
@@ -36,6 +35,7 @@ import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 import jp.nauplius.app.shl.page.login.bean.LoginResponse;
 import jp.nauplius.app.shl.page.login.service.CookieService;
 import jp.nauplius.app.shl.page.login.service.LoginService;
+import jp.nauplius.app.shl.page.record.bean.DailyRecordForm;
 import jp.nauplius.app.shl.page.record.bean.DailyRecordInputModel;
 import jp.nauplius.app.shl.page.record.bean.MonthlyRecordModel;
 import jp.nauplius.app.shl.page.record.service.DailyRecordService;
@@ -371,7 +371,7 @@ public class DailyRecordController implements ModalControllerListener {
     private void setMessages() {
         this.facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
-        PhysicalCondition previousPysicalCondition = this.dailyRecordInputModel.getPreviousPhysicalCondition();
+        DailyRecordForm previousPysicalCondition = this.dailyRecordInputModel.getPreviousDailyRecordForm();
 
         if (Objects.nonNull(previousPysicalCondition)) {
             BigDecimal temperature = previousPysicalCondition.getBodyTemperatureEvening();
@@ -400,7 +400,7 @@ public class DailyRecordController implements ModalControllerListener {
      * 前日の情報が未記入の場合にメッセージを表示する。
      */
     private void checkPreviousDaysRecordEntered() {
-        PhysicalCondition previousPysicalCondition = this.dailyRecordInputModel.getPreviousPhysicalCondition();
+        DailyRecordForm previousPysicalCondition = this.dailyRecordInputModel.getPreviousDailyRecordForm();
 
         List<NotEnteredNotice> notEnteredNotices = this.notEnteredNoticeService.findActivatedNotEnteredNotices();
 
@@ -416,26 +416,30 @@ public class DailyRecordController implements ModalControllerListener {
                     empty = true;
                 } else {
                     switch (NotEnteredNoticeTypeKey.valueOf(notEnteredNotice.getTypeKey())) {
-                    case AWAKE_TIME:
-                        empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
-                        break;
-                    case BED_TIME:
-                        empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
-                        break;
-                    case TEMP_MORNING:
-                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
-                        break;
-                    case TEMP_EVENING:
-                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
-                        break;
-                    case OX_SAT_MORNING:
-                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning()) ? true : false;
-                        break;
-                    case OX_SAT_EVENING:
-                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening()) ? true : false;
-                        break;
-                    default:
-                        break;
+                        case AWAKE_TIME :
+                            empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
+                            break;
+                        case BED_TIME :
+                            empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
+                            break;
+                        case TEMP_MORNING :
+                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
+                            break;
+                        case TEMP_EVENING :
+                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
+                            break;
+                        case OX_SAT_MORNING :
+                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning())
+                                    ? true
+                                    : false;
+                            break;
+                        case OX_SAT_EVENING :
+                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening())
+                                    ? true
+                                    : false;
+                            break;
+                        default :
+                            break;
                     }
                 }
 
