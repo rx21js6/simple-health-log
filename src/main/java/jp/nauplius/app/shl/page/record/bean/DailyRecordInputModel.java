@@ -23,11 +23,11 @@ import lombok.Setter;
 public class DailyRecordInputModel implements Serializable {
     @Inject
     @Getter
-    private PhysicalCondition physicalCondition;
+    private DailyRecordForm dailyRecordForm;
 
     @Getter
     @Setter
-    private PhysicalCondition previousPhysicalCondition;
+    private DailyRecordForm previousDailyRecordForm;
 
     @Inject
     private PhysicalCondition conditionMirror;
@@ -37,13 +37,17 @@ public class DailyRecordInputModel implements Serializable {
     private String selectedDate;
 
     public void setPhysicalCondition(PhysicalCondition physicalCondition) {
-        this.physicalCondition = physicalCondition;
+        try {
+            BeanUtils.copyProperties(this.dailyRecordForm, physicalCondition);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
         this.setMirror();
     }
 
     private void setMirror() {
         try {
-            BeanUtils.copyProperties(this.conditionMirror, this.physicalCondition);
+            BeanUtils.copyProperties(this.conditionMirror, this.dailyRecordForm);
             if (Objects.isNull(this.conditionMirror.getConditionNote())) {
                 this.conditionMirror.setConditionNote(StringUtils.EMPTY);
             }
@@ -54,24 +58,24 @@ public class DailyRecordInputModel implements Serializable {
 
     public void reset() {
         try {
-            BeanUtils.copyProperties(this.physicalCondition, this.conditionMirror);
+            BeanUtils.copyProperties(this.dailyRecordForm, this.conditionMirror);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new SimpleHealthLogException(e);
         }
     }
 
     public boolean isModelEdited() {
-        return !(Objects.equals(this.physicalCondition.getAwakeTime(), this.conditionMirror.getAwakeTime())
-                && Objects.equals(this.physicalCondition.getBedTime(), this.conditionMirror.getBedTime())
-                && Objects.equals(this.physicalCondition.getBodyTemperatureMorning(),
+        return !(Objects.equals(this.dailyRecordForm.getAwakeTime(), this.conditionMirror.getAwakeTime())
+                && Objects.equals(this.dailyRecordForm.getBedTime(), this.conditionMirror.getBedTime())
+                && Objects.equals(this.dailyRecordForm.getBodyTemperatureMorning(),
                         this.conditionMirror.getBodyTemperatureMorning())
-                && Objects.equals(this.physicalCondition.getBodyTemperatureEvening(),
+                && Objects.equals(this.dailyRecordForm.getBodyTemperatureEvening(),
                         this.conditionMirror.getBodyTemperatureEvening())
-                && Objects.equals(this.physicalCondition.getOxygenSaturationMorning(),
+                && Objects.equals(this.dailyRecordForm.getOxygenSaturationMorning(),
                         this.conditionMirror.getOxygenSaturationMorning())
-                && Objects.equals(this.physicalCondition.getOxygenSaturationEvening(),
+                && Objects.equals(this.dailyRecordForm.getOxygenSaturationEvening(),
                         this.conditionMirror.getOxygenSaturationEvening())
-                && Objects.equals(this.physicalCondition.getConditionNote(), this.conditionMirror.getConditionNote()));
+                && Objects.equals(this.dailyRecordForm.getConditionNote(), this.conditionMirror.getConditionNote()));
     }
 
     /**

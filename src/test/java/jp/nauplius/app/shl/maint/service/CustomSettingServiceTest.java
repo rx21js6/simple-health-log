@@ -33,8 +33,8 @@ import jp.nauplius.app.shl.maint.bean.TimeZoneInputModel;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
-        TestMessageBundleProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestEntityManagerFactoryProducer.class,
+        TestMessageBundleProducer.class})
 public class CustomSettingServiceTest extends AbstractServiceTest {
     @Inject
     private LoginInfo loginInfo;

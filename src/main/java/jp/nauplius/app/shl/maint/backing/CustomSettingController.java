@@ -117,7 +117,8 @@ public class CustomSettingController implements Serializable {
             this.customSettingService.changeMailAddress();
 
             this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.mailAddressChanged"), null));
+                    this.messageBundle.getString("contents.maint.settings.customSetting.msg.mailAddressChanged"),
+                    null));
 
         } catch (SimpleHealthLogException e) {
 

@@ -173,13 +173,13 @@
                     <b:column id="dailyRecordValuesMorning">
                         <b:panelGrid columns="3">
                             <b:inputText type="time"
-                                value="#{dailyRecordInputModel.physicalCondition.awakeTime}"
+                                value="#{dailyRecordInputModel.dailyRecordForm.awakeTime}"
                                 converter="timeConverter"
                                 label="#{msg['contents.record.recordInput.label.awakeTime']}"
                                 labelStyle="width:100px;">
                             </b:inputText>
-                            <b:inputText type="number" mask="99.9" p:step="0.1"
-                                value="#{dailyRecordInputModel.physicalCondition.bodyTemperatureMorning}"
+                            <b:inputText type="number" mask="99.9" p:step="0.1" max="99.9"
+                                value="#{dailyRecordInputModel.dailyRecordForm.bodyTemperatureMorning}"
                                 label="#{msg['contents.record.recordInput.label.bodyTemperature']}"
                                 labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
@@ -187,7 +187,7 @@
                             <b:message for="@previous" />
 
                             <b:inputText type="number" mask="9{1,2}"
-                                value="#{dailyRecordInputModel.physicalCondition.oxygenSaturationMorning}"
+                                value="#{dailyRecordInputModel.dailyRecordForm.oxygenSaturationMorning}"
                                 label="#{msg['contents.record.recordInput.label.oxygenSaturation']}"
                                 labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
@@ -208,13 +208,13 @@
                     <b:column id="dailyRecordValuesEvening">
                         <b:panelGrid columns="3">
                             <b:inputText type="time"
-                                value="#{dailyRecordInputModel.physicalCondition.bedTime}"
+                                value="#{dailyRecordInputModel.dailyRecordForm.bedTime}"
                                 converter="timeConverter"
                                 label="#{msg['contents.record.recordInput.label.bedTime']}"
                                 labelStyle="width:100px;">
                             </b:inputText>
                             <b:inputText type="number" mask="99.9" p:step="0.1"
-                                value="#{dailyRecordInputModel.physicalCondition.bodyTemperatureEvening}"
+                                value="#{dailyRecordInputModel.dailyRecordForm.bodyTemperatureEvening}"
                                 label="#{msg['contents.record.recordInput.label.bodyTemperature']}"
                                 labelStyle="width:100px;" maxlength="4">
                                 <f:converter converterId="javax.faces.BigDecimal" />
@@ -222,13 +222,12 @@
                             <b:message for="@previous" />
 
                             <b:inputText type="number" mask="9{1,2}"
-                                value="#{dailyRecordInputModel.physicalCondition.oxygenSaturationEvening}"
+                                value="#{dailyRecordInputModel.dailyRecordForm.oxygenSaturationEvening}"
                                 label="#{msg['contents.record.recordInput.label.oxygenSaturation']}"
                                 labelStyle="width:100px;" maxlength="3">
                                 <f:converter converterId="javax.faces.Integer" />
-                                <b:message for="@previous" />
-
                             </b:inputText>
+                            <b:message for="@previous" />
                         </b:panelGrid>
                     </b:column>
                 </b:row>
@@ -243,7 +242,7 @@
                 <b:row>
                     <b:column>
                         <b:inputTextarea
-                            value="#{dailyRecordInputModel.physicalCondition.conditionNote}"
+                            value="#{dailyRecordInputModel.dailyRecordForm.conditionNote}"
                             label="#{msg['contents.record.recordInput.label.conditionNote']}"
                             labelStyle="width:100px;" maxlength="100">
                             <b:message for="@previous" />

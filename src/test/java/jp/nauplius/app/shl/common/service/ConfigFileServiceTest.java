@@ -26,8 +26,7 @@ import jp.nauplius.app.shl.common.producer.TestMessageBundleProducer;
 import jp.nauplius.app.shl.common.ui.bean.HomeDirectoryInfo;
 
 @RunWith(CdiRunner.class)
-@ActivatedAlternatives({ TestLoggerProducer.class, TestMessageBundleProducer.class,
-        TestHomeDirectoryInfoProducer.class })
+@ActivatedAlternatives({TestLoggerProducer.class, TestMessageBundleProducer.class, TestHomeDirectoryInfoProducer.class})
 public class ConfigFileServiceTest extends AbstractServiceTest {
     @Inject
     private ConfigFileService configFileService;

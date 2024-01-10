@@ -108,7 +108,7 @@ public class LoginFilter implements Filter {
                 // パスワードリセット
                 chain.doFilter(request, response);
             } else if (loggedIn) {
-                if (servletPath.equals("/")) {
+                if (servletPath.equals("/") || servletPath.endsWith("/") || servletPath.endsWith("jsf")) {
                     // 入力画面に遷移
                     httpServletResponse.sendRedirect(contextPath + "/contents/record/recordInput.xhtml");
                     return;
