@@ -1,12 +1,12 @@
 package jp.nauplius.app.shl.user.bean;
 
-import javax.enterprise.inject.Default;
-import javax.validation.GroupSequence;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import jakarta.enterprise.inject.Default;
+import jakarta.validation.GroupSequence;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import jp.nauplius.app.shl.common.ui.exception.order.FirstOrder;
 import jp.nauplius.app.shl.user.constants.UserRoleId;

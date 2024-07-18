@@ -5,8 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 

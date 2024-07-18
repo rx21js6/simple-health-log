@@ -2,9 +2,9 @@ package jp.nauplius.app.shl.user.bean;
 
 import java.io.Serializable;
 
-import javax.inject.Named;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import jakarta.inject.Named;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import jp.nauplius.app.shl.user.constants.UserRoleId;
 import lombok.Data;

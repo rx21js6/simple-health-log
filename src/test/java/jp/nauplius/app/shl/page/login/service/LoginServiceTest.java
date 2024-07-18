@@ -1,18 +1,18 @@
 package jp.nauplius.app.shl.page.login.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.HashMap;
 
-import javax.inject.Inject;
-
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import io.github.cdiunit.ActivatedAlternatives;
+import io.github.cdiunit.CdiRunner;
+import jakarta.inject.Inject;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.listener.InitializationListener;

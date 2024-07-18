@@ -2,10 +2,10 @@ package jp.nauplius.app.shl.common.service;
 
 import java.io.Serializable;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.ws.bean.GetUsersResponse;

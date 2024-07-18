@@ -3,12 +3,12 @@ package jp.nauplius.app.shl.common.listener;
 import java.io.IOException;
 import java.util.Objects;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.persistence.EntityManager;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.slf4j.Logger;

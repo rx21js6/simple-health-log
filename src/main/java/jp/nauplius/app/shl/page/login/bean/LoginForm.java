@@ -2,13 +2,14 @@ package jp.nauplius.app.shl.page.login.bean;
 
 import java.io.Serializable;
 
-import javax.inject.Named;
-import javax.validation.constraints.NotEmpty;
-
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Named
 @Data
+@SessionScoped
 public class LoginForm implements Serializable {
     @NotEmpty(message = "{login.loginid.notEmpty}")
     // @Size(min = 5, max = 10)

@@ -2,15 +2,18 @@
 
 (Pardon my broken English.😅)
 
-Updated at 2024-01-10
+Ver1.6.0
 
-* Fixed some bugs.
+Updated at 2024-07-18
+
+* Updated to support Java 17, Jetty 12, and Jakarta. Jetty 9 is no longer supported.(1.6.0〜)
 
 ---
 
 ## Docker(2022-08-22～)
 
-* See [README-Docker.md](docker/README-Docker.md)
+* ~~See [README-Docker.md](docker/README-Docker.md)~~
+* At the moment, not supported.(Because Jetty 12 package doesn't exist in apt repository.😢)
 
 ---
 
@@ -25,10 +28,11 @@ This app is recording only (below)..
 * Condition notes(Free style)
 
 ## Requirement
+（1.6.0〜）
 
-* JDK 1.8
-* Gradle 7.1+
-* Jetty9.4+（Recommended）
+* JDK 17
+* Gradle 8.3+
+* Jetty12（Recommended）
 * PostgreSQL 12+
 
 ## Preparations
@@ -105,5 +109,5 @@ Run `gradle war` and deploy war.
 
 MIT
 
-©2022 nauplius.jp
+©2022-2024 nauplius.jp
 

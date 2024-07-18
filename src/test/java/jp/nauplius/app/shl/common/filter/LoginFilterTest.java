@@ -6,21 +6,20 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.HashMap;
 
-import javax.inject.Inject;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.CdiRunner;
-import org.jglue.cdiunit.internal.servlet.MockHttpServletRequestImpl;
-import org.jglue.cdiunit.internal.servlet.MockHttpServletResponseImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import io.github.cdiunit.ActivatedAlternatives;
+import io.github.cdiunit.CdiRunner;
+import io.github.cdiunit.internal.servlet5.MockHttpServletRequestImpl;
+import io.github.cdiunit.internal.servlet5.MockHttpServletResponseImpl;
+import jakarta.inject.Inject;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;
@@ -74,7 +73,7 @@ public class LoginFilterTest extends AbstractServiceTest {
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
-        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(null, null);
         request.setRequestURI("/simple-health-log/contents/record/monthlyRecord.xhtml");
         request.setServletPath("/contents/record/monthlyRecord.xhtml");
         request.setContextPath("/simple-health-log");
@@ -104,7 +103,7 @@ public class LoginFilterTest extends AbstractServiceTest {
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
-        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(null, null);
         request.setRequestURI("/simple-health-log");
         request.setServletPath("/");
         request.setContextPath("/simple-health-log");
@@ -128,7 +127,7 @@ public class LoginFilterTest extends AbstractServiceTest {
     public void testDoFilterNotLoggedIn() throws IOException, ServletException {
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
-        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(null, null);
         request.setRequestURI("/simple-health-log");
         request.setServletPath("/");
         request.setContextPath("/simple-health-log");
@@ -158,7 +157,7 @@ public class LoginFilterTest extends AbstractServiceTest {
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
-        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(null, null);
         request.setRequestURI("/simple-health-log/contents/maint/user/userList.xhtml");
         request.setServletPath("/contents/maint/user/userList.xhtml");
         request.setContextPath("/simple-health-log");
@@ -188,7 +187,7 @@ public class LoginFilterTest extends AbstractServiceTest {
 
         this.insertTestDataXml(this.keyIvHolderService.getEntityManager(), "dbunit/LoginFilterTest_data01.xml");
 
-        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl();
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(null, null);
         request.setRequestURI("/simple-health-log/contents/maint/user/userList.xhtml");
         request.setServletPath("/contents/maint/user/userList.xhtml");
         request.setContextPath("/simple-health-log");

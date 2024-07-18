@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.transaction.RollbackException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.RollbackException;
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.DatabaseException;
@@ -21,6 +21,7 @@ import jp.nauplius.app.shl.page.initial.bean.InitialSettingForm;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
 
 @Named
+@SessionScoped
 public class InitialSettingService implements Serializable {
     @Inject
     private transient ResourceBundle messageBundle;

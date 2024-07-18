@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.TypedQuery;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.slf4j.Logger;
 
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.persistence.TypedQuery;
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.db.model.UserToken;
@@ -39,6 +39,7 @@ import jp.nauplius.app.shl.user.constants.UserStatus;
  * 利用者サービス
  */
 @Named
+@SessionScoped
 public class UserService extends AbstractService {
     @Inject
     private Logger logger;
