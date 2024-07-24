@@ -44,6 +44,19 @@ This app is recording only (below)..
     * **Important** Save backup file in case of crash. If config.yml lost, Currently (and probably in the future) there is no recovery method.
     * When crashed, restore config.yml at www owner's '~/simple-health-log/' directory.
 
+### Jetty12(1.6.0〜)
+
+Add the modules listed below. (Write  in start.d/* or start.ini)
+
+```
+--module=ee10-annotations
+--module=ee10-servlet
+--module=ee10-deploy
+--module=ee10-webapp
+--module=ee10-websocket-jakarta
+--module=ee10-cdi
+```
+
 ### PostgreSQL
 
 * Create user "healthlog". And create database.
