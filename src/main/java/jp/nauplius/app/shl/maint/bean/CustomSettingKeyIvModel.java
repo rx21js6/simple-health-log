@@ -2,8 +2,8 @@ package jp.nauplius.app.shl.maint.bean;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
 
 import lombok.Data;
 

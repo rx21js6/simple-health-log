@@ -3,12 +3,12 @@ package jp.nauplius.app.shl.common.service;
 import java.io.Serializable;
 import java.util.Locale;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import javax.servlet.http.HttpSession;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpSession;
 
 import lombok.Getter;
 import lombok.Setter;

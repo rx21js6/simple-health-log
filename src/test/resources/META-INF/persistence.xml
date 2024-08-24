@@ -14,12 +14,12 @@
 
         <!-- Entities / Model -->
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
-            <property name="javax.persistence.jdbc.url"
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver" />
+            <property name="jakarta.persistence.jdbc.url"
                 value="@jp.nauplius.app.shl.setting.testDb.url@" />
-            <property name="javax.persistence.jdbc.user"
+            <property name="jakarta.persistence.jdbc.user"
                 value="@jp.nauplius.app.shl.setting.testDb.user@" />
-            <property name="javax.persistence.jdbc.password"
+            <property name="jakarta.persistence.jdbc.password"
                 value="@jp.nauplius.app.shl.setting.testDb.password@" />
         </properties>
     </persistence-unit>

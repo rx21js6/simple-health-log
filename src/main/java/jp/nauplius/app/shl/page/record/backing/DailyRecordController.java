@@ -9,16 +9,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jp.nauplius.app.shl.common.constants.NotEnteredNoticeTypeKey;
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.constants.ShlConstants;
@@ -60,7 +59,7 @@ public class DailyRecordController implements ModalControllerListener {
     private transient ResourceBundle messageBundle;
 
     @Inject
-    private FacesContext facesContext;
+    private transient FacesContext facesContext;
 
     @Inject
     private LoginService loginService;
@@ -102,8 +101,10 @@ public class DailyRecordController implements ModalControllerListener {
 
     @PostConstruct
     public void postConstruct() {
-        this.today = this.loginInfo.getUsersLocalToday();
-        this.dailyRecordInputModel.setSelectedDate(this.today.format(ShlConstants.RECORDING_DATE_FORMATTER));
+        if (StringUtils.isEmpty(this.dailyRecordInputModel.getSelectedDate())) {
+            this.today = this.loginInfo.getUsersLocalToday();
+            this.dailyRecordInputModel.setSelectedDate(this.today.format(ShlConstants.RECORDING_DATE_FORMATTER));
+        }
     }
 
     public void init() {
@@ -416,30 +417,26 @@ public class DailyRecordController implements ModalControllerListener {
                     empty = true;
                 } else {
                     switch (NotEnteredNoticeTypeKey.valueOf(notEnteredNotice.getTypeKey())) {
-                        case AWAKE_TIME :
-                            empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
-                            break;
-                        case BED_TIME :
-                            empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
-                            break;
-                        case TEMP_MORNING :
-                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
-                            break;
-                        case TEMP_EVENING :
-                            empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
-                            break;
-                        case OX_SAT_MORNING :
-                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning())
-                                    ? true
-                                    : false;
-                            break;
-                        case OX_SAT_EVENING :
-                            empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening())
-                                    ? true
-                                    : false;
-                            break;
-                        default :
-                            break;
+                    case AWAKE_TIME:
+                        empty = Objects.isNull(previousPysicalCondition.getAwakeTime()) ? true : false;
+                        break;
+                    case BED_TIME:
+                        empty = Objects.isNull(previousPysicalCondition.getBedTime()) ? true : false;
+                        break;
+                    case TEMP_MORNING:
+                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureMorning()) ? true : false;
+                        break;
+                    case TEMP_EVENING:
+                        empty = Objects.isNull(previousPysicalCondition.getBodyTemperatureEvening()) ? true : false;
+                        break;
+                    case OX_SAT_MORNING:
+                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationMorning()) ? true : false;
+                        break;
+                    case OX_SAT_EVENING:
+                        empty = Objects.isNull(previousPysicalCondition.getOxygenSaturationEvening()) ? true : false;
+                        break;
+                    default:
+                        break;
                     }
                 }
 

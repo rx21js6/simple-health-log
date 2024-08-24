@@ -6,14 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 
-import javax.inject.Inject;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
-
 import org.hamcrest.CoreMatchers;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +15,12 @@ import org.junit.runner.RunWith;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
+import io.github.cdiunit.ActivatedAlternatives;
+import io.github.cdiunit.CdiRunner;
+import jakarta.inject.Inject;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMessage.RecipientType;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;
 import jp.nauplius.app.shl.common.producer.TestLoggerProducer;

@@ -2,11 +2,6 @@ package jp.nauplius.app.shl.maint.service;
 
 import java.util.HashMap;
 
-import javax.inject.Inject;
-import javax.mail.MessagingException;
-
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +10,10 @@ import org.junit.runner.RunWith;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
+import io.github.cdiunit.ActivatedAlternatives;
+import io.github.cdiunit.CdiRunner;
+import jakarta.inject.Inject;
+import jakarta.mail.MessagingException;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.producer.TestCustomSettingMailSenderProducer;

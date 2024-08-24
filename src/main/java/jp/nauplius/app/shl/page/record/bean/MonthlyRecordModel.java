@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
 
 import lombok.Getter;
 import lombok.Setter;

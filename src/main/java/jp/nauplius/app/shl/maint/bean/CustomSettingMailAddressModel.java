@@ -2,9 +2,9 @@ package jp.nauplius.app.shl.maint.bean;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
-import javax.validation.constraints.Email;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+import jakarta.validation.constraints.Email;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

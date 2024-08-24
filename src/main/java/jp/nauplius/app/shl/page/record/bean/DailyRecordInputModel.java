@@ -5,13 +5,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jp.nauplius.app.shl.common.constants.ShlConstants;
 import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
@@ -29,12 +29,17 @@ public class DailyRecordInputModel implements Serializable {
     @Setter
     private DailyRecordForm previousDailyRecordForm;
 
-    @Inject
+    // @Inject
     private PhysicalCondition conditionMirror;
 
     @Getter
     @Setter
     private String selectedDate;
+
+    @PostConstruct
+    public void postConstruct() {
+        this.conditionMirror = new PhysicalCondition();
+    }
 
     public void setPhysicalCondition(PhysicalCondition physicalCondition) {
         try {

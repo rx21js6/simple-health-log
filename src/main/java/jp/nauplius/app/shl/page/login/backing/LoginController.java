@@ -5,12 +5,12 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.slf4j.Logger;
 
@@ -32,7 +32,7 @@ public class LoginController implements Serializable {
     private transient ResourceBundle messageBundle;
 
     @Inject
-    private FacesContext facesContext;
+    private transient FacesContext facesContext;
 
     @Inject
     @Getter

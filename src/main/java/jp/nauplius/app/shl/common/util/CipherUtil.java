@@ -11,10 +11,11 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Named;
 import jp.nauplius.app.shl.common.constants.SecurityLevel;
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
@@ -26,6 +27,7 @@ import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
  *
  */
 @Named
+@Dependent
 public class CipherUtil implements Serializable {
     /**
      * 乱数アルゴリズム

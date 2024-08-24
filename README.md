@@ -2,15 +2,19 @@
 
 (Pardon my broken English.😅)
 
-Updated at 2024-01-10
+Ver1.6.0
 
-* Fixed some bugs.
+Updated at 2024-08-24
+
+* Updated to support Java 17, Jetty 12, and Jakarta. Jetty 9 is no longer supported.(1.6.0〜)
+* Fixed some small bugs.
 
 ---
 
 ## Docker(2022-08-22～)
 
-* See [README-Docker.md](docker/README-Docker.md)
+* ~~See [README-Docker.md](docker/README-Docker.md)~~
+* At the moment, not supported.(Because Jetty 12 package doesn't exist in apt repository.😢)
 
 ---
 
@@ -25,10 +29,11 @@ This app is recording only (below)..
 * Condition notes(Free style)
 
 ## Requirement
+（1.6.0〜）
 
-* JDK 1.8
-* Gradle 7.1+
-* Jetty9.4+（Recommended）
+* JDK 17
+* Gradle 8.3+
+* Jetty12（Recommended）
 * PostgreSQL 12+
 
 ## Preparations
@@ -39,6 +44,19 @@ This app is recording only (below)..
 * Only when starting for the first time, '~/simple-health-log/config.yml' is automatically created.
     * **Important** Save backup file in case of crash. If config.yml lost, Currently (and probably in the future) there is no recovery method.
     * When crashed, restore config.yml at www owner's '~/simple-health-log/' directory.
+
+### Jetty12(1.6.0〜)
+
+Add the modules listed below. (Write  in start.d/* or start.ini)
+
+```
+--module=ee10-annotations
+--module=ee10-servlet
+--module=ee10-deploy
+--module=ee10-webapp
+--module=ee10-websocket-jakarta
+--module=ee10-cdi
+```
 
 ### PostgreSQL
 
@@ -105,5 +123,5 @@ Run `gradle war` and deploy war.
 
 MIT
 
-©2022 nauplius.jp
+©2022-2024 nauplius.jp
 

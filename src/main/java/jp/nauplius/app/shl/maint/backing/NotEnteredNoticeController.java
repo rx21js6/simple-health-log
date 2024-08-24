@@ -3,11 +3,11 @@ package jp.nauplius.app.shl.maint.backing;
 import java.io.Serializable;
 import java.util.ResourceBundle;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.maint.service.NotEnteredNoticeService;
@@ -16,7 +16,7 @@ import jp.nauplius.app.shl.maint.service.NotEnteredNoticeService;
 @ViewScoped
 public class NotEnteredNoticeController implements Serializable {
     @Inject
-    private FacesContext facesContext;
+    private transient FacesContext facesContext;
 
     @Inject
     private NotEnteredNoticeService notEnteredNoticeService;

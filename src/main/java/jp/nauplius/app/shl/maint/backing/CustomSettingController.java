@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.maint.bean.CustomSettingPasswordModel;
@@ -19,7 +19,7 @@ import jp.nauplius.app.shl.user.service.UserService;
 @ViewScoped
 public class CustomSettingController implements Serializable {
     @Inject
-    private FacesContext facesContext;
+    private transient FacesContext facesContext;
 
     @Inject
     private CustomSettingService customSettingService;

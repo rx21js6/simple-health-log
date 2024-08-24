@@ -4,10 +4,10 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Objects;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.convert.FacesConverter;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -6,8 +6,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 

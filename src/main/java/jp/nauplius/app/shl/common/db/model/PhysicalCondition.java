@@ -1,7 +1,7 @@
 package jp.nauplius.app.shl.common.db.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
