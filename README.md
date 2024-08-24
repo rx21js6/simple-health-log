@@ -4,9 +4,10 @@
 
 Ver1.6.0
 
-Updated at 2024-07-18
+Updated at 2024-08-24
 
 * Updated to support Java 17, Jetty 12, and Jakarta. Jetty 9 is no longer supported.(1.6.0〜)
+* Fixed some small bugs.
 
 ---
 
