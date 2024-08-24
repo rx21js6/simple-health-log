@@ -3,12 +3,11 @@ package jp.nauplius.app.shl.user.backing;
 import java.io.Serializable;
 import java.util.ResourceBundle;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.page.login.service.LoginService;
 import jp.nauplius.app.shl.user.bean.PasswordResetForm;
@@ -22,7 +21,7 @@ public class PasswordResetController implements Serializable {
     private transient ResourceBundle messageBundle;
 
     @Inject
-    private FacesContext context;
+    private transient FacesContext context;
 
     @Inject
     private LoginService loginService;

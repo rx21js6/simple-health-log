@@ -4,24 +4,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.transaction.Transactional;
-
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jp.nauplius.app.shl.common.producer.InitializationQualifier;
 
 /**
  * データベース登録・更新（Flyway）機能
  */
 @Named
-public class DbLoader {
+@ApplicationScoped
+public class DbLoader implements Serializable {
     @Inject
     private Logger logger;
 
@@ -94,9 +96,9 @@ public class DbLoader {
     @Transactional
     public void updateDb() {
         Map<String, Object> properties = this.entityManager.getEntityManagerFactory().getProperties();
-        String dbUrl = String.valueOf(properties.get("javax.persistence.jdbc.url"));
-        String dbUser = String.valueOf(properties.get("javax.persistence.jdbc.user"));
-        String dbPassword = String.valueOf(properties.get("javax.persistence.jdbc.password"));
+        String dbUrl = String.valueOf(properties.get("jakarta.persistence.jdbc.url"));
+        String dbUser = String.valueOf(properties.get("jakarta.persistence.jdbc.user"));
+        String dbPassword = String.valueOf(properties.get("jakarta.persistence.jdbc.password"));
         Flyway flyway = Flyway.configure().dataSource(dbUrl, dbUser, dbPassword).load();
         flyway.baseline();
         flyway.migrate();

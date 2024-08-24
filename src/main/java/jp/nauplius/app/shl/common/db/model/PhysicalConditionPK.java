@@ -1,7 +1,7 @@
 package jp.nauplius.app.shl.common.db.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * The primary key class for the physical_condition database table.

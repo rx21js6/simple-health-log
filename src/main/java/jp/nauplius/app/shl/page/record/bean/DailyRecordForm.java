@@ -6,15 +6,15 @@ import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-import javax.inject.Named;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
-
 import org.apache.commons.beanutils.BeanUtils;
 
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import jp.nauplius.app.shl.common.db.model.PhysicalCondition;
 import jp.nauplius.app.shl.common.db.model.PhysicalConditionPK;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
@@ -24,6 +24,7 @@ import lombok.Data;
  * 日次入力画面フォーム
  */
 @Named
+@SessionScoped
 @Data
 public class DailyRecordForm implements Serializable {
     private PhysicalConditionPK id;

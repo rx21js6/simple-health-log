@@ -4,9 +4,9 @@ import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import jp.nauplius.app.shl.common.db.model.KeyIv;
 import jp.nauplius.app.shl.common.db.model.UserInfo;

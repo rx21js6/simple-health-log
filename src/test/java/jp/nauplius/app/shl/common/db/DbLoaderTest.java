@@ -1,14 +1,13 @@
 package jp.nauplius.app.shl.common.db;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-
 import org.eclipse.persistence.exceptions.DatabaseException;
-import org.jglue.cdiunit.ActivatedAlternatives;
-import org.jglue.cdiunit.CdiRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import io.github.cdiunit.ActivatedAlternatives;
+import io.github.cdiunit.CdiRunner;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jp.nauplius.app.shl.common.db.loader.DbLoader;
 import jp.nauplius.app.shl.common.db.model.KeyIv;
 import jp.nauplius.app.shl.common.producer.TestEntityManagerFactoryProducer;

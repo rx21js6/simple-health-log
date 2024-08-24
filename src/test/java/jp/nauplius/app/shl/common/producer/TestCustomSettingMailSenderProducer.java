@@ -2,10 +2,10 @@ package jp.nauplius.app.shl.common.producer;
 
 import static org.mockito.Mockito.when;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Produces;
-import javax.inject.Named;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Named;
 
 import org.mockito.Mockito;
 

@@ -2,13 +2,14 @@ package jp.nauplius.app.shl.user.bean;
 
 import java.io.Serializable;
 
-import javax.inject.Named;
-import javax.validation.constraints.NotEmpty;
-
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
 @Named
+@SessionScoped
 public class PasswordResetForm implements Serializable {
     @NotEmpty(message = "{passwordReset.loginId.notEmpty}")
     private String loginId;

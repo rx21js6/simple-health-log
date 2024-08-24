@@ -1,6 +1,6 @@
 package jp.nauplius.app.shl.user.bean;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 import lombok.Data;
 

@@ -3,9 +3,9 @@ package jp.nauplius.app.shl.common.service;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 import jp.nauplius.app.shl.common.db.model.UserInfo;
 import lombok.Getter;

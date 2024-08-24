@@ -5,13 +5,12 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ResourceBundle;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.interceptor.PermissionInterceptor;
 import jp.nauplius.app.shl.common.service.ConfigFileService;
@@ -22,7 +21,7 @@ import jp.nauplius.app.shl.user.service.UserService;
 @ViewScoped
 public class AdminSettingController implements Serializable {
     @Inject
-    private FacesContext facesContext;
+    private transient FacesContext facesContext;
 
     @Inject
     private AdminSettingService adminSettingService;

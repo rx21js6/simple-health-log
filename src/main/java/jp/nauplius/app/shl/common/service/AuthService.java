@@ -3,9 +3,9 @@ package jp.nauplius.app.shl.common.service;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jp.nauplius.app.shl.common.constants.AuthInfoConstants;
 import jp.nauplius.app.shl.common.constants.UserRole;
 import jp.nauplius.app.shl.page.login.bean.LoginInfo;
@@ -14,6 +14,7 @@ import jp.nauplius.app.shl.page.login.bean.LoginInfo;
  * 認証サービス
  */
 @Named
+@SessionScoped
 public class AuthService implements Serializable {
     @Inject
     private LoginInfo loginInfo;

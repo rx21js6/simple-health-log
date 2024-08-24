@@ -2,14 +2,13 @@ package jp.nauplius.app.shl.maint.service;
 
 import java.util.Properties;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+import jakarta.mail.Message;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import jp.nauplius.app.shl.common.exception.SimpleHealthLogException;
 import jp.nauplius.app.shl.common.service.AbstractMailSender;
 

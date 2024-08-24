@@ -3,9 +3,9 @@ package jp.nauplius.app.shl.page.record.backing;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.apache.commons.collections.CollectionUtils;
 
