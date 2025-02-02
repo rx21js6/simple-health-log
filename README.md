@@ -2,11 +2,11 @@
 
 (Pardon my broken English.😅)
 
-Ver1.6.0
+Ver1.6.1
 
-Updated at 2024-08-24
+Updated at 2025-02-XX
 
-* Updated to support Java 17, Jetty 12, and Jakarta. Jetty 9 is no longer supported.(1.6.0〜)
+* Changed Bootsfaces.jar to be obtained from Maven Central.
 * Fixed some small bugs.
 
 ---
@@ -123,5 +123,5 @@ Run `gradle war` and deploy war.
 
 MIT
 
-©2022-2024 nauplius.jp
+©2022-2025 nauplius.jp
 

@@ -2,22 +2,21 @@ package jp.nauplius.app.shl.common.ui.converter;
 
 import java.sql.Time;
 import java.time.LocalTime;
-import java.util.Objects;
+
+import org.apache.commons.lang3.StringUtils;
 
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
 import jakarta.faces.convert.FacesConverter;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * 時刻表示の変換
  */
 @FacesConverter("timeConverter")
-public class TimeConverter implements Converter {
+public class TimeConverter implements Converter<Time> {
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component, String value) {
+    public Time getAsObject(FacesContext context, UIComponent component, String value) {
         if (StringUtils.isEmpty(value)) {
             return null;
         }
@@ -34,14 +33,7 @@ public class TimeConverter implements Converter {
     }
 
     @Override
-    public String getAsString(FacesContext conext, UIComponent component, Object value) {
-        if (!(value instanceof Time)) {
-            return StringUtils.EMPTY;
-        }
-
-        if (Objects.isNull(value)) {
-            return StringUtils.EMPTY;
-        }
+    public String getAsString(FacesContext conext, UIComponent component, Time value) {
         Time timeValue = (Time) value;
         LocalTime localTime = timeValue.toLocalTime();
         String timeText = String.format("%02d:%02d", localTime.getHour(), localTime.getMinute());
