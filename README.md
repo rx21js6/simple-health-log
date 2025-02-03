@@ -4,7 +4,7 @@
 
 Ver1.6.1
 
-Updated at 2025-02-XX
+Updated at 2025-02-03
 
 * Changed Bootsfaces.jar to be obtained from Maven Central.
 * Fixed some small bugs.
