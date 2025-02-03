@@ -4,20 +4,20 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
 import jakarta.faces.convert.FacesConverter;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * 時刻表示の変換
  */
 @FacesConverter("timeConverter")
-public class TimeConverter implements Converter {
+public class TimeConverter implements Converter<Time> {
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component, String value) {
+    public Time getAsObject(FacesContext context, UIComponent component, String value) {
         if (StringUtils.isEmpty(value)) {
             return null;
         }
@@ -34,16 +34,11 @@ public class TimeConverter implements Converter {
     }
 
     @Override
-    public String getAsString(FacesContext conext, UIComponent component, Object value) {
-        if (!(value instanceof Time)) {
-            return StringUtils.EMPTY;
-        }
-
+    public String getAsString(FacesContext conext, UIComponent component, Time value) {
         if (Objects.isNull(value)) {
-            return StringUtils.EMPTY;
+            return null;
         }
-        Time timeValue = (Time) value;
-        LocalTime localTime = timeValue.toLocalTime();
+        LocalTime localTime = value.toLocalTime();
         String timeText = String.format("%02d:%02d", localTime.getHour(), localTime.getMinute());
         return timeText;
     }

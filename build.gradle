@@ -57,10 +57,10 @@ dependencies {
     compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '5.0.0'
 
     // https://mvnrepository.com/artifact/org.glassfish/jakarta.faces
-    implementation group: 'org.glassfish', name: 'jakarta.faces', version: '4.0.7'
+    implementation group: 'org.glassfish', name: 'jakarta.faces', version: '4.0.9'
 
     // https://mvnrepository.com/artifact/net.bootsfaces/bootsfaces
-    implementation(files("jars/BootsFaces-OSP-java17-2.0.0-SNAPSHOT.jar"))
+    implementation group: 'net.bootsfaces', name: 'bootsfaces', version: '2.0.1'
 
     // Bean Validation
     // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
@@ -72,7 +72,7 @@ dependencies {
 
     // DB + JPA
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
 
     // https://mvnrepository.com/artifact/org.eclipse.persistence/eclipselink
     implementation group: 'org.eclipse.persistence', name: 'eclipselink', version: '4.0.3'
