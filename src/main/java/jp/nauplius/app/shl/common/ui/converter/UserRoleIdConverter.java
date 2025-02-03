@@ -1,6 +1,7 @@
 package jp.nauplius.app.shl.common.ui.converter;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,11 +22,15 @@ import jp.nauplius.app.shl.common.service.LocaleService;
 public class UserRoleIdConverter implements Converter<Integer> {
     @Override
     public Integer getAsObject(FacesContext context, UIComponent component, String value) {
-        return null;
+        return Integer.valueOf(value);
     }
 
     @Override
     public String getAsString(FacesContext conext, UIComponent component, Integer value) {
+        if (Objects.isNull(value)) {
+            return StringUtils.EMPTY;
+        }
+
         ExternalContext externalContext = conext.getExternalContext();
         HttpSession httpSession = (HttpSession) externalContext.getSession(true);
         Locale locale = (Locale) httpSession.getAttribute(LocaleService.SESSION_KEY);
@@ -35,18 +40,18 @@ public class UserRoleIdConverter implements Converter<Integer> {
         String result = StringUtils.EMPTY;
         UserRole userRole = UserRole.valueOf((int) value);
         switch (userRole) {
-            case ADMIN :
-                result = messageBundle.getString("contents.maint.user.role.label.admin");
-                break;
-            case USER :
-                result = messageBundle.getString("contents.maint.user.role.label.user");
-                break;
-            case RESTRICTED :
-                result = messageBundle.getString("contents.maint.user.role.label.restricted");
-                break;
-            default :
-                result = StringUtils.EMPTY;
-                break;
+        case ADMIN:
+            result = messageBundle.getString("contents.maint.user.role.label.admin");
+            break;
+        case USER:
+            result = messageBundle.getString("contents.maint.user.role.label.user");
+            break;
+        case RESTRICTED:
+            result = messageBundle.getString("contents.maint.user.role.label.restricted");
+            break;
+        default:
+            result = StringUtils.EMPTY;
+            break;
         }
         return result;
     }

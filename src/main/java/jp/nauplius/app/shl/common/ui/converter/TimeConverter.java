@@ -2,6 +2,7 @@ package jp.nauplius.app.shl.common.ui.converter;
 
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,8 +35,10 @@ public class TimeConverter implements Converter<Time> {
 
     @Override
     public String getAsString(FacesContext conext, UIComponent component, Time value) {
-        Time timeValue = (Time) value;
-        LocalTime localTime = timeValue.toLocalTime();
+        if (Objects.isNull(value)) {
+            return null;
+        }
+        LocalTime localTime = value.toLocalTime();
         String timeText = String.format("%02d:%02d", localTime.getHour(), localTime.getMinute());
         return timeText;
     }

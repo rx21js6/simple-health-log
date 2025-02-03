@@ -27,13 +27,12 @@ public class StringDateConverter implements Converter<String> {
      */
     @Override
     public String getAsString(FacesContext context, UIComponent component, String value) {
-        String textValue = (String) value;
-        if (StringUtils.isEmpty(textValue)) {
+        if (StringUtils.isEmpty(value)) {
             return null;
         }
 
         LocalDate date = null;
-        date = LocalDate.parse(textValue, ShlConstants.RECORDING_DATE_FORMATTER);
+        date = LocalDate.parse(value, ShlConstants.RECORDING_DATE_FORMATTER);
         String dateText = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
         return dateText;
     }
